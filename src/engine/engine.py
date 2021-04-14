@@ -4,31 +4,15 @@ import inspect
 import logging
 from utils import path_from_root
 from .graph import Graph
-
+from .ticker import Ticker
 
 class Engine:
   def print(self, *args, **kwargs):
-    print('[{}] '.format(self.line), file=self.console_log, end='')
     print(*args, **kwargs, file=self.console_log)
-  
-  # def init(self, alg_locals):
-  #   watch(alg_locals, deepcopy=False, callback=self.watch_locals)
-
-  # def watch_locals(self, frame, elem, exec_info):
-  #   for key in frame.f_locals:
-  #     if not inspect.isclass(frame.f_locals[key]) and not inspect.ismodule(frame.f_locals[key]) and not inspect.ismethod(frame.f_locals[key]):
-  #       unwatch(frame.f_locals[key])
-  #       watch(frame.f_locals[key], deepcopy=True, callback=self.local_change)
-  #   self.local_change(frame, elem, exec_info)
-  
-  # def local_change(self, frame, elem, exec_info):
-  #   self.logger.debug(exec_info)
-  #   self.line = exec_info[0]
-  #   self.tick(Engine.TICK_SOURCE_VARS)
 
   def line_callback(self, src):
-    self.line = src.lineno - 1
-    self.logger.debug('{}: {}'.format(self.line, src.fullsource.replace('\n', '')))
+    self.lineno = src.lineno - 1
+    self.logger.debug('{}: {}'.format(self.lineno, src.fullsource.replace('\n', '')))
     self.tick(Engine.TICK_SOURCE_LINE)
 
   def tick(self, source=None):
@@ -37,9 +21,21 @@ class Engine:
     
     if source is None:
       source = Engine.TICK_SOURCE_USER
+
+    console_logs = self.console_log.getvalue()
+    components = [ component.get_transformed_state() for component in self.components ]
+
+    self.ticker.tick(
+      source=source,
+      lineno=self.lineno,
+      console_logs=console_logs,
+      components=components
+    )
+
+    self.console_log.flush()
   
   def make_frames(self):
-    return []
+    return [ tick.data for tick in self.ticker.get_ticks() ]
 
   def Graph(self, incoming_graph_data=None, **attr):
     if 'visualize' not in attr:
@@ -52,22 +48,18 @@ class Engine:
 
     return graph
 
-  # def __del__(self):
-    # if hasattr(self, 'alg_locals') and self.alg_locals is not None:
-    #   unwatch(self.alg_locals)
-    # pass
-
   def __init__(self, unique_id:str):
     self.console_log = StringIO()
-    self.ticks = []
     self.components = []
-    self.line = 1
+    self.lineno = 1
 
     self.alg_locals = None
 
     self.logger = logging.getLogger(unique_id)
     self.logger.addHandler(logging.FileHandler(path_from_root('../logs/algs/{}.log'.format(unique_id))))
     self.logger.setLevel(logging.DEBUG)
+
+    self.ticker = Ticker()
 
 
 Engine.TICK_SOURCE_LINE = 0

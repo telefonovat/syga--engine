@@ -5,8 +5,8 @@
 - [x] Presunúť `runner`, `sender` a `loader` do `components`
 - [ ] Pridať type hints
 - [ ] Pridať docs
-- [ ] Rozdeliť logy
-- [ ] Implementovať `logger`
+- [x] Rozdeliť logy
+- [x] Implementovať `logger`
 - [ ] Unit testy pre `engine`
 - [ ] Unit testy pre `runner`
 - [ ] Unit testy pre `sender`
