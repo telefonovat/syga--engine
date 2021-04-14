@@ -8,38 +8,32 @@ from exceptions import LoaderException
 class Loader:
   def create_module(self):
     try:
-      logger.debug('Creating module {} -> '.format(self.module_name))
-
       with open(self.module_path, 'w') as f:
         f.write(self.code)
 
-      logger.debug('success')
+      logger.debug('Creating module {} -> success'.format(self.module_name))
     except OSError as e:
-      logger.debug('error')
+      logger.debug('Creating module {} -> error'.format(self.module_name))
       raise LoaderException(e)
 
   def validate_cfg(self):
-    logger.debug('Validating cfg -> ')
-
     # todo: use JSON schema validation
     try:
       if 'code' not in self.cfg:
         raise LoaderException('`code` property not in cfg')
 
-      logger.debug('valid')
+      logger.debug('Validating cfg -> valid')
     except LoaderException as e:
-      logger.debug('invalid')
+      logger.debug('Validating cfg -> invalid')
       raise e
 
   def parse_cfg(self):
     try:
-      logger.debug('Parsing cfg -> ')
-      
       self.cfg = json.loads(self.raw)
 
-      logger.debug('success')
+      logger.debug('Parsing cfg -> success')
     except json.JSONDecodeError:
-      logger.debug('error')
+      logger.debug('Parsing cfg -> error')
       raise LoaderException('Error parsing cfg')
 
   def prepare_code(self):

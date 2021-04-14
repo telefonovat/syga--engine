@@ -9,14 +9,12 @@ from exceptions import RunnerException, AlgorithmException
 class Runner:
   def import_module(self):
     module_name = self.loader.module_name
-    
-    logger.debug('Importing module {} -> '.format(module_name))
 
     try:
       self.module = importlib.import_module(module_name)
-      logger.debug('success')
+      logger.debug('Importing module {} -> success'.format(module_name))
     except Exception as e:
-      logger.debug('error')
+      logger.debug('Importing module {} -> error'.format(module_name))
       raise RunnerException(e)
   
   def run(self):
@@ -29,7 +27,7 @@ class Runner:
 
     fun = getattr(self.module, fun_name)
 
-    logger.debug('Running {} -> '.format(module_name))
+    logger.debug('Running {} <<<'.format(module_name))
 
     args = {
       'fun': fun,
@@ -39,9 +37,9 @@ class Runner:
 
     try:
       exec('fun(engine, print)', {}, args)
-      logger.debug('success')
+      logger.debug('>>> success')
     except Exception as e:
-      logger.debug('error')
+      logger.debug('>>> error')
       raise AlgorithmException(e)
 
   def __init__(self, loader:Loader):

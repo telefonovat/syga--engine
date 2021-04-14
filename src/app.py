@@ -10,9 +10,12 @@ class App:
 
   def main_loop(self):
     try:
+      logger.debug('{} main_loop START'.format('-' * 70))
+
       sender = Sender()
 
       cfg = input()
+      logger.debug('Input read: {} chars'.format(len(cfg)))
 
       loader = Loader(cfg)
       runner = Runner(loader)
@@ -33,6 +36,9 @@ class App:
     except Exception as e:
       logger.exception(traceback.format_exc())
       sender.send_error(e)
+
+    finally:
+      logger.debug('{} main_loop END\n'.format('-' * 70))
 
   def run(self):
     while True:
