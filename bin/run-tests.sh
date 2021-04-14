@@ -2,4 +2,4 @@
 
 cd "$( dirname "$( realpath "$0" )" )/.."
 
-python3 src/test.py
+python3 src/test.py -v
