@@ -32,11 +32,12 @@ class TestLoader(unittest.TestCase):
     )
 
   def test_parse_cfg(self):
-    not_json = random_name(random.randint(100, 200))
-    loader = Loader(not_json)
-    
-    with self.assertRaises(LoaderException):
-      loader.parse_cfg()
+    for _ in range(20):
+      not_json = random_name(random.randint(100, 200))
+      loader = Loader(not_json)
+      
+      with self.assertRaises(LoaderException):
+        loader.parse_cfg()
 
     # This should NOT raise an exception
     self._get_loader().parse_cfg()

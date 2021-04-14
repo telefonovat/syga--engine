@@ -33,7 +33,7 @@ class Tick:
       self.data['components'] == value.data['components'] 
     )
   
-  def __init__(self, tick_id, source, lineno, console_logs, components):
+  def __init__(self, tick_id:int, source:int, lineno:int, console_logs:str, components):
     self.data = dict(
       tick_id=tick_id,
       source=source,

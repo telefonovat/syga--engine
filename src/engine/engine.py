@@ -15,7 +15,7 @@ class Engine:
     self.logger.debug('{}: {}'.format(self.lineno, src.fullsource.replace('\n', '')))
     self.tick(Engine.TICK_SOURCE_LINE)
 
-  def tick(self, source=None):
+  def tick(self, source:int=None):
     if len(self.components) == 0:
       return # Ignore tick with no components
     

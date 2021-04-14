@@ -5,7 +5,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 
 # https://stackoverflow.com/a/40537179
-def resolve_url(url):
+def resolve_url(url:str) -> str:
   parts = list(urlsplit(url))
   segments = parts[2].split('/')
   segments = [segment + '/' for segment in segments[:-1]] + [segments[-1]]
@@ -24,11 +24,11 @@ def path_from_root(*args):
   return os.path.join(os.path.abspath(os.path.dirname(__file__)), '../' ,*args)
 
 
-def random_name(n_bytes=16):
+def random_name(n_bytes=16) -> str:
   return binascii.b2a_hex(os.urandom(n_bytes)).decode('utf-8').lower()
 
 
-def detect_indentation(code):
+def detect_indentation(code:str) -> int:
   indentations = [ len(line) - len(line.lstrip()) for line in code.splitlines() ]
   min_indentation = min(indentations)
 
@@ -46,6 +46,6 @@ def detect_indentation(code):
   return min_indentation
 
 
-def add_indentation(code:str, indentation:int):
+def add_indentation(code:str, indentation:int) -> str:
   prefix = ' ' * indentation
   return '\n'.join([ prefix + line for line in code.splitlines() ])
