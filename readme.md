@@ -4,7 +4,7 @@
 
 - [x] Presunúť `runner`, `sender` a `loader` do `components`
 - [ ] Pridať type hints
-- [ ] Pridať docs
+- [ ] Pridať doc strings
 - [x] Rozdeliť logy
 - [x] Implementovať `logger`
 - [ ] Unit testy pre `engine`
