@@ -10,5 +10,5 @@
 - [ ] Unit testy pre `engine`
 - [ ] Unit testy pre `runner`
 - [ ] Unit testy pre `sender`
-- [ ] Unit testy pre `loader`
-- [ ] Detekovať indentáciu
+- [x] Unit testy pre `loader`
+- [x] Detekovať indentáciu
