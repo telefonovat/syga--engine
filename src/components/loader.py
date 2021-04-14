@@ -1,9 +1,7 @@
 import json
-import os
-import binascii
 import re
 import logging
-from utils import path_from_root
+from utils import path_from_root, random_name
 from exceptions import LoaderException
 
 
@@ -57,6 +55,6 @@ class Loader:
   
   def __init__(self, cfg:str):
     self.raw = cfg
-    self.unique_id = '_{}'.format(binascii.b2a_hex(os.urandom(16)).decode('utf-8'))
+    self.unique_id = '_{}'.format(random_name())
     self.module_name = '{}.{}'.format('__algs', self.unique_id)
     self.module_path = '{}.py'.format(path_from_root('__algs', self.unique_id))

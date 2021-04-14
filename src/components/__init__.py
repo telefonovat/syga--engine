@@ -1,3 +1,3 @@
-from components.loader import Loader
-from components.runner import Runner
-from components.sender import Sender
+from .loader import Loader
+from .runner import Runner
+from .sender import Sender

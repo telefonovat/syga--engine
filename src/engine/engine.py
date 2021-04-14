@@ -3,7 +3,7 @@ from io import StringIO
 import inspect
 import logging
 from utils import path_from_root
-from engine.graph import Graph
+from .graph import Graph
 
 
 class Engine:

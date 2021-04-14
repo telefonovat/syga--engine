@@ -18,4 +18,4 @@ code="$( cat "$target" )"
 
 input_json=$( jq -n --arg code "$code" '{code: $code}' | jq -c . )
 
-echo "$input_json" | python src/main.py
+echo "$input_json" | python3 ./src/main.py

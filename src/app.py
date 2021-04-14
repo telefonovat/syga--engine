@@ -32,7 +32,7 @@ class App:
       exit()
 
     except AlgorithmException as e:
-      logging.exception(traceback.format_exc())
+      logging.warn(traceback.format_exc())
       sender.send_mixed(e, runner.engine.make_frames())
 
     except Exception as e:

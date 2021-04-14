@@ -1,7 +1,7 @@
 import hunter
 import importlib
 import logging
-from components.loader import Loader
+from .loader import Loader
 from engine import Engine
 from exceptions import RunnerException, AlgorithmException
 
