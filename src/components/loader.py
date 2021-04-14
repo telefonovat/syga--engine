@@ -1,7 +1,7 @@
 import json
 import re
 import logging
-from utils import path_from_root, random_name
+from utils import path_from_root, random_name, detect_indentation, add_indentation
 from exceptions import LoaderException
 
 
@@ -21,6 +21,7 @@ class Loader:
   def validate_cfg(self):
     logging.debug('Validating cfg -> ')
 
+    # todo: use JSON schema validation
     try:
       if 'code' not in self.cfg:
         raise LoaderException('`code` property not in cfg')
@@ -42,10 +43,16 @@ class Loader:
       raise LoaderException('Error parsing cfg')
 
   def prepare_code(self):
-    self.code = 'def {}(engine, print):\n  {}'.format(
-      self.unique_id,
-      re.sub('\n', '\n  ', self.cfg['code'])
-    )
+    try:
+      code = self.cfg['code']
+      indentation = detect_indentation(code)
+      
+      self.code = 'def {}(engine, print):\n{}'.format(
+        self.unique_id,
+        add_indentation(code, indentation)
+      )
+    except IndentationError:
+      raise LoaderException('Indentation error')
 
   def load(self):
     self.parse_cfg()
