@@ -1,8 +1,11 @@
 import json
+from .logger import logger
 
 
 class Sender:
   def _send_response(self, res, err:Exception, frames):
+    logger.debug('Sending {} response'.format(res))
+    
     print(json.dumps({
       'res': res,
       'err': str(err),

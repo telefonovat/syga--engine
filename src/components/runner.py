@@ -1,21 +1,22 @@
 import hunter
 import importlib
-import logging
+from .logger import logger
 from .loader import Loader
 from engine import Engine
 from exceptions import RunnerException, AlgorithmException
+
 
 class Runner:
   def import_module(self):
     module_name = self.loader.module_name
     
-    logging.debug('Importing module {} -> '.format(module_name))
+    logger.debug('Importing module {} -> '.format(module_name))
 
     try:
       self.module = importlib.import_module(module_name)
-      logging.debug('success')
+      logger.debug('success')
     except Exception as e:
-      logging.debug('error')
+      logger.debug('error')
       raise RunnerException(e)
   
   def run(self):
@@ -28,7 +29,7 @@ class Runner:
 
     fun = getattr(self.module, fun_name)
 
-    logging.debug('Running {} -> '.format(module_name))
+    logger.debug('Running {} -> '.format(module_name))
 
     args = {
       'fun': fun,
@@ -38,9 +39,9 @@ class Runner:
 
     try:
       exec('fun(engine, print)', {}, args)
-      logging.debug('success')
+      logger.debug('success')
     except Exception as e:
-      logging.debug('error')
+      logger.debug('error')
       raise AlgorithmException(e)
 
   def __init__(self, loader:Loader):

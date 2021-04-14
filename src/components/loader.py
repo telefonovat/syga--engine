@@ -1,6 +1,6 @@
 import json
 import re
-import logging
+from .logger import logger
 from utils import path_from_root, random_name, detect_indentation, add_indentation
 from exceptions import LoaderException
 
@@ -8,38 +8,38 @@ from exceptions import LoaderException
 class Loader:
   def create_module(self):
     try:
-      logging.debug('Creating module {} -> '.format(self.module_name))
+      logger.debug('Creating module {} -> '.format(self.module_name))
 
       with open(self.module_path, 'w') as f:
         f.write(self.code)
 
-      logging.debug('success')
+      logger.debug('success')
     except OSError as e:
-      logging.debug('error')
+      logger.debug('error')
       raise LoaderException(e)
 
   def validate_cfg(self):
-    logging.debug('Validating cfg -> ')
+    logger.debug('Validating cfg -> ')
 
     # todo: use JSON schema validation
     try:
       if 'code' not in self.cfg:
         raise LoaderException('`code` property not in cfg')
 
-      logging.debug('valid')
+      logger.debug('valid')
     except LoaderException as e:
-      logging.debug('invalid')
+      logger.debug('invalid')
       raise e
 
   def parse_cfg(self):
     try:
-      logging.debug('Parsing cfg -> ')
+      logger.debug('Parsing cfg -> ')
       
       self.cfg = json.loads(self.raw)
 
-      logging.debug('success')
+      logger.debug('success')
     except json.JSONDecodeError:
-      logging.debug('error')
+      logger.debug('error')
       raise LoaderException('Error parsing cfg')
 
   def prepare_code(self):

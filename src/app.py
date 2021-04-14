@@ -1,17 +1,12 @@
-import logging
-from utils import path_from_root
-from components import Loader, Runner, Sender
-from exceptions import AlgorithmException
 import traceback
+from utils import path_from_root
+from components import Loader, Runner, Sender, logger
+from exceptions import AlgorithmException
 
 
 class App:
   def init(self):
-    logging.basicConfig(
-      filename=path_from_root('../logs/debug.log'),
-      format='[%(asctime)s] %(levelname)s: %(message)s',
-      level=logging.DEBUG
-    )
+    pass
 
   def main_loop(self):
     try:
@@ -28,15 +23,15 @@ class App:
       sender.send_success(runner.engine.make_frames())
       
     except EOFError as e:
-      logging.warn('EOF, exiting')
+      logger.warn('EOF, exiting')
       exit()
 
     except AlgorithmException as e:
-      logging.warn(traceback.format_exc())
+      logger.warn(traceback.format_exc())
       sender.send_mixed(e, runner.engine.make_frames())
 
     except Exception as e:
-      logging.exception(traceback.format_exc())
+      logger.exception(traceback.format_exc())
       sender.send_error(e)
 
   def run(self):
@@ -44,6 +39,6 @@ class App:
       self.main_loop()
 
   def die(self, e:Exception):
-    logging.error('The app is dead')
-    logging.exception(traceback.format_exc())
+    logger.error('The app is dead')
+    logger.exception(traceback.format_exc())
     exit()
