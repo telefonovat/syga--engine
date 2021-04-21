@@ -3,27 +3,31 @@ from io import StringIO
 import inspect
 import logging
 from utils import path_from_root
-from .graph import Graph
+from engine.graph import Graph
 from .ticker import Ticker
 
 class Engine:
+  TICK_SOURCE_LINE = 0
+  TICK_SOURCE_VARS = 1
+  TICK_SOURCE_USER = 2
+  
   def print(self, *args, **kwargs):
     print(*args, **kwargs, file=self.console_log)
 
   def line_callback(self, src):
     self.lineno = src.lineno - 1
     self.logger.debug('{}: {}'.format(self.lineno, src.fullsource.replace('\n', '')))
-    self.tick(Engine.TICK_SOURCE_LINE)
+    self.tick(self.TICK_SOURCE_LINE)
 
   def tick(self, source:int=None):
     if len(self.components) == 0:
       return # Ignore tick with no components
     
     if source is None:
-      source = Engine.TICK_SOURCE_USER
+      source = self.TICK_SOURCE_USER
 
     console_logs = self.console_log.getvalue()
-    components = [ component.get_transformed_state() for component in self.components ]
+    components = [ (component, component.get_transformed_state()) for component in self.components ]
 
     self.ticker.tick(
       source=source,
@@ -35,7 +39,15 @@ class Engine:
     self.console_log.flush()
   
   def make_frames(self):
-    return [ tick.data for tick in self.ticker.get_ticks() ]
+    for component in self.components:
+      component.interpret_transformed_state()
+    
+    all_ticks = self.ticker.get_ticks()
+
+    for tick in all_ticks:
+      tick.data['components'] = [ component.compute_style(transformed_state) for component, transformed_state in tick.data['components'] ]
+  
+    return [ tick.data for tick in all_ticks ]
 
   def Graph(self, incoming_graph_data=None, **attr):
     if 'visualize' not in attr:
@@ -60,8 +72,3 @@ class Engine:
     self.logger.setLevel(logging.DEBUG)
 
     self.ticker = Ticker()
-
-
-Engine.TICK_SOURCE_LINE = 0
-Engine.TICK_SOURCE_VARS = 1
-Engine.TICK_SOURCE_USER = 2

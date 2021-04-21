@@ -8,6 +8,12 @@ from exceptions import RunnerException, AlgorithmException
 
 class Runner:
   def import_module(self):
+    """
+    Imports the module created by the loader component using importlib
+
+    raises:
+     - RunnerException: if an error occurres while importing the module
+    """
     module_name = self.loader.module_name
 
     try:
@@ -18,6 +24,14 @@ class Runner:
       raise RunnerException(e)
   
   def run(self):
+    """
+    Runs the user provided algorithm by running the module created by the
+    loader component and initiates line tracing by the hunter library
+
+    raises:
+     - RunnerException: if an error occurres while importing the module
+     - AlgorithmException: if an error is raised while running the algorithm
+    """
     module_name = self.loader.module_name
     fun_name = self.loader.unique_id
 
@@ -43,5 +57,11 @@ class Runner:
       raise AlgorithmException(e)
 
   def __init__(self, loader:Loader):
+    """
+    Creates a new instance of Runner
+
+    parameters:
+     - loader (Loader): the loader which already loaded the config
+    """
     self.loader = loader
     self.engine = Engine(self.loader.unique_id)
