@@ -2,6 +2,8 @@ class GraphNodeColorizer:
   BINARY_INTERPRETATION = 0
   GROUP_INTERPRETATION = 1
   IDENTITY_INTERPRETATION = 2
+  DEFAULT_FALSE_COLOR = 'default'
+  DEFAULT_TRUE_COLOR = 'blue'
   
   @staticmethod
   def build(*args, **kwargs):
@@ -10,7 +12,7 @@ class GraphNodeColorizer:
 
     if len(args) == 1:
       if not callable(args[0]):
-        return GraphNodeColorizer.build(lambda v: v in args[0], **kwargs)
+        return GraphNodeColorizer.build(lambda v,G: v in args[0], **kwargs)
       return GraphNodeColorizer(args[0], **kwargs)
 
     else:
@@ -23,7 +25,7 @@ class GraphNodeColorizer:
     res = {}
 
     for v in G.nodes:
-      transformed = self._transform(v, G) 
+      transformed = self._transform(v, G)
       res[v] = transformed
       self._unique_values.add(transformed)
       
@@ -34,10 +36,15 @@ class GraphNodeColorizer:
       if isinstance(self._colors, int):
         if self._colors == 1:
           self._interpretation = self.BINARY_INTERPRETATION
+          self._colors = [self.DEFAULT_TRUE_COLOR]
         elif self._colors > 1:
           self._interpretation = self.GROUP_INTERPRETATION
 
-      elif isinstance(self._colors, list):
+      elif isinstance(self._colors, str):
+        self._interpretation = self.BINARY_INTERPRETATION
+        self._colors = [self._colors]
+
+      elif isinstance(self._colors, (list, tuple)):
         if len(self._colors) == 1:
           self._interpretation = self.BINARY_INTERPRETATION
         elif len(self._colors) > 1:
@@ -49,11 +56,15 @@ class GraphNodeColorizer:
       if self._interpretation is None:
         raise Exception('Unknown coloring')
     else:
-      pass # todo : implement this
+      if self._unique_values == {True, False}:
+        self._interpretation = self.BINARY_INTERPRETATION
+      else:
+        self._interpretation = self.GROUP_INTERPRETATION
+      # todo: implement IDENTITY_INTERPRETATION guess
 
   def compute_single(self, value):
     if self._interpretation == self.BINARY_INTERPRETATION:
-      return self._colors[0] if bool(value) else 'default'
+      return self._colors[0] if bool(value) else self.DEFAULT_FALSE_COLOR
 
     elif self._interpretation == self.GROUP_INTERPRETATION:
       return self._colors[value]
