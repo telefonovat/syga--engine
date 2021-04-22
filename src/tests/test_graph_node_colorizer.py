@@ -140,7 +140,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
   # todo: IDENTITY_INTERPRETATION guess
   # todo: random values tests --> they should yield GROUP_INTERPRETATION
 
-  def test_compute_single_binary_interpretation_auto(self):
+  def test_compute_single_binary_interpretation(self):
     props = ['color', 'colors']
     values = [1, 'blue', ['red'], '#333', '#123456', 'rgb(123, 12, 32)', 'rgba(12, 12, 12, 0.5)']
 
