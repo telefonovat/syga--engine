@@ -12,3 +12,4 @@
 - [ ] Unit testy pre `sender`
 - [x] Unit testy pre `loader`
 - [x] Detekovať indentáciu
+- [ ] Support pre RGB farby

@@ -15,8 +15,7 @@ class Graph(networkx.Graph, Visualizer):
     }
 
   def interpret_transformed_state(self):
-    if self.node_colorizer is not None:
-      self.node_colorizer.interpret()
+    if self.node_colorizer is not None: self.node_colorizer.interpret()
 
   def compute_style(self, transformed_state):
     return {
