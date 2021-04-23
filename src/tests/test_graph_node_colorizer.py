@@ -10,6 +10,34 @@ import random
 
 class TestGraphNodeColorizer(unittest.TestCase):
   #
+  # Validation
+  #
+
+  def test_validate_color_arg_valid(self):
+    # todo: implement this test
+    pass
+
+  def test_validate_palette_arg_valid(self):
+    # todo: implement this test
+    pass
+
+  def test_validate_range_arg_valid(self):
+    # todo: implement this test
+    pass
+
+  def test_validate_color_arg_invalid(self):
+    # todo: implement this test
+    pass
+
+  def test_validate_palette_arg_invalid(self):
+    # todo: implement this test
+    pass
+
+  def test_validate_range_arg_invalid(self):
+    # todo: implement this test
+    pass
+  
+  #
   # Transformation
   #
 
