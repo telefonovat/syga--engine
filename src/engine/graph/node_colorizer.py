@@ -12,6 +12,7 @@ class GraphNodeColorizer:
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
   
+  
   @staticmethod
   def is_color(*args, **kwargs):
     """
@@ -27,12 +28,14 @@ class GraphNodeColorizer:
     except:
       return False
 
+
   @staticmethod
   def are_colors(iterable):
     """
     Returns True if all items in the iterable are colors; False otherwise
     """
     return all([ GraphNodeColorizer.is_color(color) for color in iterable ])
+
 
   @staticmethod
   def build(*args, **kwargs):
@@ -52,6 +55,7 @@ class GraphNodeColorizer:
         raise Exception('color_nodes_by: source not specified') # todo: use proper exception
       prop = kwargs['prop']
       return GraphNodeColorizer.build(lambda v,G: None if prop not in G.nodes[v] else G.nodes[v][prop], **kwargs)
+
 
   def transform(self, G):
     """
@@ -74,6 +78,7 @@ class GraphNodeColorizer:
       
     return res
 
+
   def _binary_interpretation(self, t=None, f=None):
     """
     States that this graph node colorizer will use binary interpretation.
@@ -89,6 +94,7 @@ class GraphNodeColorizer:
     
     self._colors = (false_color, true_color)
     self._interpretation = self.BINARY_INTERPRETATION
+
 
   def _group_interpretation(self, colors):
     """
@@ -136,11 +142,13 @@ class GraphNodeColorizer:
       else:
         self._colors = dict(zip(sorted(self._unique_values), self._colors[:len(self._unique_values)]))
 
+
   def _identity_interpretation(self):
     """
     States that this graph node colorizer will use identity interpretation.
     """
     self._interpretation = self.IDENTITY_INTERPRETATION
+
 
   def _spectral_interpretation(self):
     """
@@ -156,6 +164,7 @@ class GraphNodeColorizer:
       upper = float('+inf') if len(uv) == 0 else max(uv)
 
     self._range = (lower, upper)
+
 
   def interpret(self):
     """
@@ -221,6 +230,7 @@ class GraphNodeColorizer:
       else:
         self._group_interpretation(len(self._unique_values))
 
+
   def compute_single(self, value):
     """
     Computes the color for the single specified value. The process depends on
@@ -249,6 +259,7 @@ class GraphNodeColorizer:
 
     raise Exception('Unknown interpretation type') # todo: use proper exception
 
+
   def compute(self, transformed_state):
     """
     Computes the styles for every node in the transformed_style dict
@@ -263,6 +274,7 @@ class GraphNodeColorizer:
       return None
 
     return dict([ (key, self.compute_single(value)) for key,value in transformed_state.items() ])    
+
 
   def _validate_colors(self):
     """
@@ -296,6 +308,7 @@ class GraphNodeColorizer:
 
     return False
 
+
   def _validate_palette(self):
     """
     Validates the value of _palette.
@@ -308,6 +321,7 @@ class GraphNodeColorizer:
     
     # todo: implement this
     return True
+
 
   def _validate_range(self):
     """
@@ -341,6 +355,7 @@ class GraphNodeColorizer:
       isinstance(upper, (int, float)) and
       lower < upper
     )
+
 
   def __init__(self, transform, **kwargs):
     """
