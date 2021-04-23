@@ -1,8 +1,17 @@
+"""
+The GraphNodeColorizer module
+"""
+
 from colour import Color
 import seaborn as sns
 
 
-class GraphNodeColorizer:
+class GraphNodeColorizer(object):
+  """
+  GraphNodeColorizer computes the colors of the nodes in a graph. The process
+  is described in the following document:
+    - todo: add link
+  """
   BINARY_INTERPRETATION = 0
   GROUP_INTERPRETATION = 1
   IDENTITY_INTERPRETATION = 2
@@ -11,8 +20,8 @@ class GraphNodeColorizer:
   DEFAULT_TRUE_COLOR = Color('blue')
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
-  
-  
+
+
   @staticmethod
   def is_color(*args, **kwargs):
     """
@@ -25,7 +34,7 @@ class GraphNodeColorizer:
     try:
       Color(*args, **kwargs)
       return True
-    except:
+    except: # pylint: disable=bare-except
       return False
 
 
@@ -34,7 +43,7 @@ class GraphNodeColorizer:
     """
     Returns True if all items in the iterable are colors; False otherwise
     """
-    return all([ GraphNodeColorizer.is_color(color) for color in iterable ])
+    return all([GraphNodeColorizer.is_color(color) for color in iterable])
 
 
   @staticmethod
@@ -43,55 +52,62 @@ class GraphNodeColorizer:
     Creates the GraphNodeColorizer
     """
     if len(args) >= 2:
-      raise Exception('color_nodes_by: too many positional arguments') # todo: use proper exception
+      raise Exception('color_nodes_by: too many positional arguments')
 
     if len(args) == 1:
       if not callable(args[0]):
-        return GraphNodeColorizer.build(lambda v,G: v in args[0], **kwargs)
+        return GraphNodeColorizer.build(lambda v, graph: v in args[0], **kwargs)
       return GraphNodeColorizer(args[0], **kwargs)
 
     else:
       if 'prop' not in kwargs:
-        raise Exception('color_nodes_by: source not specified') # todo: use proper exception
+        raise Exception('color_nodes_by: source not specified')
       prop = kwargs['prop']
-      return GraphNodeColorizer.build(lambda v,G: None if prop not in G.nodes[v] else G.nodes[v][prop], **kwargs)
+      transform = lambda v, graph: None if prop not in graph.nodes[v] else graph.nodes[v][prop]
+      return GraphNodeColorizer.build(transform, **kwargs)
 
 
-  def transform(self, G):
+  def transform(self, graph):
     """
     Runs the _transform method for every node in the graph, thus creating the
     transformed structure state for the specified Graph component
 
     parameters:
-      - G (networkx.Graph): the graph to transform
+      - graph (networkx.Graph): the graph to transform
 
     returns:
       - transformed_state (dict): node to transformed information
     """
     res = {}
 
-    for v in G.nodes:
-      transformed = self._transform(v, G)
-      res[v] = transformed
+    for node in graph.nodes:
+      transformed = self._transform(node, graph)
+      res[node] = transformed
       if transformed is not None:
         self._unique_values.add(transformed)
-      
+
     return res
 
 
-  def _binary_interpretation(self, t=None, f=None):
+  def _binary_interpretation(self, true=None, false=None):
     """
     States that this graph node colorizer will use binary interpretation.
     The colors for true and false values can be specified. If omitted, default
-    value are used
+    value are used.
+
+    After this method runs, the value of _colors will be a tuple of two colors:
+      - first color is the false color
+      - second color is the true color
+
+    This enable for writing `_colors[int(bool(value))]`
 
     parameters:
-      - t (color): the color of true values (must be a valid argument of Color)
-      - f (color): the color of false values (must be a valid argument of Color)
+      - true (color): the color of true values (must be a valid argument of Color)
+      - false (color): the color of false values (must be a valid argument of Color)
     """
-    true_color = Color(t) if t is not None else self.DEFAULT_TRUE_COLOR
-    false_color = Color(f) if f is not None else self.DEFAULT_FALSE_COLOR
-    
+    true_color = Color(true) if true is not None else self.DEFAULT_TRUE_COLOR
+    false_color = Color(false) if false is not None else self.DEFAULT_FALSE_COLOR
+
     self._colors = (false_color, true_color)
     self._interpretation = self.BINARY_INTERPRETATION
 
@@ -115,32 +131,35 @@ class GraphNodeColorizer:
     have the DEFAULT_FALSE_COLOR
 
     parameters:
-      - colors (int|list|dict): the colors of the groups 
+      - colors (int|list|dict): the colors of the groups
     """
     self._interpretation = self.GROUP_INTERPRETATION
 
     if isinstance(colors, int):
-      self._colors = [ Color(rgb=color) for color in sns.color_palette(self.DEFAULT_DISCRETE_PALETTE, colors) ]
+      palette = sns.color_palette(self.DEFAULT_DISCRETE_PALETTE, colors)
+      self._colors = [Color(rgb=color) for color in palette]
 
     elif isinstance(colors, list):
-      self._colors = [ Color(color) for color in colors ]
+      self._colors = [Color(color) for color in colors]
 
     elif isinstance(colors, dict):
-      self._colors = dict([ (key, Color(color)) for key,color in colors.items() ])
-    
+      self._colors = dict([(key, Color(color)) for key, color in colors.items()])
+
     # If _colors is a list, it will be turned into a dict if possible. It may
     # not be possible if there are more unique items than the number of colors
     # In such case an Exception is raised
     if isinstance(self._colors, list):
-      if len(self._colors) < len(self._unique_values):
+      uniq = self._unique_values
+
+      if len(self._colors) < len(uniq):
         if len(self._colors) == 2:
           # Two colors with more unique values will turn into binary
           # interpretation with the specified colors as true/false colors
           self._binary_interpretation(*self._colors)
         else:
-          raise Exception('Too few colors: found {} unique values'.format(len(self._unique_values))) # todo: use proper exception
+          raise Exception('Too few colors: found {} unique values'.format(len(uniq)))
       else:
-        self._colors = dict(zip(sorted(self._unique_values), self._colors[:len(self._unique_values)]))
+        self._colors = dict(zip(sorted(uniq), self._colors[:len(uniq)]))
 
 
   def _identity_interpretation(self):
@@ -152,31 +171,55 @@ class GraphNodeColorizer:
 
   def _spectral_interpretation(self):
     """
-    Stats that this graph node colorizer will use spectral interpretation.
+    States that this graph node colorizer will use spectral interpretation.
     The upper and lower boundaries of the unique values will be computed. If
     there are no unique values -inf and +inf is used.
+
+    After this method runs the value of _range will a tuple of two items:
+      - The first item is the lower bound of the range
+      - The second item is the upper bound of the range 
     """
     self._interpretation = self.SPECTRAL_INTERPRETATION
 
     if self._range is None:
-      uv = self._unique_values
-      lower = float('-inf') if len(uv) == 0 else min(uv)
-      upper = float('+inf') if len(uv) == 0 else max(uv)
+      uniq = self._unique_values
+      lower = float('-inf') if uniq else min(uniq)
+      upper = float('+inf') if uniq else max(uniq)
 
     self._range = (lower, upper)
 
+  def _guess_interpretation(self):
+    """
+    Used to guess the correct interpretation if no interpretation parameters
+    were specified. The contents of _unique_values are used. The options are:
+      - a subset of {True, False} (inc. an empty set) --> BINARY_INTERPRETATION
+      - a set of colors --> IDENTITY_INTERPRETATION
+      - everything else --> GROUP_INTERPRETATION
+    """
+    uniq = self._unique_values
+
+    if uniq == {True, False} or uniq == {True} or uniq == {False} or uniq == {}:
+      self._binary_interpretation()
+
+    elif set([type(x) for x in uniq]) == {int, float}:
+      self._spectral_interpretation()
+
+    elif GraphNodeColorizer.are_colors(uniq):
+      self._identity_interpretation()
+
+    else:
+      self._group_interpretation(len(self._unique_values))
 
   def interpret(self):
     """
     If the interpretation was specified by a parameter, the type of the
-    interpretation is computed. During this process, the value of _colors is
-    normalized, the type of _colors will depend on the interpretation type
+    interpretation is computed.
 
-    If the interpretation was NOT specified, it is guessed from the contents
-    of _unique_values. The options are:
-      - a subset of {True, False} (inc. an empty set) --> BINARY_INTERPRETATION
-      - a set of colors --> IDENTITY_INTERPRETATION
-      - everything else --> GROUP_INTERPRETATION
+    If the interpretation was NOT specified, it is guessed using the
+    _guess_interpretation method. See this method for more info
+
+    After interpretation the type of _colors, _range and _palette may change.
+    Each interpretation type defines the requested type of the props.
 
     The type of _colors depends on the type of interpretation:
       - BINARY_INTERPRETATION   --> tuple ("true color", "false color")
@@ -211,24 +254,12 @@ class GraphNodeColorizer:
 
       # Unable to determine the interpretation type
       if self._interpretation is None:
-        raise Exception('Invalid value of color(s) parameter') # todo: use proper exception
+        raise Exception('Invalid value of color(s) parameter')
 
     # todo: consider _palette parameter
 
     else:
-      uv = self._unique_values
-      
-      if uv == {True, False} or uv == {True} or uv == {False} or uv == {}:
-        self._binary_interpretation()
-        
-      elif all([ isinstance(x, (float, int)) for x in uv ]) and any([ isinstance(x, float) for x in uv ]):
-        self._spectral_interpretation()
-
-      elif GraphNodeColorizer.are_colors(uv):
-        self._identity_interpretation()
-
-      else:
-        self._group_interpretation(len(self._unique_values))
+      self._guess_interpretation()
 
 
   def compute_single(self, value):
@@ -238,7 +269,7 @@ class GraphNodeColorizer:
     """
     if value is None:
       return None
-    
+
     if self._interpretation == self.BINARY_INTERPRETATION:
       return self._colors[int(bool(value))]
 
@@ -250,14 +281,14 @@ class GraphNodeColorizer:
         # Do not raise an exception here, instead the node will have no color
         # Todo: maybe add warning
         return self.DEFAULT_FALSE_COLOR
-      lower,upper = self._range
-      x = min(1, max(0, (value - lower) / (upper - lower)))
-      return 'color-' + str(x) # todo: use actual palette
-      
+      lower, upper = self._range
+      point = min(1, max(0, (value - lower) / (upper - lower)))
+      return 'color-' + str(point) # todo: use actual palette
+
     elif self._interpretation == self.IDENTITY_INTERPRETATION:
       return value
 
-    raise Exception('Unknown interpretation type') # todo: use proper exception
+    raise Exception('Unknown interpretation type')
 
 
   def compute(self, transformed_state):
@@ -273,7 +304,7 @@ class GraphNodeColorizer:
     if transformed_state is None:
       return None
 
-    return dict([ (key, self.compute_single(value)) for key,value in transformed_state.items() ])    
+    return dict([(key, self.compute_single(value)) for key, value in transformed_state.items()])
 
 
   def _validate_colors(self):
@@ -293,7 +324,7 @@ class GraphNodeColorizer:
     """
     if self._colors is None:
       return True
-    
+
     if isinstance(self._colors, int):
       return self._colors > 0
 
@@ -301,10 +332,10 @@ class GraphNodeColorizer:
       return GraphNodeColorizer.is_color(self._colors)
 
     elif isinstance(self._colors, (list, tuple)):
-      return len(self._colors) > 0 and GraphNodeColorizer.are_colors(self._colors)
+      return self._colors and GraphNodeColorizer.are_colors(self._colors)
 
     elif isinstance(self._colors, dict):
-      return len(self._colors) > 0 and GraphNodeColorizer.are_colors(self._colors.values())
+      return self._colors and GraphNodeColorizer.are_colors(self._colors.values())
 
     return False
 
@@ -314,11 +345,11 @@ class GraphNodeColorizer:
     Validates the value of _palette.
 
     returns
-      - validity (bool): True if valid False otherwise 
+      - validity (bool): True if valid False otherwise
     """
     if self._palette is None:
       return True
-    
+
     # todo: implement this
     return True
 
@@ -348,13 +379,9 @@ class GraphNodeColorizer:
     if len(self._range) != 2:
       return False
 
-    lower,upper = self._range
+    lower, upper = self._range
 
-    return (
-      isinstance(lower, (int, float)) and
-      isinstance(upper, (int, float)) and
-      lower < upper
-    )
+    return isinstance(lower, (int, float)) and isinstance(upper, (int, float)) and lower < upper
 
 
   def __init__(self, transform, **kwargs):
@@ -365,8 +392,8 @@ class GraphNodeColorizer:
     constructore can be considered private
     """
     if 'color' in kwargs and 'colors' in kwargs:
-      raise Exception('color_nodes_by: color and colors arguments are mutually exclusive') # todo: use proper exception
-    
+      raise Exception('color_nodes_by: color and colors arguments are mutually exclusive')
+
     self._interpretation = None
     self._transform = transform
     self._unique_values = set()
@@ -387,7 +414,7 @@ class GraphNodeColorizer:
       self._range = kwargs['range']
 
     if self._palette is not None and self._colors is not None:
-      raise Exception('color(s) and palette parameters are mutually exclusive') # todo: use proper exception
+      raise Exception('color(s) and palette parameters are mutually exclusive')
 
     if not self._validate_colors():
       raise Exception('Invalid value for color(s) parameter: {}'.format(self._colors))
