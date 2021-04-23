@@ -52,7 +52,7 @@ class GraphNodeColorizer(object):
     Creates the GraphNodeColorizer
     """
     if len(args) >= 2:
-      raise Exception('color_nodes_by: too many positional arguments')
+      raise Exception('Too many positional arguments')
 
     if len(args) == 1:
       if not callable(args[0]):
@@ -61,7 +61,7 @@ class GraphNodeColorizer(object):
 
     else:
       if 'prop' not in kwargs:
-        raise Exception('color_nodes_by: source not specified')
+        raise Exception('Source not specified')
       prop = kwargs['prop']
       transform = lambda v, graph: None if prop not in graph.nodes[v] else graph.nodes[v][prop]
       return GraphNodeColorizer.build(transform, **kwargs)
@@ -252,11 +252,12 @@ class GraphNodeColorizer(object):
       elif isinstance(self._colors, dict):
         self._group_interpretation(self._colors)
 
-      # Unable to determine the interpretation type
+      # Unable to determine the interpretation type - if this happends, it is
+      # an implementation error - the arguments MUST be validated properly
       if self._interpretation is None:
-        raise Exception('Invalid value of color(s) parameter')
+        raise Exception('Error during the colorization process')
 
-    # todo: consider _palette parameter
+    # todo: consider the _palette
 
     else:
       self._guess_interpretation()
@@ -392,7 +393,7 @@ class GraphNodeColorizer(object):
     constructore can be considered private
     """
     if 'color' in kwargs and 'colors' in kwargs:
-      raise Exception('color_nodes_by: color and colors arguments are mutually exclusive')
+      raise Exception('Color and colors arguments are mutually exclusive')
 
     self._interpretation = None
     self._transform = transform
@@ -414,13 +415,13 @@ class GraphNodeColorizer(object):
       self._range = kwargs['range']
 
     if self._palette is not None and self._colors is not None:
-      raise Exception('color(s) and palette parameters are mutually exclusive')
+      raise Exception('Parameters color(s) and palette are mutually exclusive')
 
     if not self._validate_colors():
-      raise Exception('Invalid value for color(s) parameter: {}'.format(self._colors))
+      raise Exception('Invalid value for parameter color(s): {}'.format(self._colors))
 
     if not self._validate_palette():
-      raise Exception('Invalid value for palette parameter: {}'.format(self._palette))
+      raise Exception('Invalid value for parameter palette: {}'.format(self._palette))
 
     if not self._validate_range():
-      raise Exception('Invalid value for range parameter: {}'.format(self._range))
+      raise Exception('Invalid value for parameter range: {}'.format(self._range))
