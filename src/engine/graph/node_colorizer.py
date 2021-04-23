@@ -177,7 +177,7 @@ class GraphNodeColorizer(object):
 
     After this method runs the value of _range will a tuple of two items:
       - The first item is the lower bound of the range
-      - The second item is the upper bound of the range 
+      - The second item is the upper bound of the range
     """
     self._interpretation = self.SPECTRAL_INTERPRETATION
 
