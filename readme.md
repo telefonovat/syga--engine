@@ -13,3 +13,4 @@
 - [x] Unit testy pre `loader`
 - [x] Detekovať indentáciu
 - [ ] Support pre RGB farby
+- [ ] Vytvoriť dedikované Exceptions pre Visualizer, GraphNodeColorizer, ...
