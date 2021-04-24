@@ -2,20 +2,27 @@
 
 cd "$( dirname "$( realpath "$0" )" )/.."
 
-echo "$1" | grep '/' -q && {
+alg="$1"
+
+echo "$alg" | grep '/' -q && {
   echo "Invalid symbols in example name"
   exit 1
 }
 
-target="./examples/$1.py"
+target="./examples/$alg.py"
 
 if [ ! -f "$target" ] ; then
-  echo "Example '$1' does not exist"
+  echo "Example '$alg' does not exist"
   exit 1
 fi
 
 code="$( cat "$target" )"
-
 input_json=$( jq -n --arg code "$code" '{code: $code}' | jq -c . )
 
-echo "$input_json" | python3 ./src/main.py
+echo "$input_json" | python3 ./src/main.py 2>&1 > "./out/$alg.json"
+
+exit_code="$?"
+
+cat "./out/$alg.json"
+
+exit "$exit_code"
