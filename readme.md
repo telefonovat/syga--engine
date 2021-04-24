@@ -2,15 +2,20 @@
 
 ### Todo
 
-- [x] Presunúť `runner`, `sender` a `loader` do `components`
-- [ ] Pridať type hints
-- [ ] Pridať doc strings
-- [x] Rozdeliť logy
-- [x] Implementovať `logger`
+#### Workflow
+
+- [ ] Upraviť všetky *.py súbory, aby mali 10/10 v Pylint
+- [ ] Setup Gitlab CI s Pylint a testami
+
+#### Testy
+
 - [ ] Unit testy pre `engine`
 - [ ] Unit testy pre `runner`
 - [ ] Unit testy pre `sender`
 - [x] Unit testy pre `loader`
-- [x] Detekovať indentáciu
+
+#### Iné
+
 - [ ] Support pre RGB farby
 - [ ] Vytvoriť dedikované Exceptions pre Visualizer, GraphNodeColorizer, ...
+- [ ] Implementovať timer
