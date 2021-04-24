@@ -20,7 +20,7 @@ v0 = 'a'
 G.nodes[v0]['s'] = STATE_OPENED
 G.nodes[v0]['h'] = 0
 
-G.color_nodes_by(prop='s', colors=['default', 'blue', 'red'])
+G.color_nodes_by(prop='s', colors=['gray', 'blue', 'red'])
 G.label_nodes_by(prop='h')
 
 while True:
