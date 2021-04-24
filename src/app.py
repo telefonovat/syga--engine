@@ -41,7 +41,7 @@ class App:
 
     except AlgorithmException as e:
       logger.warn(traceback.format_exc())
-      sender.send_mixed(e, runner.engine.make_frames())
+      sender.send_mixed(frames=runner.engine.make_frames(), err=e)
 
     except Exception as e:
       logger.exception(traceback.format_exc())

@@ -2,6 +2,7 @@
 The GraphNodeColorizer module
 """
 
+import types
 from colour import Color
 import seaborn as sns
 
@@ -55,7 +56,8 @@ class GraphNodeColorizer(object):
       raise Exception('Too many positional arguments')
 
     if len(args) == 1:
-      if not callable(args[0]):
+      if not isinstance(args[0], types.FunctionType):
+        # todo: validate the used of in operator
         return GraphNodeColorizer.build(lambda v, graph: v in args[0], **kwargs)
       return GraphNodeColorizer(args[0], **kwargs)
 
