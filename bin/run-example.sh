@@ -19,7 +19,7 @@ fi
 code="$( cat "$target" )"
 input_json=$( jq -n --arg code "$code" '{code: $code}' | jq -c . )
 
-echo "$input_json" | python3 ./src/main.py 2>&1 > "./out/$alg.json"
+echo "$input_json" | python3 ./src/main.py > "./out/$alg.json"
 
 exit_code="$?"
 
