@@ -57,7 +57,7 @@ class Tick:
     properties are equal:
       - source
       - console_logs
-      - components
+      - transformed state of the components
 
     parameters:
       - value (Tick): another tick
@@ -68,7 +68,7 @@ class Tick:
     return (
       self.data['source'] == value.data['source'] and
       self.data['console_logs'] == value.data['console_logs'] and
-      self.data['components'] == value.data['components'] 
+      all([x[1] == y[1] for x, y in zip(self.data['components'], value.data['components'])])
     )
   
 
