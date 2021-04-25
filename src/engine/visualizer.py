@@ -2,7 +2,7 @@
 The Visualizer class
 """
 
-class Visualizer(object):
+class Visualizer:
   """
   Visualizer is a data structure which can be visualized. This class is used
   as an abstract base for all visualizers. Is simply defines the interface

@@ -2,9 +2,7 @@
 The engine module
 """
 
-from watchpoints import watch, unwatch
 from io import StringIO
-import inspect
 import logging
 from utils import path_from_root
 from engine.graph import Graph
@@ -31,7 +29,7 @@ class Engine:
   TICK_SOURCE_LINE = 0
   TICK_SOURCE_VARS = 1
   TICK_SOURCE_USER = 2
-  
+
 
   def print(self, *args, **kwargs):
     """
@@ -71,12 +69,12 @@ class Engine:
     """
     if not self._components:
       return # Ignore tick with no components
-    
+
     if source is None:
       source = self.TICK_SOURCE_USER
 
     console_logs = self._console_log.getvalue()
-    components = [ (component, component.get_transformed_state()) for component in self._components ]
+    components = [ (comp, comp.get_transformed_state()) for comp in self._components ]
 
     self._ticker.tick(
       source=source,
@@ -86,7 +84,7 @@ class Engine:
     )
 
     self._console_log = StringIO() # Empty the contents
-  
+
 
   def make_frames(self):
     """
@@ -101,29 +99,30 @@ class Engine:
       - todo: add link
 
     returns:
-      - frames (list): the frames used for visualization 
+      - frames (list): the frames used for visualization
     """
     for component in self._components:
       component.interpret_transformed_state()
-    
+
     all_ticks = self._ticker.get_ticks()
 
     for tick in all_ticks:
-      tick.data['components'] = [ component.compute_style(transformed_state) for component, transformed_state in tick.data['components'] ]
+      components_style = [comp.compute_style(state) for comp, state in tick.data['components']]
+      tick.data['components'] = components_style
 
     # todo: implement the merging algorithm
-  
+
     return [ tick.data for tick in all_ticks ]
 
 
-  def Graph(self, incoming_graph_data=None, **attr):
+  def Graph(self, incoming_graph_data=None, **attr): # pylint: disable=invalid-name
     """
     Creates a new instance of Graph visualizer
     """
     if 'visualize' not in attr:
       attr['visualize'] = True
 
-    graph = Graph(incoming_graph_data=None, **attr)
+    graph = Graph(incoming_graph_data=incoming_graph_data, **attr)
 
     if attr['visualize']:
       self._components.append(graph)
@@ -131,20 +130,20 @@ class Engine:
     return graph
 
 
-  def __init__(self, unique_id:str):
+  def __init__(self, uid:str):
     """
     Creates a new instance of Engine. A unique ID must be provided. This ID
     will be used to create a unique log file for debugging purposes
 
     parameters:
-      - unique_id (str): The unique ID of this engine
+      - uid (str): The unique ID of this engine
     """
     self._console_log = StringIO()
     self._components = []
     self._lineno = 1
 
-    self._logger = logging.getLogger(unique_id)
-    self._logger.addHandler(logging.FileHandler(path_from_root('../logs/algs/{}.log'.format(unique_id))))
+    self._logger = logging.getLogger(uid)
+    self._logger.addHandler(logging.FileHandler(path_from_root('../logs/algs/{}.log'.format(uid))))
     self._logger.setLevel(logging.DEBUG)
 
     self._ticker = Ticker()

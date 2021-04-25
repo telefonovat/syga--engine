@@ -7,7 +7,7 @@ from colour import Color
 import seaborn as sns
 
 
-class GraphNodeColorizer(object):
+class GraphNodeColorizer:
   """
   GraphNodeColorizer computes the colors of the nodes in a graph. The process
   is described in the following document:
@@ -61,12 +61,12 @@ class GraphNodeColorizer(object):
         return GraphNodeColorizer.build(lambda v, graph: v in args[0], **kwargs)
       return GraphNodeColorizer(args[0], **kwargs)
 
-    else:
-      if 'prop' not in kwargs:
-        raise Exception('Source not specified')
-      prop = kwargs['prop']
-      transform = lambda v, graph: None if prop not in graph.nodes[v] else graph.nodes[v][prop]
-      return GraphNodeColorizer.build(transform, **kwargs)
+    if 'prop' not in kwargs:
+      raise Exception('Source not specified')
+
+    prop = kwargs['prop']
+    transform = lambda v, graph: None if prop not in graph.nodes[v] else graph.nodes[v][prop]
+    return GraphNodeColorizer.build(transform, **kwargs)
 
 
   def transform(self, graph):
@@ -145,7 +145,7 @@ class GraphNodeColorizer(object):
       self._colors = [Color(color) for color in colors]
 
     elif isinstance(colors, dict):
-      self._colors = dict([(key, Color(color)) for key, color in colors.items()])
+      self._colors = {key: Color(color) for key, color in colors.items()}
 
     # If _colors is a list, it will be turned into a dict if possible. It may
     # not be possible if there are more unique items than the number of colors
@@ -200,10 +200,10 @@ class GraphNodeColorizer(object):
     """
     uniq = self._unique_values
 
-    if uniq == {True, False} or uniq == {True} or uniq == {False} or uniq == {}:
+    if uniq in ({True, False}, {True}, {False}, {}):
       self._binary_interpretation()
 
-    elif set([type(x) for x in uniq]) == {int, float}:
+    elif {type(x) for x in uniq} == {int, float}:
       self._spectral_interpretation()
 
     elif GraphNodeColorizer.are_colors(uniq):
@@ -276,10 +276,10 @@ class GraphNodeColorizer(object):
     if self._interpretation == self.BINARY_INTERPRETATION:
       return self._colors[int(bool(value))]
 
-    elif self._interpretation == self.GROUP_INTERPRETATION:
+    if self._interpretation == self.GROUP_INTERPRETATION:
       return self._colors[value] if value in self._colors else self.DEFAULT_FALSE_COLOR
 
-    elif self._interpretation == self.SPECTRAL_INTERPRETATION:
+    if self._interpretation == self.SPECTRAL_INTERPRETATION:
       if not isinstance(value, (int, float)):
         # Do not raise an exception here, instead the node will have no color
         # Todo: maybe add warning
@@ -288,7 +288,7 @@ class GraphNodeColorizer(object):
       point = min(1, max(0, (value - lower) / (upper - lower)))
       return 'color-' + str(point) # todo: use actual palette
 
-    elif self._interpretation == self.IDENTITY_INTERPRETATION:
+    if self._interpretation == self.IDENTITY_INTERPRETATION:
       return value
 
     raise Exception('Unknown interpretation type')
@@ -307,7 +307,7 @@ class GraphNodeColorizer(object):
     if transformed_state is None:
       return None
 
-    return dict([(key, self.compute_single(value)) for key, value in transformed_state.items()])
+    return {key: self.compute_single(value) for key, value in transformed_state.items()}
 
 
   def _validate_colors(self):
@@ -331,13 +331,13 @@ class GraphNodeColorizer(object):
     if isinstance(self._colors, int):
       return self._colors > 0
 
-    elif isinstance(self._colors, str):
+    if isinstance(self._colors, str):
       return GraphNodeColorizer.is_color(self._colors)
 
-    elif isinstance(self._colors, (list, tuple)):
+    if isinstance(self._colors, (list, tuple)):
       return self._colors and GraphNodeColorizer.are_colors(self._colors)
 
-    elif isinstance(self._colors, dict):
+    if isinstance(self._colors, dict):
       return self._colors and GraphNodeColorizer.are_colors(self._colors.values())
 
     return False

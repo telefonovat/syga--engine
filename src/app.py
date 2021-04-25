@@ -1,5 +1,9 @@
+"""
+The main class
+"""
+
+import sys
 import traceback
-from utils import path_from_root
 from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
 
@@ -12,7 +16,6 @@ class App:
     """
     Initiates the app
     """
-    pass
 
 
   def main_loop(self):
@@ -35,16 +38,16 @@ class App:
       runner.run()
 
       sender.send_success(runner.engine.make_frames())
-      
+
     except EOFError as e:
-      logger.warn('EOF, exiting')
-      exit()
+      logger.debug('EOF, exiting')
+      sys.exit(0)
 
     except AlgorithmException as e:
-      logger.warn(traceback.format_exc())
+      logger.debug(traceback.format_exc())
       sender.send_mixed(frames=runner.engine.make_frames(), err=e)
 
-    except Exception as e:
+    except Exception as e: # pylint: disable=broad-except
       logger.exception(traceback.format_exc())
       sender.send_error(e)
 
@@ -70,5 +73,6 @@ class App:
       - e (Exception): the error which caused the app to die
     """
     logger.error('The app is dead')
+    logger.exception(e)
     logger.exception(traceback.format_exc())
-    exit(1)
+    sys.exit(1)

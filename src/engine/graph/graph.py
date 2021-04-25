@@ -144,7 +144,7 @@ class Graph(networkx.Graph, Visualizer):
     Creates a new instance of Graph. A new instance MUST be creating by calling
     engine.Graph(), which calls this constructor and forwards the arguments
     """
-    super(Graph, self).__init__(incoming_graph_data=incoming_graph_data, **attr)
+    super().__init__(incoming_graph_data=incoming_graph_data, **attr)
 
     self._stylizers = {
         'node_colors': None,

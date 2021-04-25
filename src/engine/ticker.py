@@ -36,7 +36,7 @@ class Ticker:
     Returns all ticks
     """
     return self.ticks
-  
+
 
   def __init__(self):
     """
@@ -70,7 +70,7 @@ class Tick:
       self.data['console_logs'] == value.data['console_logs'] and
       all([x[1] == y[1] for x, y in zip(self.data['components'], value.data['components'])])
     )
-  
+
 
   def __init__(self, tick_id:int, source:int, lineno:int, console_logs:str, components):
     """

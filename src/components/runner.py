@@ -2,12 +2,12 @@
 The runner component
 """
 
-import hunter
 import importlib
-from .logger import logger
-from .loader import Loader
+import hunter
 from engine import Engine
 from exceptions import RunnerException, AlgorithmException
+from .logger import logger
+from .loader import Loader
 
 
 class Runner:
@@ -32,7 +32,7 @@ class Runner:
     except Exception as e:
       logger.debug('Importing module {} -> error'.format(module_name))
       raise RunnerException(e)
-  
+
 
   def run(self):
     """
@@ -61,7 +61,7 @@ class Runner:
     }
 
     try:
-      exec('fun(engine, print)', {}, args)
+      exec('fun(engine, print)', {}, args) # pylint: disable=exec-used
       logger.debug('>>> success')
     except Exception as e:
       logger.debug('>>> error')
@@ -77,3 +77,4 @@ class Runner:
     """
     self.loader = loader
     self.engine = Engine(self.loader.unique_id)
+    self.module = None

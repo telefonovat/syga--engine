@@ -4,9 +4,9 @@ The tests entrypoint
 
 import unittest
 
-from tests.test_utils import TestUtils # pylint: disable=unused-import
-from tests.test_loader import TestLoader # pylint: disable=unused-import
-from tests.test_graph_node_colorizer import TestGraphNodeColorizer # pylint: disable=unused-import
+from tests import TestUtils # pylint: disable=unused-import,no-name-in-module
+from tests import TestLoader # pylint: disable=unused-import,no-name-in-module
+from tests import TestGraphNodeColorizer # pylint: disable=unused-import,no-name-in-module
 
 
 if __name__ == '__main__':

@@ -130,7 +130,11 @@ disable=print-statement,
         import-error,
         syntax-error,
         logging-format-interpolation,
-        raise-missing-from
+        raise-missing-from,
+        no-self-use,
+        too-many-arguments,
+        too-few-public-methods,
+        use-a-generator
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

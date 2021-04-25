@@ -4,7 +4,6 @@ The utility functions used across the app and tests
 
 import binascii
 import os
-import re
 from urllib.parse import urlsplit, urlunsplit
 
 
@@ -103,7 +102,7 @@ def add_indentation(code:str, indentation:int) -> str:
    - indentation (int): The number of spaces
 
   returns:
-   - transformed_code (str): The code after adding indentations 
+   - transformed_code (str): The code after adding indentations
   """
   prefix = ' ' * indentation
   return '\n'.join([ prefix + line for line in code.splitlines() ])
