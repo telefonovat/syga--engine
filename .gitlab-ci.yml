@@ -35,7 +35,7 @@ run-test.sh:
     - apt-get -yq update
     - add-apt-repository universe
     - apt-get -yq update
-    - apt-get -yq install python2.7 python2.7-dev python3.6 python3.6-dev python3.7 python3.7-dev
+    - apt-get -yq install python3.7 python3.7-dev python3-pip
     - pip3 install -r requirements.txt
     - git clone https://github.com/stedolan/jq.git
     - cd jq
