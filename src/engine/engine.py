@@ -57,7 +57,7 @@ class Engine:
 
     if self._logger is not None:
       self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
-    
+
     self.tick(self.TICK_SOURCE_LINE)
 
 

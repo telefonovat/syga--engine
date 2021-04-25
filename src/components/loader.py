@@ -42,7 +42,7 @@ class Loader:
     except LoaderException as e:
       logger.debug('Parsing cfg -> error')
       raise e
-      
+
     except json.JSONDecodeError:
       logger.debug('Parsing cfg -> error')
       raise LoaderException('Error parsing cfg')

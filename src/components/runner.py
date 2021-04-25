@@ -44,7 +44,7 @@ class Runner:
      - AlgorithmException: if an error is raised while running the algorithm
     """
     self.engine.init_logger(self.loader.unique_id)
-    
+
     module_name = self.loader.module_name
     fun_name = self.loader.unique_id
 
