@@ -25,10 +25,11 @@ pylint:
       codequality: codeclimate.json
     when: always
 
-unittest:
+run-test.sh:
   stage: Test
   image: python:3.7-slim
   before_script:
     - pip3 install -r requirements.txt
+    - apt-get install jq
   script:
-    - python3 src/test.py
+    - ./bin/run-tests.sh
