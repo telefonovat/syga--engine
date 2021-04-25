@@ -134,7 +134,8 @@ disable=print-statement,
         no-self-use,
         too-many-arguments,
         too-few-public-methods,
-        use-a-generator
+        use-a-generator,
+        no-name-in-module
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
