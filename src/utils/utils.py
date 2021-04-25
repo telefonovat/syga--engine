@@ -1,3 +1,7 @@
+"""
+The utility functions used across the app and tests
+"""
+
 import binascii
 import os
 import re
@@ -11,7 +15,7 @@ def resolve_url(url:str) -> str:
   corresponding directories
 
   Parameters:
-   - `url` (str): The URL to resolve
+   - url (str): The URL to resolve
 
   Returns:
    - resolved_url (str): The resolved URL
@@ -35,7 +39,7 @@ def path_from_root(*args):
   Returns the path from root the root directory
 
   parameters:
-   - `*args`: Parts of the path (this path will then start from the root dir)
+   - *args: Parts of the path (this path will then start from the root dir)
 
   returns:
    - absolute_path (str): Absolute path from the root project directory
@@ -50,7 +54,7 @@ def random_name(n_bytes=16) -> str:
   the generated name)
 
   parameters:
-   - `n_bytes` (int): The length of the random name in bytes. Defaults to 16
+   - n_bytes (int): The length of the random name in bytes. Defaults to 16
 
   returns:
    - random_name (str): A random name
@@ -63,10 +67,10 @@ def detect_indentation(code:str) -> int:
   A trivial function for detecting indentation of the specified code.
 
   raises:
-   - `IndentationError`: if the indentation is inconsistent
+   - IndentationError: if the indentation is inconsistent
 
   parameters:
-   - `code` (str): The code
+   - code (str): The code
 
   returns:
    - indentation (int): The size of the indentation used
@@ -95,8 +99,8 @@ def add_indentation(code:str, indentation:int) -> str:
   responsibility of this function to detect whether tabulation was used.
 
   parameters:
-   - `code` (str): The code
-   - `indentation` (int): The number of spaces
+   - code (str): The code
+   - indentation (int): The number of spaces
 
   returns:
    - transformed_code (str): The code after adding indentations 

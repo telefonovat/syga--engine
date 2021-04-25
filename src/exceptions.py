@@ -1,3 +1,7 @@
+"""
+All exceptions used by this app MUST be defined here
+"""
+
 class AppException(Exception):
   """
   The root which should be used as a base for all other exceptions used

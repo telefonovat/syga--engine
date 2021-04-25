@@ -1,3 +1,7 @@
+"""
+All utility functions
+"""
+
 from .utils import path_from_root
 from .utils import random_name
 from .utils import detect_indentation

@@ -14,6 +14,7 @@ class App:
     """
     pass
 
+
   def main_loop(self):
     """
     The main loop of the app. The app waits for an input on the stdint in JSON
@@ -50,6 +51,7 @@ class App:
     finally:
       logger.debug('{} main_loop END\n'.format('-' * 70))
 
+
   def run(self):
     """
     Runs the app after initialization. This is the method alternative for
@@ -58,10 +60,14 @@ class App:
     while True:
       self.main_loop()
 
+
   def die(self, e:Exception):
     """
     This method MUST be called whenever there occurres an error which the app
-    cannot recover from. In such case the app dies  
+    cannot recover from. In such case the app dies
+
+    parameters:
+      - e (Exception): the error which caused the app to die
     """
     logger.error('The app is dead')
     logger.exception(traceback.format_exc())
