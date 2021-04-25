@@ -1,3 +1,7 @@
+"""
+The runner component
+"""
+
 import hunter
 import importlib
 from .logger import logger
@@ -7,6 +11,12 @@ from exceptions import RunnerException, AlgorithmException
 
 
 class Runner:
+  """
+  Runner component receives the module which was prepared by the loader
+  component, imports it and prepares the code trackers (Hunter). A new instance
+  of engine is then created and passed to the algorithm as an argument of the
+  wrapper function
+  """
   def import_module(self):
     """
     Imports the module created by the loader component using importlib
@@ -23,6 +33,7 @@ class Runner:
       logger.debug('Importing module {} -> error'.format(module_name))
       raise RunnerException(e)
   
+
   def run(self):
     """
     Runs the user provided algorithm by running the module created by the
@@ -55,6 +66,7 @@ class Runner:
     except Exception as e:
       logger.debug('>>> error')
       raise AlgorithmException(e)
+
 
   def __init__(self, loader:Loader):
     """

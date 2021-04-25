@@ -101,49 +101,42 @@ class Graph(networkx.Graph, Visualizer):
     """
     todo: implement this
     """
-    pass
 
 
   def scale_nodes_by(self, *args, **kwargs):
     """
     todo: implement this
     """
-    pass
 
 
   def label_nodes_by(self, *args, **kwargs):
     """
     todo: implement this
     """
-    pass
 
 
   def color_edges_by(self, *args, **kwargs):
     """
     todo: implement this
     """
-    pass
 
 
   def shape_edges_by(self, *args, **kwargs):
     """
     todo: implement this
     """
-    pass
 
 
   def scale_edges_by(self, *args, **kwargs):
     """
     todo: implement this
     """
-    pass
 
 
   def label_edges_by(self, *args, **kwargs):
     """
     todo: implement this
     """
-    pass
 
 
   def __init__(self, incoming_graph_data=None, **attr):
