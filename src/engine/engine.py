@@ -18,8 +18,7 @@ class Engine:
     - Tick sampling
     - Computation of frames
 
-  A new instance of engine is created every time an algorithm is being
-  visualized.
+  A new instance of engine is created every time an algorithm is visualized.
 
   Engine defines a factory method for every visualizer which instantiates the
   visualizer and stores a reference to it in a property. The transformed state
@@ -34,7 +33,7 @@ class Engine:
   TICK_SOURCE_USER = 2
   
 
-  def print(self, *args, **kwargs): # pylint: disable=syntax-error
+  def print(self, *args, **kwargs):
     """
     Overloaded print method which is passed as an argument to the wrapper
     function of the visualized algorithm. Instead of printing to stdout,
@@ -136,6 +135,9 @@ class Engine:
     """
     Creates a new instance of Engine. A unique ID must be provided. This ID
     will be used to create a unique log file for debugging purposes
+
+    parameters:
+      - unique_id (str): The unique ID of this engine
     """
     self._console_log = StringIO()
     self._components = []
