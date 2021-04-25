@@ -24,3 +24,9 @@ pylint:
     reports:
       codequality: codeclimate.json
     when: always
+
+unittest:
+  stage: Test
+  image: python:3.7-slim
+  script:
+    - python3 src/test.py
