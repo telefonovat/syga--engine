@@ -2,7 +2,6 @@ STATE_UNKNOWN = 0
 STATE_OPENED  = 1
 STATE_CLOSED  = 2
 
-
 G = engine.Graph()
 
 G.add_edge('a', 'b', w=30)
