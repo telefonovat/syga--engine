@@ -54,7 +54,10 @@ class Engine:
       - src (object): the source line
     """
     self._lineno = src.lineno - 1
-    self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
+
+    if self._logger is not None:
+      self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
+    
     self.tick(self.TICK_SOURCE_LINE)
 
 
@@ -130,20 +133,26 @@ class Engine:
     return graph
 
 
-  def __init__(self, uid:str):
+  def init_logger(self, uid:str):
     """
-    Creates a new instance of Engine. A unique ID must be provided. This ID
+    Initiates the engine's logger. A unique ID must be provided. This ID
     will be used to create a unique log file for debugging purposes
 
     parameters:
       - uid (str): The unique ID of this engine
     """
-    self._console_log = StringIO()
-    self._components = []
-    self._lineno = 1
-
     self._logger = logging.getLogger(uid)
     self._logger.addHandler(logging.FileHandler(path_from_root('../logs/algs/{}.log'.format(uid))))
     self._logger.setLevel(logging.DEBUG)
 
+
+  def __init__(self):
+    """
+    Creates a new instance of Engine.
+    """
+    self._console_log = StringIO()
+    self._components = []
+    self._lineno = 1
+
+    self._logger = None
     self._ticker = Ticker()

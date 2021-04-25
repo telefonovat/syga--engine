@@ -19,17 +19,22 @@ class TestLoader(unittest.TestCase):
       ])
     })
 
+
   def _get_loader(self):
     return Loader(self._get_cfg())
   
+
   def test_unique_id(self):
     loader = self._get_loader()
+
+    loader.generate_name()
 
     self.assertRegex(
       loader.unique_id,
       '^_[0-9a-f]{32}$',
       'The unique ID should be 33 chars long and start with _'
     )
+
 
   def test_parse_cfg(self):
     for _ in range(20):
@@ -42,22 +47,12 @@ class TestLoader(unittest.TestCase):
     # This should NOT raise an exception
     self._get_loader().parse_cfg()
 
-  def test_validate_cfg(self):
-    for _ in range(20):
-      random_cfg = json.dumps(random_string_dict(random.randint(1, 5), random.randint(1, 5)))
-      loader = Loader(random_cfg)
-
-      # This should NOT raise an exception
-      loader.parse_cfg()
-
-      with self.assertRaises(LoaderException):
-        loader.validate_cfg()
 
   def test_prepare_code(self):
     loader = self._get_loader()
 
     loader.parse_cfg()
-    loader.validate_cfg()
+    loader.generate_name()
     loader.prepare_code()
 
     lines = loader.code.splitlines()
@@ -68,11 +63,12 @@ class TestLoader(unittest.TestCase):
       'The first line of the file should be a function definition'
     )
 
+
   def test_create_module(self):
     loader = self._get_loader()
 
     loader.parse_cfg()
-    loader.validate_cfg()
+    loader.generate_name()
     loader.prepare_code()
     loader.create_module()
 

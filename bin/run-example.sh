@@ -17,7 +17,7 @@ if [ ! -f "$target" ] ; then
 fi
 
 code="$( cat "$target" )"
-input_json=$( jq -n --arg code "$code" '{code: $code}' | jq -c . )
+input_json=$( jq -n --arg code "$code" --arg alg "$alg" '{code: $code, secret: "super-secret-password", uid: $alg}' | jq -c . )
 
 echo "$input_json" | python3 ./src/main.py > "./out/$alg.json"
 

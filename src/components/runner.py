@@ -43,6 +43,8 @@ class Runner:
      - RunnerException: if an error occurres while importing the module
      - AlgorithmException: if an error is raised while running the algorithm
     """
+    self.engine.init_logger(self.loader.unique_id)
+    
     module_name = self.loader.module_name
     fun_name = self.loader.unique_id
 
@@ -76,5 +78,5 @@ class Runner:
      - loader (Loader): the loader which already loaded the config
     """
     self.loader = loader
-    self.engine = Engine(self.loader.unique_id)
+    self.engine = Engine()
     self.module = None
