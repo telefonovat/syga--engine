@@ -49,6 +49,6 @@ Algorithm tests:
     - ./bin/run-tests.sh
   artifacts:
     paths:
-      - public
+      - out
       - logs
     when: always
