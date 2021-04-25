@@ -29,6 +29,13 @@ run-test.sh:
   stage: Test
   image: python:3.7-slim
   before_script:
+    - sudo apt-get install -y gcc make autotools
+    - git clone https://github.com/stedolan/jq.git
+    - cd jq
+    - autoreconf -i
+    - ./configure --disable-maintainer-mode
+    - make
+    - sudo make install
     - pip3 install -r requirements.txt
     - apt-get install jq
   script:
