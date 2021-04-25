@@ -25,7 +25,15 @@ pylint:
       codequality: codeclimate.json
     when: always
 
-run-test.sh:
+Unit tests:
+  stage: Test
+  image: python:3.7-slim
+  before_script:
+    - pip install -r requirements.txt
+  script:
+    - python3 src/test.py
+
+Algorithm tests:
   stage: Test
   image: ubuntu:latest
   before_script:

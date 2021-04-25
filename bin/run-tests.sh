@@ -2,17 +2,11 @@
 
 cd "$( dirname "$( realpath "$0" )" )/.."
 
-python3 src/test.py || exit 1
-
-echo ''
-echo 'Examples'
-echo ''
-
 for example in $( find ./examples -name '*.py' ) ; do
   example=${example#.\/examples\/}
   example=${example%\.py}
 
-  printf " - $example\t"
+  printf " - $example "
 
   res="$( ./bin/run-example.sh "$example" | jq -r .res )"
 
