@@ -3,6 +3,5 @@
 cd "$( dirname "$( realpath "$0" )" )/.."
 
 pylint \
-  --disable=F0401,E0001 \
-  --indent-string='  ' \
-  'src'
+  --output-format=text \
+  $(find -not -path "./src/tests/*" -not -path "./.history/*" -type f -name "*.py" ! -path "**/.venv/**")

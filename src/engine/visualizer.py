@@ -23,7 +23,7 @@ class Visualizer(object):
     raise NotImplementedError()
 
 
-  def compute_style(self, transformed_state):
+  def compute_style(self, state):
     """
     Computes the style from the transformed state
     """
