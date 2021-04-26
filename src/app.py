@@ -64,7 +64,7 @@ class App:
       self.main_loop()
 
 
-  def die(self, e:Exception):
+  def die(self, e):
     """
     This method MUST be called whenever there occurres an error which the app
     cannot recover from. In such case the app dies

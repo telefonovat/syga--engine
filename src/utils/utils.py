@@ -7,11 +7,12 @@ import os
 from urllib.parse import urlsplit, urlunsplit
 
 
-# https://stackoverflow.com/a/40537179
-def resolve_url(url:str) -> str:
+def resolve_url(url) :
   """
   Resolve the specified URL - replacing all ./ ../ URL parts with the
-  corresponding directories
+  corresponding directories-
+
+  Taken from ttps://stackoverflow.com/a/40537179
 
   Parameters:
    - url (str): The URL to resolve
@@ -46,7 +47,7 @@ def path_from_root(*args):
   return os.path.join(os.path.abspath(os.path.dirname(__file__)), '../' ,*args)
 
 
-def random_name(n_bytes=16) -> str:
+def random_name(n_bytes=16) :
   """
   Generates and returns a random name consisting of symbols 0-9a-f of the
   specified length. One byte is two chars (ie. 16 bytes = 32 symbols in
@@ -61,7 +62,7 @@ def random_name(n_bytes=16) -> str:
   return binascii.b2a_hex(os.urandom(n_bytes)).decode('utf-8').lower()
 
 
-def detect_indentation(code:str) -> int:
+def detect_indentation(code) :
   """
   A trivial function for detecting indentation of the specified code.
 
@@ -91,7 +92,7 @@ def detect_indentation(code:str) -> int:
   return min_indentation
 
 
-def add_indentation(code:str, indentation:int) -> str:
+def add_indentation(code, indentation) :
   """
   Adds the specified amount of indentation to the beginning of each line.
   The indentation MUST be done using space (not tabulator). It is not the
@@ -106,3 +107,28 @@ def add_indentation(code:str, indentation:int) -> str:
   """
   prefix = ' ' * indentation
   return '\n'.join([ prefix + line for line in code.splitlines() ])
+
+
+def get_sample_code(indentation):
+  """
+  Returns a sample code for testing.
+
+  parameters:
+    - indentation (int): The size of the indentation
+
+  returns:
+    - code (string): Sample code with the specified indentation size
+  """
+  lines = [
+    'print("lorem")',
+    'print("ipsum")',
+    'for i in range(10):',
+    '{}x = i ** 2',
+    '{}for j in range(x):',
+    '{}{}print(j)',
+    'print("all done")'
+  ]
+
+  lines = [ line.replace('{}', ' ' * indentation) for line in lines ]
+
+  return '\n'.join(lines)

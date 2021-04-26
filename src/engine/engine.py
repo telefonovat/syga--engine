@@ -61,7 +61,7 @@ class Engine:
     self.tick(self.TICK_SOURCE_LINE)
 
 
-  def tick(self, source:int=None):
+  def tick(self, source=None):
     """
     The tick method computes the transformed state for every visualizer
     (component), creates a new tick and saves it using the Ticker
@@ -133,7 +133,7 @@ class Engine:
     return graph
 
 
-  def init_logger(self, uid:str):
+  def init_logger(self, uid):
     """
     Initiates the engine's logger. A unique ID must be provided. This ID
     will be used to create a unique log file for debugging purposes

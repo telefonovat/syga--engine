@@ -39,6 +39,8 @@ class Loader:
 
       logger.debug('Parsing cfg -> success')
 
+      return self
+
     except LoaderException as e:
       logger.debug('Parsing cfg -> error')
       raise e
@@ -63,6 +65,8 @@ class Loader:
     self.module_name = '{}.{}'.format('__algs', self.unique_id)
     self.module_path = '{}.py'.format(path_from_root('__algs', self.unique_id))
 
+    return self
+
 
   def prepare_code(self):
     """
@@ -83,6 +87,9 @@ class Loader:
         self.unique_id,
         add_indentation(code, indentation)
       )
+
+      return self
+
     except IndentationError:
       raise LoaderException('Indentation error')
 
@@ -99,6 +106,9 @@ class Loader:
         f.write(self.code)
 
       logger.debug('Creating module {} -> success'.format(self.module_name))
+
+      return self
+
     except OSError:
       logger.debug('Creating module {} -> error'.format(self.module_name))
       raise LoaderException()
@@ -114,8 +124,10 @@ class Loader:
     self.prepare_code()
     self.create_module()
 
+    return self
 
-  def __init__(self, cfg:str):
+
+  def __init__(self, cfg):
     """
     Creates a new instance of Loader
 

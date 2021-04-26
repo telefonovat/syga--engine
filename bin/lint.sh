@@ -4,4 +4,4 @@ cd "$( dirname "$( realpath "$0" )" )/../src"
 
 python3 -m pylint \
   --output-format=text \
-  $(find -not -path "./tests/*" -not -path "./__algs/*" -type f -name "*.py" ! -path "**/.venv/**")
+  $(find -not -path "./__algs/*" -type f -name "*.py" ! -path "**/.venv/**")

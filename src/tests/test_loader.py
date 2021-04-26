@@ -1,83 +1,208 @@
+"""
+Tests for src/components/loader.py
+"""
+
 import unittest
-from components import Loader
 import json
-from utils import random_name, resolve_url, path_from_root
 import random
 import os
-from exceptions import LoaderException
 from random_dict import random_string_dict
+from components import Loader
+from utils import random_name, resolve_url, path_from_root, detect_indentation, get_sample_code
+from exceptions import LoaderException
 
 
 class TestLoader(unittest.TestCase):
-  def _get_cfg(self):
-    return json.dumps({
-      'code': '\n'.join([
-        'print("lorem")',
-        'print("ipsum")',
-        'for i in range(10):',
-        '  print(i ** 2)'
-      ])
-    })
+  """
+  Tests for src/components/loader.py
+
+  Every tests is performed 20 times because some Loader methods and some parts
+  of the tests rely on chance
+  """
+  def _get_cfg(self, uid):
+    """
+    Returns a sample valid config
+
+    parameters:
+      - uid (str): the unique ID of the module
+    """
+    cfg = {
+      'code': get_sample_code(random.randint(1, 5) * 2)
+    }
+
+    if uid is not None:
+      cfg['uid'] = uid
+
+    return json.dumps(cfg)
 
 
-  def _get_loader(self):
-    return Loader(self._get_cfg())
-  
+  def _get_admin_cfg(self, uid=None):
+    """
+    Returns a sample valid config with admin password
+    """
+    cfg = {
+      'code': get_sample_code(random.randint(1, 5) * 2),
+      'secret': 'super-secret-password'
+    }
 
-  def test_unique_id(self):
-    loader = self._get_loader()
+    if uid is not None:
+      cfg['uid'] = uid
 
-    loader.generate_name()
-
-    self.assertRegex(
-      loader.unique_id,
-      '^_[0-9a-f]{32}$',
-      'The unique ID should be 33 chars long and start with _'
-    )
+    return json.dumps(cfg)
 
 
-  def test_parse_cfg(self):
+  def _get_loader(self, uid=None):
+    """
+    Returns a loader with valid config. A unique ID can be specified but will
+    be ignored by the Loader, because the secret was not specified
+
+    parameters:
+      - uid (str): the unique ID of the module
+    """
+    return Loader(self._get_cfg(uid))
+
+
+  def _get_admin_loader(self, uid=None):
+    """
+    Returns a loader with valid config and admin access. A unique ID can be
+    specified. The unique ID will be the name of the module which runs the
+    visualized algorithm
+
+    parameters:
+      - uid (str): the unique ID of the module
+    """
+    return Loader(self._get_admin_cfg(uid))
+
+
+  def test_unique_id_random(self):
+    """
+    Tests whether the format of the random ID is correct when generated
+    randomly.
+
+    conditions:
+      - prefixed with _
+      - only symbols [_0-9a-f]
+      - exactly 33 characters
+      - uid can be specified but will be ignored with no admin access
+    """
     for _ in range(20):
-      not_json = random_name(random.randint(100, 200))
-      loader = Loader(not_json)
-      
+      loader = self._get_loader(random.randint(20, 30))
+
+      loader.generate_name()
+
+      self.assertRegex(
+        loader.unique_id,
+        '^_[0-9a-f]{32}$',
+        'The unique ID should be 33 chars long and start with _'
+      )
+
+
+  def test_unique_id_specified(self):
+    """
+    Tests whether unique ID can be specified with admin access.
+
+    conditions:
+      - the specified unique is used by the module
+    """
+    for _ in range(20):
+      name = '_{}'.format(random_name(random.randint(10, 20)))
+      loader = self._get_admin_loader(name)
+
+      loader.parse_cfg()
+      loader.generate_name()
+
+      self.assertEqual(loader.unique_id, name, "Unique ID should equal the specified one")
+
+
+  def test_parse_cfg_invalid(self):
+    """
+    Tests whether an invalid input will raise a LoaderException
+
+    conditions:
+      - invalid input raises LoaderException
+    """
+    for _ in range(20):
+      not_json = lambda: random_name(random.randint(100, 200))
+      random_json = lambda: json.dumps(random_string_dict(1, 5))
+      loader = Loader(not_json() if random.random() > 0.5 else random_json())
+
       with self.assertRaises(LoaderException):
         loader.parse_cfg()
 
-    # This should NOT raise an exception
-    self._get_loader().parse_cfg()
+
+  def test_parse_cfg_valid(self):
+    """
+    Tests a valid
+
+    conditions:
+      - valid input does not raise LoaderException
+      - unique id is not checked before calling generate_name
+    """
+    for _ in range(20):
+      self._get_loader(random_name(random.randint(10, 20))).parse_cfg()
+      self._get_admin_loader(random_name(random.randint(10, 20))).parse_cfg()
 
 
   def test_prepare_code(self):
-    loader = self._get_loader()
+    """
+    Tests whether the first line of the code is a wrapper functions definition
 
-    loader.parse_cfg()
-    loader.generate_name()
-    loader.prepare_code()
+    conditions:
+      - first line must be a function definition with correct parameters
+      - indentation cannot be modified
+    """
+    for _ in range(20):
+      loader = self._get_loader()
 
-    lines = loader.code.splitlines()
+      loader.parse_cfg()
 
-    self.assertEqual(
-      lines[0],
-      'def {}(engine, print):'.format(loader.unique_id),
-      'The first line of the file should be a function definition'
-    )
+      indentation_before = detect_indentation(loader.cfg['code'])
+
+      loader.generate_name()
+      loader.prepare_code()
+
+      lines = loader.code.splitlines()
+      indentation_after = detect_indentation(loader.code)
+
+      self.assertEqual(
+        lines[0],
+        'def {}(engine, print):'.format(loader.unique_id),
+        'The first line of the file should be a function definition'
+      )
+
+      self.assertEqual(
+        indentation_before,
+        indentation_after,
+        'Indentation cannot be modified'
+      )
 
 
   def test_create_module(self):
-    loader = self._get_loader()
+    """
+    Tests whether the crete_module method creates the module
 
-    loader.parse_cfg()
-    loader.generate_name()
-    loader.prepare_code()
-    loader.create_module()
+    conditions:
+      - module is in project root directory
+      - module file exists
+      - contents of the module file are correct
+    """
+    for _ in range(20):
+      loader = self._get_loader()
 
-    self.assertTrue(
-      resolve_url(path_from_root()) in resolve_url(loader.module_path),
-      'Module should be somewhere inside root'
-    )
+      loader.parse_cfg()
+      loader.generate_name()
+      loader.prepare_code()
+      loader.create_module()
 
-    self.assertTrue(
-      os.path.isfile(loader.module_path),
-      'Python file should be created'
-    )
+      self.assertTrue(
+        resolve_url(path_from_root()) in resolve_url(loader.module_path),
+        'Module should be somewhere inside root'
+      )
+
+      self.assertTrue(
+        os.path.isfile(loader.module_path),
+        'Python file should be created'
+      )
+
+      with open(loader.module_path) as f:
+        self.assertEqual(f.read(), loader.code, "File contents should be correct")

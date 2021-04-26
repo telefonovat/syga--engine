@@ -72,7 +72,7 @@ class Tick:
     )
 
 
-  def __init__(self, tick_id:int, source:int, lineno:int, console_logs:str, components):
+  def __init__(self, tick_id, source, lineno, console_logs, components):
     """
     Creates a new instance of Tick
 

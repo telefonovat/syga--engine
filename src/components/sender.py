@@ -32,7 +32,7 @@ class Sender:
     return obj
 
 
-  def _send_response(self, res:bool, frames, err:Exception):
+  def _send_response(self, res:bool, frames, err):
     """
     Sends the response to stdout
 
@@ -52,7 +52,7 @@ class Sender:
     }))
 
 
-  def send_error(self, err:Exception):
+  def send_error(self, err):
     """
     Sends an error response
 
@@ -62,7 +62,7 @@ class Sender:
     self._send_response('error', frames=None, err=err)
 
 
-  def send_mixed(self, frames, err:Exception):
+  def send_mixed(self, frames, err):
     """
     Sends a mixed response
 

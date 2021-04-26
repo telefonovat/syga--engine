@@ -200,7 +200,7 @@ class GraphNodeColorizer:
     """
     uniq = self._unique_values
 
-    if uniq in ({True, False}, {True}, {False}, {}):
+    if uniq in ({True, False}, {True}, {False}, set()):
       self._binary_interpretation()
 
     elif {type(x) for x in uniq} == {int, float}:
@@ -242,7 +242,7 @@ class GraphNodeColorizer:
         elif self._colors > 1:
           self._group_interpretation(self._colors)
 
-      elif isinstance(self._colors, str):
+      elif self.is_color(self._colors):
         self._binary_interpretation(self._colors)
 
       elif isinstance(self._colors, (list, tuple)):
@@ -310,6 +310,41 @@ class GraphNodeColorizer:
     return {key: self.compute_single(value) for key, value in transformed_state.items()}
 
 
+  def has_interpretation(self):
+    """
+    Returns `True` if an interpretation has been specified
+    """
+    return self._interpretation is not None
+
+
+  def has_binary_interpretation(self):
+    """
+    Returns `True` if binary interpretation is used
+    """
+    return self._interpretation == self.BINARY_INTERPRETATION
+
+
+  def has_group_interpretation(self):
+    """
+    Returns `True` if group interpretation if used
+    """
+    return self._interpretation == self.GROUP_INTERPRETATION
+
+
+  def has_identity_interpretation(self):
+    """
+    Returns `true` if identity interpretation is used
+    """
+    return self._interpretation == self.IDENTITY_INTERPRETATION
+
+
+  def has_spectral_interpretation(self):
+    """
+    Returns `true` if spectral interpretation is used
+    """
+    return self._interpretation == self.SPECTRAL_INTERPRETATION
+
+
   def _validate_colors(self):
     """
     Validates the value of _colors. The validity criteria is based on the type
@@ -331,16 +366,13 @@ class GraphNodeColorizer:
     if isinstance(self._colors, int):
       return self._colors > 0
 
-    if isinstance(self._colors, str):
-      return GraphNodeColorizer.is_color(self._colors)
-
     if isinstance(self._colors, (list, tuple)):
       return self._colors and GraphNodeColorizer.are_colors(self._colors)
 
     if isinstance(self._colors, dict):
       return self._colors and GraphNodeColorizer.are_colors(self._colors.values())
 
-    return False
+    return self.is_color(self._colors)
 
 
   def _validate_palette(self):

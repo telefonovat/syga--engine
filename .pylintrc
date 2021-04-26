@@ -135,7 +135,9 @@ disable=print-statement,
         too-many-arguments,
         too-few-public-methods,
         use-a-generator,
-        no-name-in-module
+        no-name-in-module,
+        import-self,
+        too-many-public-methods
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -250,18 +252,21 @@ function-naming-style=snake_case
 #function-rgx=
 
 # Good variable names which should always be accepted, separated by a comma
-good-names=i,
+good-names=e,
+           i,
            j,
            k,
            f,
-           e,
-           ex,
-           Run,
-           _,
-           G,
            v,
            u,
-           w
+           w,
+           x,
+           y,
+           z,
+           G,
+           ex,
+           Run,
+           _
 
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no
