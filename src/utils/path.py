@@ -1,5 +1,5 @@
 """
-The utility functions used across the app and tests
+Utility functions dealing with paths and URLs
 """
 
 import os

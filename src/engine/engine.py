@@ -4,7 +4,7 @@ The engine module
 
 from io import StringIO
 import logging
-from utils import path_from_root
+from utils.path import path_from_root
 from engine.graph import Graph
 from .ticker import Ticker
 from .color import Color
