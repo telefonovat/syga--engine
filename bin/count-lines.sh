@@ -13,3 +13,5 @@ done
 
 printf "\n"
 printf "total\t$total lines\n"
+
+exit 0
