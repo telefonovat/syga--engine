@@ -6,12 +6,12 @@ import os
 from urllib.parse import urlsplit, urlunsplit
 
 
-def resolve_url(url) :
+def resolve_url(url):
   """
   Resolve the specified URL - replacing all ./ ../ URL parts with the
   corresponding directories-
 
-  Taken from ttps://stackoverflow.com/a/40537179
+  Taken from https://stackoverflow.com/a/40537179
 
   Parameters:
    - url (str): The URL to resolve
@@ -46,7 +46,7 @@ def path_from_root(*args):
   return os.path.join(os.path.abspath(os.path.dirname(__file__)), '../' ,*args)
 
 
-def detect_indentation(code) :
+def detect_indentation(code):
   """
   A trivial function for detecting indentation of the specified code.
 
@@ -76,7 +76,7 @@ def detect_indentation(code) :
   return min_indentation
 
 
-def add_indentation(code, indentation) :
+def add_indentation(code, indentation):
   """
   Adds the specified amount of indentation to the beginning of each line.
   The indentation MUST be done using space (not tabulator). It is not the

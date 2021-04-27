@@ -8,7 +8,7 @@ import random
 import itertools
 
 
-def random_name(n_bytes=16) :
+def random_name(n_bytes=16):
   """
   Generates and returns a random name consisting of symbols 0-9a-f of the
   specified length. One byte is two chars (ie. 16 bytes = 32 symbols in
