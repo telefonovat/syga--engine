@@ -14,6 +14,7 @@ class TestUtils(unittest.TestCase):
   """
   Tests for src/utils/utils.py
   """
+
   def test_random_name(self):
     """
     Test whether the random_name function generates a random name in the

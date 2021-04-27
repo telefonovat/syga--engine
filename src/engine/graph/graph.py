@@ -28,6 +28,7 @@ class Graph(networkx.Graph, Visualizer):
   This method simply passes all arguments to the builder of the designated
   Stylizer (todo: maybe rename this)
   """
+
   def get_transformed_state(self):
     """
     Returns the transformed state of the Graph which is composed of

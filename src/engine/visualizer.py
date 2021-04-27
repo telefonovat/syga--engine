@@ -8,6 +8,7 @@ class Visualizer:
   as an abstract base for all visualizers. Is simply defines the interface
   which must be implemented by every visualizer.
   """
+
   def get_transformed_state(self):
     """
     Returns the transformed state of the visualizer

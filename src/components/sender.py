@@ -12,6 +12,7 @@ class Sender:
   Sender is used to send the result of the algorithm run. Provided frames are
   parsed before to make sure they can be JSON encoded
   """
+
   def _parse_colors(self, obj):
     """
     Recursively turns all instances of Color into RGB tuples

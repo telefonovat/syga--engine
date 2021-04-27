@@ -13,12 +13,15 @@ class GraphNodeColorizer:
   is described in the following document:
     - todo: add link
   """
+
   BINARY_INTERPRETATION = 0
   GROUP_INTERPRETATION = 1
   IDENTITY_INTERPRETATION = 2
   SPECTRAL_INTERPRETATION = 3
+
   DEFAULT_FALSE_COLOR = None
   DEFAULT_TRUE_COLOR = Color('blue')
+
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
 

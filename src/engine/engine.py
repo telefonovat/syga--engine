@@ -27,6 +27,7 @@ class Engine:
   style computation method of the visualizer. After the style is computed,
   ticks can be merged into frames
   """
+
   TICK_SOURCE_LINE = 0
   TICK_SOURCE_VARS = 1
   TICK_SOURCE_USER = 2

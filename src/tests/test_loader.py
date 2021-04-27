@@ -21,6 +21,7 @@ class TestLoader(unittest.TestCase):
   Every tests is performed 20 times because some Loader methods and some parts
   of the tests rely on chance
   """
+
   def _get_cfg(self, uid):
     """
     Returns a sample valid config

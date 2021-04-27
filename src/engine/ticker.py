@@ -6,6 +6,7 @@ class Ticker:
   """
   Used to store the ticks an keep track of their IDs
   """
+
   def tick(self, source, lineno, console_logs, components):
     """
     Creates and saves a new tick
@@ -51,6 +52,7 @@ class Tick:
   The tick class is just a wrapper for a dict, which stores the tick properties
   which implements the __eq__ method.
   """
+
   def __eq__(self, value):
     """
     Used to compare two ticks. Two ticks are considered equal if the following
