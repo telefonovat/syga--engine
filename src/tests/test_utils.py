@@ -5,7 +5,8 @@ Tests for src/utils/utils.py
 import unittest
 import random
 import os
-from utils import path_from_root, detect_indentation, add_indentation, resolve_url, get_sample_code
+from utils import path_from_root, resolve_url
+from utils.code import detect_indentation, add_indentation, get_sample_code
 from utils.random import random_name
 
 
