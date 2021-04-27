@@ -7,6 +7,7 @@ import logging
 from utils import path_from_root
 from engine.graph import Graph
 from .ticker import Ticker
+from .color import Color
 
 
 class Engine:
@@ -29,6 +30,9 @@ class Engine:
   TICK_SOURCE_LINE = 0
   TICK_SOURCE_VARS = 1
   TICK_SOURCE_USER = 2
+
+
+  Color = Color
 
 
   def print(self, *args, **kwargs):

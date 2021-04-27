@@ -29,6 +29,7 @@ class Runner:
     try:
       self.module = importlib.import_module(module_name)
       logger.debug('Importing module {} -> success'.format(module_name))
+
     except Exception as e:
       logger.debug('Importing module {} -> error'.format(module_name))
       raise RunnerException(e)
@@ -65,6 +66,7 @@ class Runner:
     try:
       exec('fun(engine, print)', {}, args) # pylint: disable=exec-used
       logger.debug('>>> success')
+
     except Exception as e:
       logger.debug('>>> error')
       raise AlgorithmException(e)

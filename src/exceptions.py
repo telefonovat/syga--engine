@@ -28,3 +28,8 @@ class AlgorithmException(AppException):
   A general algorithm exception. Whenever something goes wrong with the user
   provided algorithm, this exception should be raised.
   """
+
+class ColorException(AlgorithmException):
+  """
+  An exception which should be raised when there is a color problem
+  """
