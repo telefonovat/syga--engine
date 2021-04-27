@@ -190,6 +190,7 @@ class GraphNodeColorizer:
 
     self._range = (lower, upper)
 
+
   def _guess_interpretation(self):
     """
     Used to guess the correct interpretation if no interpretation parameters
@@ -211,6 +212,7 @@ class GraphNodeColorizer:
 
     else:
       self._group_interpretation(len(self._unique_values))
+
 
   def interpret(self):
     """
