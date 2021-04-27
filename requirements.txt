@@ -3,4 +3,5 @@ hunter
 watchpoints
 networkx
 colour
+webcolors
 seaborn
