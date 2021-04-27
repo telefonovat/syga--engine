@@ -9,7 +9,7 @@ from colour import Color
 import seaborn as sns
 from engine.graph import Graph
 from engine.graph.node_colorizer import GraphNodeColorizer
-from utils import random_name
+from utils.random import random_name
 
 
 class TestGraphNodeColorizer(unittest.TestCase):

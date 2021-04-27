@@ -3,7 +3,8 @@ Loader component
 """
 
 import json
-from utils import path_from_root, random_name, detect_indentation, add_indentation
+from utils import path_from_root, detect_indentation, add_indentation
+from utils.random import random_name
 from exceptions import LoaderException
 from .logger import logger
 

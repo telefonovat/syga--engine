@@ -8,7 +8,8 @@ import random
 import os
 from random_dict import random_string_dict
 from components import Loader
-from utils import random_name, resolve_url, path_from_root, detect_indentation, get_sample_code
+from utils import resolve_url, path_from_root, detect_indentation, get_sample_code
+from utils.random import random_name
 from exceptions import LoaderException
 
 

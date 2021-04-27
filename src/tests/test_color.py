@@ -4,8 +4,8 @@ Tests for src/engine/color.py
 
 import unittest
 from random import random, randrange, randint, choice, shuffle
-from engine.color import Color, COLOR_NAME_TO_RGBA
-from utils import random_name, random_chunk, random_whitespace_pad
+from engine.color import Color, COLOR_NAMES
+from utils.random import random_name, random_chunk, random_whitespace_pad
 
 
 class TestColor(unittest.TestCase):
@@ -18,13 +18,13 @@ class TestColor(unittest.TestCase):
     Test is_keyword
 
     conditions:
-      - any key from COLOR_NAME_TO_RGBA is valid
+      - any key from COLOR_NAMES is valid
       - anything else is invalid
     """
-    random_valid = lambda: choice(list(COLOR_NAME_TO_RGBA.keys()))
+    random_valid = lambda: choice(COLOR_NAMES)
     random_invalid = lambda: random_name(5)
 
-    for _ in range(100):
+    for _ in range(500):
       is_valid = random() > 0.5
       keyword = random_valid() if is_valid else random_invalid()
 

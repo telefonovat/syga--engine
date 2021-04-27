@@ -7,7 +7,6 @@
 - [x] <s>Upraviť všetky *.py súbory, aby mali 10/10 v Pylint</s>
 - [x] <s>Setup Gitlab CI s Pylint a testami</s>
 - [ ] Rozlíšiť private a public properties a methods pomocou prefixu _
-- [ ] Používať template string, tj. `f''`
 - [ ] Rozdeliť utils module
 - [ ] Jedna medzera po class docstring-u
 
