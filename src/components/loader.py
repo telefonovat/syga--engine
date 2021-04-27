@@ -28,14 +28,14 @@ class Loader:
      - LoaderException: if the JSON cannot be parsed
     """
     try:
-      self.cfg = json.loads(self.raw)
+      self._cfg = json.loads(self._raw)
 
-      if 'code' not in self.cfg:
+      if 'code' not in self._cfg:
         raise LoaderException('`code` property not in cfg')
 
-      if 'secret' in self.cfg:
-        if self.cfg['secret'] == 'super-secret-password': # todo: use .env
-          self.admin_access = True
+      if 'secret' in self._cfg:
+        if self._cfg['secret'] == 'super-secret-password': # todo: use .env
+          self._admin_access = True
         else:
           raise LoaderException('Invalid value of `secret` property')
 
@@ -59,8 +59,8 @@ class Loader:
     Otherwise a random 32 bytes [0-9a-f] will be generated and prefixed with
     an underscore (_) and used as the unique name.
     """
-    if self.admin_access and 'uid' in self.cfg:
-      self.unique_id = self.cfg['uid']
+    if self._admin_access and 'uid' in self._cfg:
+      self.unique_id = self._cfg['uid']
     else:
       self.unique_id = '_{}'.format(random_name())
 
@@ -82,10 +82,10 @@ class Loader:
      - LoaderException: if the indentation of the code is inconsistent
     """
     try:
-      code = self.cfg['code']
+      code = self._cfg['code']
       indentation = detect_indentation(code)
 
-      self.code = 'def {}(engine, print):\n{}'.format(
+      self._code = 'def {}(engine, print):\n{}'.format(
         self.unique_id,
         add_indentation(code, indentation)
       )
@@ -105,7 +105,7 @@ class Loader:
     """
     try:
       with open(self.module_path, 'w') as f:
-        f.write(self.code)
+        f.write(self._code)
 
       logger.debug('Creating module {} -> success'.format(self.module_name))
 
@@ -136,12 +136,13 @@ class Loader:
     parameters:
      - cfg (str): the JSON config input
     """
-    self.raw = cfg
+    self._raw = cfg
+
     self.unique_id = None
     self.module_name = None
     self.module_path = None
 
-    self.cfg = None
-    self.code = None
+    self._cfg = None
+    self._code = None
 
-    self.admin_access = False
+    self._admin_access = False

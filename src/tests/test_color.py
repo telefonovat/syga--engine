@@ -179,7 +179,7 @@ class TestColor(unittest.TestCase):
 
     # Mixing floats and integers
     for _ in range(500):
-      color_rgba = [random(), randint(0, 255), randint(0, 255)]
+      color_rgba = [random(), randint(1, 255), randint(1, 255)]
       shuffle(color_rgba)
       self.assertFalse(Color.is_rgba(color_rgba), f'{color_rgba} is invalid')
 

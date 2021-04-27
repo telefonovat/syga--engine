@@ -159,13 +159,14 @@ class TestLoader(unittest.TestCase):
 
       loader.parse_cfg()
 
-      indentation_before = detect_indentation(loader.cfg['code'])
+      # pylint: disable=protected-access
+      indentation_before = detect_indentation(loader._cfg['code'])
 
       loader.generate_name()
       loader.prepare_code()
 
-      lines = loader.code.splitlines()
-      indentation_after = detect_indentation(loader.code)
+      lines = loader._code.splitlines()  # pylint: disable=protected-access
+      indentation_after = detect_indentation(loader._code) # pylint: disable=protected-access
 
       self.assertEqual(
         lines[0],
@@ -208,4 +209,5 @@ class TestLoader(unittest.TestCase):
       )
 
       with open(loader.module_path) as f:
-        self.assertEqual(f.read(), loader.code, "File contents should be correct")
+        code = loader._code # pylint: disable=protected-access
+        self.assertEqual(f.read(), code, "File contents should be correct")
