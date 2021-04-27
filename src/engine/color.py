@@ -95,6 +95,14 @@ class Color:
 
 
   @staticmethod
+  def is_color(color):
+    """
+    Returns `true` if the specified color is in any recognized format
+    """
+    return Color.is_keyword(color) or Color.is_hex(color) or Color.is_rgba(color)
+
+
+  @staticmethod
   def from_keyword(color):
     """
     Returns the normalized rgba tuple saved under the specified keyword
