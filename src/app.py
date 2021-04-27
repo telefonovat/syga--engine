@@ -37,7 +37,7 @@ class App:
       loader.load()
       runner.run()
 
-      sender.send_success(runner.engine.make_frames())
+      sender.send_success(runner.make_frames())
 
     except EOFError as e:
       logger.debug('EOF, exiting')
@@ -45,7 +45,7 @@ class App:
 
     except AlgorithmException as e:
       logger.debug(traceback.format_exc())
-      sender.send_mixed(frames=runner.engine.make_frames(), err=e)
+      sender.send_mixed(frames=runner.make_frames(), err=e)
 
     except Exception as e: # pylint: disable=broad-except
       logger.exception(traceback.format_exc())

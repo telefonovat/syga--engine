@@ -25,10 +25,10 @@ class Runner:
     raises:
      - RunnerException: if an error occurres while importing the module
     """
-    module_name = self.loader.module_name
+    module_name = self._loader.module_name
 
     try:
-      self.module = importlib.import_module(module_name)
+      self._module = importlib.import_module(module_name)
       logger.debug('Importing module {} -> success'.format(module_name))
 
     except Exception as e:
@@ -45,23 +45,23 @@ class Runner:
      - RunnerException: if an error occurres while importing the module
      - AlgorithmException: if an error is raised while running the algorithm
     """
-    self.engine.init_logger(self.loader.unique_id)
+    self._engine.init_logger(self._loader.unique_id)
 
-    module_name = self.loader.module_name
-    fun_name = self.loader.unique_id
+    module_name = self._loader.module_name
+    fun_name = self._loader.unique_id
 
     self.import_module()
 
-    hunter.trace(module=module_name, kind='line', action=self.engine.line_callback)
+    hunter.trace(module=module_name, kind='line', action=self._engine.line_callback)
 
-    fun = getattr(self.module, fun_name)
+    fun = getattr(self._module, fun_name)
 
     logger.debug('Running {} <<<'.format(module_name))
 
     args = {
       'fun': fun,
-      'engine': self.engine,
-      'print': self.engine.print
+      'engine': self._engine,
+      'print': self._engine.print
     }
 
     try:
@@ -73,6 +73,13 @@ class Runner:
       raise AlgorithmException(e)
 
 
+  def make_frames(self):
+    """
+    Engine computes the visualization frames. These frames are then returned
+    """
+    return self._engine.make_frames()
+
+
   def __init__(self, loader:Loader):
     """
     Creates a new instance of Runner
@@ -80,6 +87,6 @@ class Runner:
     parameters:
      - loader (Loader): the loader which already loaded the config
     """
-    self.loader = loader
-    self.engine = Engine()
-    self.module = None
+    self._loader = loader
+    self._engine = Engine()
+    self._module = None
