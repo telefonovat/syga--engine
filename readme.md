@@ -20,7 +20,7 @@
 
 #### Iné
 
-- [x] Support pre RGB farby ako string
+- [x] <s>Support pre RGB farby ako string</s>
 - [ ] Vytvoriť dedikované Exceptions pre Visualizer, GraphNodeColorizer, ...
 - [ ] Implementovať timer (sledovanie času behu algoritmu)
 - [x] <s>Implementovať možnosť špecifikovať uid behu algoritmu (musí to byť chránené heslom) Otestovať to</s>
