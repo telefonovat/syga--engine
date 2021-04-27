@@ -3,8 +3,8 @@ The GraphNodeColorizer module
 """
 
 import types
-from colour import Color
 import seaborn as sns
+from engine.color import Color
 
 
 class GraphNodeColorizer:
@@ -24,30 +24,6 @@ class GraphNodeColorizer:
 
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
-
-
-  @staticmethod
-  def is_color(*args, **kwargs):
-    """
-    Returns True if the arguments are valid for the Color constructor, ie. they
-    will product a valid color. This is tested using very simple try/except
-
-    returns:
-      - is_color (bool): True if valid False otherwise
-    """
-    try:
-      Color(*args, **kwargs)
-      return True
-    except: # pylint: disable=bare-except
-      return False
-
-
-  @staticmethod
-  def are_colors(iterable):
-    """
-    Returns True if all items in the iterable are colors; False otherwise
-    """
-    return all([GraphNodeColorizer.is_color(color) for color in iterable])
 
 
   @staticmethod
@@ -210,7 +186,7 @@ class GraphNodeColorizer:
     elif {type(x) for x in uniq} == {int, float}:
       self._spectral_interpretation()
 
-    elif GraphNodeColorizer.are_colors(uniq):
+    elif Color.are_colors(uniq):
       self._identity_interpretation()
 
     else:
@@ -247,7 +223,7 @@ class GraphNodeColorizer:
         elif self._colors > 1:
           self._group_interpretation(self._colors)
 
-      elif self.is_color(self._colors):
+      elif Color.is_color(self._colors):
         self._binary_interpretation(self._colors)
 
       elif isinstance(self._colors, (list, tuple)):
@@ -372,12 +348,12 @@ class GraphNodeColorizer:
       return self._colors > 0
 
     if isinstance(self._colors, (list, tuple)):
-      return self._colors and GraphNodeColorizer.are_colors(self._colors)
+      return self._colors and Color.are_colors(self._colors)
 
     if isinstance(self._colors, dict):
-      return self._colors and GraphNodeColorizer.are_colors(self._colors.values())
+      return self._colors and Color.are_colors(self._colors.values())
 
-    return self.is_color(self._colors)
+    return Color.is_color(self._colors)
 
 
   def _validate_palette(self):

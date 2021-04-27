@@ -3,7 +3,7 @@ The sender component
 """
 
 import json
-from colour import Color
+from engine.color import Color
 from .logger import logger
 
 
@@ -20,7 +20,7 @@ class Sender:
     todo: consider using different library than colour
     """
     if isinstance(obj, Color):
-      return obj.rgb
+      return obj.rgba
 
     if isinstance(obj, list):
       for i in range(len(obj)): # pylint: disable=consider-using-enumerate

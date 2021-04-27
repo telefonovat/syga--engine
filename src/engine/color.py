@@ -97,9 +97,24 @@ class Color:
   @staticmethod
   def is_color(color):
     """
-    Returns `true` if the specified color is in any recognized format
+    Returns `True` if the specified color is in any recognized format or is
+    None or is equal to string `default` (which is the same as None).
     """
-    return Color.is_keyword(color) or Color.is_hex(color) or Color.is_rgba(color)
+    return (
+      color is None or
+      color == 'default' or
+      Color.is_keyword(color) or
+      Color.is_hex(color) or
+      Color.is_rgba(color)
+    )
+
+
+  @staticmethod
+  def are_colors(iterable):
+    """
+    Returns True if all items in the iterable are colors; False otherwise
+    """
+    return all(Color.is_color(color) for color in iterable)
 
 
   @staticmethod
@@ -192,6 +207,9 @@ class Color:
     returns:
       - rgba (tuple): normalized rgba tuple (r, g, b, a)
     """
+    if color is None or color == 'default':
+      return None # None is a valid color
+
     if isinstance(color, Color):
       return color.rgba
 
