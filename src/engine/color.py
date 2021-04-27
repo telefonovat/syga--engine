@@ -11,6 +11,10 @@ from webcolors import CSS3_NAMES_TO_HEX
 from exceptions import ColorException
 
 
+# Normalized rgba format is tuple of floats - float error must be considered
+FLOAT_ERROR = 0.000005
+
+
 # Matches color in hex format
 HEX_REGEX_STR = r'^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$'
 
@@ -80,13 +84,13 @@ class Color:
       if len(color) not in (3, 4):
         return False
 
-      if len(color) == 4 and (color[3] < 0 or color[3] > 1):
+      if len(color) == 4 and (color[3] < -FLOAT_ERROR or color[3] > 1 + FLOAT_ERROR):
         return False
 
       rgb = color[:3]
 
       if any(isinstance(c, float) for c in rgb):
-        return all(0 <= c <= 1 for c in rgb)
+        return all(-FLOAT_ERROR <= c <= 1 + FLOAT_ERROR for c in rgb)
 
       if all(isinstance(c, int) for c in rgb):
         return all(0 <= c <= 255 for c in rgb)
@@ -101,6 +105,7 @@ class Color:
     None or is equal to string `default` (which is the same as None).
     """
     return (
+      isinstance(color, Color) or
       color is None or
       color == 'default' or
       Color.is_keyword(color) or
@@ -225,6 +230,36 @@ class Color:
     raise ColorException('Invalid color: {}'.format(color))
 
 
+  def __eq__(self, color):
+    """
+    Defines equality of two colors
+    """
+    if not Color.is_color(color):
+      return False
+
+    color = Color(color)
+
+    if self.rgba is None or color.rgba is None:
+      return self.rgba is None and color.rgba is None
+
+    return all(abs(x - y) <= FLOAT_ERROR for x, y in zip(self.rgba, color.rgba))
+
+
+  def __str__(self):
+    """
+    Defines conversion to string
+    """
+    r, g, b, a = self.rgba
+    return f'<Color r={r} g={g} b={b} a={a}>'
+
+
+  def __repr__(self):
+    """
+    Defines the string representation
+    """
+    return self.__str__()
+
+
   def __init__(self, color):
     """
     Creates a new instance of Color.
@@ -236,8 +271,8 @@ class Color:
 
 
 for _key, _rgb in COLOR_NAME_TO_RGB.items():
-  r, g, b = _rgb
-  COLOR_NAME_TO_RGBA[_key] = (r / 255, g / 255, b / 255, 1)
+  _r, _g, _b = _rgb
+  COLOR_NAME_TO_RGBA[_key] = (_r / 255, _g / 255, _b / 255, 1)
 
 for _key, _hex in CSS3_NAMES_TO_HEX.items():
   if _key not in COLOR_NAME_TO_RGBA:

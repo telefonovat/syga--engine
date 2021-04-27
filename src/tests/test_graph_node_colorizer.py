@@ -5,8 +5,8 @@ Tests for src/engine/graph/node_colorizer.py
 import unittest
 import itertools
 import random
-from colour import Color
 import seaborn as sns
+from engine.color import Color
 from engine.graph import Graph
 from engine.graph.node_colorizer import GraphNodeColorizer
 from utils.random import random_name
@@ -146,10 +146,10 @@ class TestGraphNodeColorizer(unittest.TestCase):
       - list with exactly one item which is a valid parameter is valid
     """
     props = ['color', 'colors']
-    values = [1, 'blue', ['red'], '#333', ['#123456'], Color(rgb=(0.5, 0.1, 0.2)), [Color('pink')]]
+    values = [1, 'blue', ['red'], '#333', ['#123456'], Color((0.5, 0.1, 0.2)), [Color('pink')]]
     # todo: implement random_color function
 
-    for prop,value in itertools.product(props, values):
+    for prop, value in itertools.product(props, values):
       colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: value })
       colorizer.interpret()
 
@@ -177,7 +177,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
       ['red', 'blue'],
       { 'foo': 'red', 'bar': 'blue' },
       [Color('pink'), Color('grey')],
-      { 'lorem': Color(rgb=(0.1, 0.2, 0.3)), 'ipsum': 'red', 'dolor': '#123' }
+      { 'lorem': Color((0.1, 0.2, 0.3)), 'ipsum': 'red', 'dolor': '#123' }
     ]
 
     for prop,value in itertools.product(props, values):
@@ -379,7 +379,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
         self.assertEqual(
           colorizer.compute_single(key),
-          Color(color) if value != len(colors) else Color(rgb=palette[index]),
+          Color(color) if value != len(colors) else Color(palette[index]),
           'Group interpretation specified by {} --> {} = {}'.format(comment, key, color)
         )
 

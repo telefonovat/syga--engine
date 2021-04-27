@@ -24,4 +24,4 @@
 - [ ] Vytvoriť dedikované Exceptions pre Visualizer, GraphNodeColorizer, ...
 - [ ] Implementovať timer (sledovanie času behu algoritmu)
 - [x] <s>Implementovať možnosť špecifikovať uid behu algoritmu (musí to byť chránené heslom) Otestovať to</s>
-- [ ] `engine.Color` namiesto importovaného Color
+- [x] <s>`engine.Color` namiesto importovaného Color</s>

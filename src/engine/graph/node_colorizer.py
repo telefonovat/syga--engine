@@ -118,7 +118,7 @@ class GraphNodeColorizer:
 
     if isinstance(colors, int):
       palette = sns.color_palette(self.DEFAULT_DISCRETE_PALETTE, colors)
-      self._colors = [Color(rgb=color) for color in palette]
+      self._colors = [Color(color) for color in palette]
 
     elif isinstance(colors, list):
       self._colors = [Color(color) for color in colors]
