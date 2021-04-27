@@ -4,7 +4,7 @@ Utility functions dealing with randomness
 
 import binascii
 import os
-from random import random, randint, randrange, choice
+from random import random, randint, choice
 import itertools
 from engine.color import COLOR_NAMES
 
@@ -31,7 +31,7 @@ def random_chunk(lis, min_chunk=1, max_chunk=3):
   Taken from https://stackoverflow.com/a/21439176
 
   paramters:
-    - li (iterable): The iterable to split into chunks
+    - lis (iterable): The iterable to split into chunks
     - min_chunk (int): The lower bound on chunk size
     - max_chunk (int): The upper bound on chunk size
 
@@ -87,7 +87,7 @@ def random_color_hex():
   Whitespace padding is valid.
 
   returns:
-    - color (str)
+    - color (str): color in hex format
   """
   color = '#' + random_name(choice([3, 4, 6, 8]))
 
@@ -102,7 +102,12 @@ def random_color_hex():
 
 def random_color_rgba():
   """
-  a
+  Returns a random valid color in rgba format
+
+  todo: finish this docstring
+
+  returns:
+    - color (str): color in rgba format
   """
   use_perc = random() > 0.5
   use_alpha = random() > 0.5
