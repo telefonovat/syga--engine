@@ -8,7 +8,7 @@
 - [x] <s>Setup Gitlab CI s Pylint a testami</s>
 - [ ] Rozlíšiť private a public properties a methods pomocou prefixu _
 - [x] Rozdeliť utils module
-- [ ] Jedna medzera po class docstring-u
+- [x] Jedna medzera po class docstring-u
 
 #### Testy
 
