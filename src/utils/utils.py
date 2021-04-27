@@ -2,9 +2,7 @@
 The utility functions used across the app and tests
 """
 
-import binascii
 import os
-import random
 from urllib.parse import urlsplit, urlunsplit
 
 
@@ -118,4 +116,3 @@ def get_sample_code(indentation):
   lines = [ line.replace('{}', ' ' * indentation) for line in lines ]
 
   return '\n'.join(lines)
-
