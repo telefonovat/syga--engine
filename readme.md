@@ -16,13 +16,13 @@
 - [ ] Unit testy pre `engine`
 - [ ] Unit testy pre `runner`
 - [ ] Unit testy pre `sender`
-- [ ] <s>Unit testy pre `loader`</s> (niektoré už sú, pridať viac)
-- [ ] Pozrieť sa neskôr na test_color.py a skontrolovať kvalitu
+- [x] <s>Unit testy pre `loader`</s>
+- [ ] Pozrieť sa neskôr na `test_color.py` a skontrolovať kvalitu
 
 #### Iné
 
-- [ ] Support pre RGB farby ako string
+- [x] Support pre RGB farby ako string
 - [ ] Vytvoriť dedikované Exceptions pre Visualizer, GraphNodeColorizer, ...
 - [ ] Implementovať timer (sledovanie času behu algoritmu)
-- [ ] <s>Implementovať možnosť špecifikovať uid behu algoritmu (musí to byť chránené heslom)</s> Otestovať to
-- [ ] `engine.Color` namiesto importovaného Color (pokojne stačí wrapper)
+- [x] <s>Implementovať možnosť špecifikovať uid behu algoritmu (musí to byť chránené heslom) Otestovať to</s>
+- [ ] `engine.Color` namiesto importovaného Color
