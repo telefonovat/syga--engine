@@ -179,7 +179,7 @@ class TestColor(unittest.TestCase):
 
     # Mixing floats and integers
     for _ in range(500):
-      color_rgba = [random(), randint(1, 255), randint(1, 255)]
+      color_rgba = [random(), randint(2, 255), randint(2, 255)]
       shuffle(color_rgba)
       self.assertFalse(Color.is_rgba(color_rgba), f'{color_rgba} is invalid')
 
@@ -197,7 +197,7 @@ class TestColor(unittest.TestCase):
       - whitespace padding does not affect validity
     """
     for _ in range(500):
-      color_rgba = [random() for _ in range(4)]
+      color_rgba = [randint(0, 255) / 255 for _ in range(4)]
       color_hex = '#{}'.format(''.join(["%02x" % round(c * 255) for c in color_rgba]))
 
       # 50% probability of not specifing transparency | valid
@@ -212,7 +212,7 @@ class TestColor(unittest.TestCase):
       normalized = Color.normalize_hex(color_hex)
 
       for expected, actual in zip(color_rgba, normalized):
-        self.assertAlmostEqual(expected, actual, 2)
+        self.assertAlmostEqual(expected, actual)
 
 
   def test_normalize_hex_short(self):
@@ -236,7 +236,7 @@ class TestColor(unittest.TestCase):
       normalized = Color.normalize_hex(color_hex)
 
       for expected, actual in zip(color_rgba, normalized):
-        self.assertAlmostEqual(expected, actual, 2)
+        self.assertAlmostEqual(expected, actual)
 
 
   def test_normalize_rgba_int(self):
@@ -263,10 +263,10 @@ class TestColor(unittest.TestCase):
         color_rgba[i] = c / 255
 
       for actual, expected in zip(Color.normalize_color(color_rgba_str), color_rgba):
-        self.assertAlmostEqual(actual, expected, 2, color_rgba_str)
+        self.assertAlmostEqual(actual, expected, 7, color_rgba_str)
 
       for actual, expected in zip(Color.normalize_color(color_rgba), color_rgba):
-        self.assertAlmostEqual(actual, expected, 2, color_rgba)
+        self.assertAlmostEqual(actual, expected, 7, color_rgba)
 
 
   def test_normalize_rgba_perc(self):
@@ -285,7 +285,7 @@ class TestColor(unittest.TestCase):
       )
 
       for actual, expected in zip(Color.normalize_color(color_rgba_str), color_rgba):
-        self.assertAlmostEqual(actual, expected, 2, color_rgba_str)
+        self.assertAlmostEqual(actual, expected, 7, color_rgba_str)
 
       for actual, expected in zip(Color.normalize_color(color_rgba), color_rgba):
-        self.assertAlmostEqual(actual, expected, 2, color_rgba)
+        self.assertAlmostEqual(actual, expected, 7, color_rgba)

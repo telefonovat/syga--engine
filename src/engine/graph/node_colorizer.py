@@ -293,35 +293,35 @@ class GraphNodeColorizer:
 
   def has_interpretation(self):
     """
-    Returns `True` if an interpretation has been specified
+    Returns True if an interpretation has been specified
     """
     return self._interpretation is not None
 
 
   def has_binary_interpretation(self):
     """
-    Returns `True` if binary interpretation is used
+    Returns True if binary interpretation is used
     """
     return self._interpretation == self.BINARY_INTERPRETATION
 
 
   def has_group_interpretation(self):
     """
-    Returns `True` if group interpretation if used
+    Returns True if group interpretation if used
     """
     return self._interpretation == self.GROUP_INTERPRETATION
 
 
   def has_identity_interpretation(self):
     """
-    Returns `true` if identity interpretation is used
+    Returns True if identity interpretation is used
     """
     return self._interpretation == self.IDENTITY_INTERPRETATION
 
 
   def has_spectral_interpretation(self):
     """
-    Returns `true` if spectral interpretation is used
+    Returns True if spectral interpretation is used
     """
     return self._interpretation == self.SPECTRAL_INTERPRETATION
 

@@ -59,7 +59,13 @@ class Color:
   @staticmethod
   def is_keyword(color):
     """
-    Return `True` if the specified color is a known color keyword
+    Return True if the specified color is a known color keyword (name)
+
+    parameters:
+      - color (any): anything
+
+    returns:
+      - is_keyword (bool)
     """
     return isinstance(color, str) and color in COLOR_NAME_TO_RGBA
 
@@ -67,7 +73,13 @@ class Color:
   @staticmethod
   def is_hex(color):
     """
-    Returns `True` if the specified color is in hex format
+    Returns True if the specified color is in hex format
+
+    parameters:
+      - color (any): anything
+
+    returns:
+      - is_hex (bool)
     """
     return isinstance(color, str) and bool(HEX_REGEX.match(color.strip()))
 
@@ -75,7 +87,13 @@ class Color:
   @staticmethod
   def is_rgba(color):
     """
-    Returns `True` if the specified color is in rgba format
+    Returns True if the specified color is in rgba format
+
+    parameters:
+      - color (any): anything
+
+    returns:
+      - is_rgba (bool)
     """
     if isinstance(color, str):
       return bool(RGBA_REGEX.match(color.strip()))
@@ -101,8 +119,14 @@ class Color:
   @staticmethod
   def is_color(color):
     """
-    Returns `True` if the specified color is in any recognized format or is
+    Returns True if the specified color is in any recognized format or is
     None or is equal to string `default` (which is the same as None).
+
+    parameters:
+      - color (any): anything
+
+    returns:
+      - is_color (bool)
     """
     return (
       isinstance(color, Color) or
@@ -118,6 +142,12 @@ class Color:
   def are_colors(iterable):
     """
     Returns True if all items in the iterable are colors; False otherwise
+
+    parameters:
+      - iterable (iterable): any iterable collection of data
+
+    returns:
+      - are_colors (bool)
     """
     return all(Color.is_color(color) for color in iterable)
 
@@ -126,6 +156,9 @@ class Color:
   def from_keyword(color):
     """
     Returns the normalized rgba tuple saved under the specified keyword
+
+    parameters:
+      - color (str): color name
 
     returns:
       - rgba (tuple): normalized rgba tuple (r, g, b, a)
@@ -171,6 +204,9 @@ class Color:
     rgb(a) format - no checks are done. In case of invalid input any exception
     might be raised.
 
+    parameters:
+      - color (str|tuple): color in rgb(a) format
+
     returns:
       - rgba (tuple): normalized rgba tuple (r, g, b, a)
     """
@@ -190,7 +226,7 @@ class Color:
         rgba.append(parse_perc(parts[3]) if '%' in parts[3] else float(parts[3]))
 
     if isinstance(color, (list, tuple)):
-      perc = all(isinstance(c, float) for c in color)
+      perc = any(isinstance(c, float) for c in color)
       rgba = [c if perc else c / 255 for c in color]
 
     if len(rgba) == 3:
@@ -208,6 +244,9 @@ class Color:
 
     raises:
       - ColorException when no format matched
+
+    paramaters:
+      - color (any): color in any recognized format
 
     returns:
       - rgba (tuple): normalized rgba tuple (r, g, b, a)
@@ -257,7 +296,7 @@ class Color:
     """
     Defines the string representation
     """
-    return self.__str__()
+    return str(self)
 
 
   def __init__(self, color):
