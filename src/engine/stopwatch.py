@@ -41,7 +41,7 @@ class Stopwatch:
     returns:
       - diff (float)
     """
-    return time.clock() - self._started if self._running else 0
+    return time.perf_counter() - self._started if self._running else 0
 
 
   def start(self):
@@ -52,7 +52,7 @@ class Stopwatch:
       - self (Stopwatch)
     """
     if not self._running:
-      self._started = time.clock()
+      self._started = time.perf_counter()
       self._running = True
 
     return self
