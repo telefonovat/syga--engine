@@ -221,7 +221,6 @@ class TestGraphNodeColorizer(unittest.TestCase):
     """
     props = ['color', 'colors']
     values = [1, 'blue', ['red'], '#333', ['#123456'], Color((0.5, 0.1, 0.2)), [Color('pink')]]
-    # todo: implement random_color function
 
     for prop, value in itertools.product(props, values):
       colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: value })
@@ -354,7 +353,14 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_group_interpretation_guess(self):
     """
-    todo: docstring this
+    Tests the conditions which should cause the graph visualizer to choose the
+    group interpretation automatically - no interpretation parameters used
+
+    Meta transformation is used
+
+    conditions:
+      - transformed values are from {0, ..., 9} - this should cause group
+        interpretation to be chosen
     """
     G = Graph()
     colorizer = GraphNodeColorizer.build(prop='component')
@@ -396,7 +402,11 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_compute_single_binary_interpretation_specified(self):
     """
-    Todo: docstring this
+    Tests compute_single method when binary interpretation is used.
+
+    Conditions:
+      - an instance of Color, equal to the specified color, is returned
+      - if an int=1 was specified, the default true color should be returned
     """
     props = ['color', 'colors']
     values = [1, 'blue', ['red'], '#333', '#123456']
@@ -430,7 +440,12 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_compute_single_group_interpretation_specified(self):
     """
-    Todo: docstrig this
+    Tests compute_single method when binary interpretation is used.
+
+    Conditions:
+      - The correct Color is returned
+      - When an int>1 was used, a color from the default palette should be
+        returned
     """
     props = ['color', 'colors']
     colors = { 'a': 'red', 'b': 'blue', 'c': 'green' }
