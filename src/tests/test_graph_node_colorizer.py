@@ -9,7 +9,7 @@ import seaborn as sns
 from engine.color import Color
 from engine.graph import Graph
 from engine.graph.node_colorizer import GraphNodeColorizer
-from utils.random import random_name
+from utils.random import random_name, random_color
 
 
 class TestGraphNodeColorizer(unittest.TestCase):
@@ -17,14 +17,55 @@ class TestGraphNodeColorizer(unittest.TestCase):
   Tests for src/engine/graph/node_colorizer.py
   """
 
+  def _random_colors_argument(self):
+    """
+    Generates a random valid argument for the color(s) parameter. Options are
+      - int greater than 0
+      - a single color (str or Color instance)
+      - a list of colors (str or Color instance, can be mixed)
+      - a tuple of colors (str or Color instance, can be mixed)
+      - a dict where values are colors (str or Color instance, can be mixed)
+
+    returns:
+      - colors (int|str|Color|list|dict): valid argument for color kwarg
+    """
+    OPT_INT = 0 # pylint: disable=invalid-name
+    OPT_COLOR = 1 # pylint: disable=invalid-name
+    OPT_LIST = 2 # pylint: disable=invalid-name
+    OPT_DICT = 3 # pylint: disable=invalid-name
+
+    opt = random.choice([OPT_INT, OPT_COLOR, OPT_LIST, OPT_DICT])
+
+    if opt == OPT_INT:
+      return random.randint(1, 20)
+
+    if opt == OPT_COLOR:
+      return random_color()
+
+    if opt == OPT_LIST:
+      l = [random_color() for _ in range(random.randint(1, 20))]
+      return l if random.random() > 0.5 else tuple(l)
+
+    if opt == OPT_DICT:
+      return { random_name(4): random_color() for _ in range(random.randint(1, 20)) }
+
+    raise Exception('Invalid opt')
+
   #
   # Validation | ANCHOR
   #
 
   def test_validate_color_arg_valid(self):
     """
-    todo: implement this test
+    Tests the validate_colors static function if the input is valid.
     """
+    for _ in range(200):
+      colors = self._random_colors_argument()
+
+      self.assertTrue(
+        GraphNodeColorizer.validate_colors(colors),
+        f'colors={colors} is valid'
+      )
 
 
   def test_validate_palette_arg_valid(self):
@@ -41,8 +82,41 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_validate_color_arg_invalid(self):
     """
-    todo: implement this test
+    Tests the validate_colors static function if the input is invalid.
     """
+    for _ in range(200):
+      colors = self._random_colors_argument()
+
+      if isinstance(colors, int):
+        colors = 1 - colors # will be 0 or less
+
+      if isinstance(colors, (str, Color)):
+        colors = random_name(5) # not a color
+
+      if isinstance(colors, (list, tuple)):
+        was_tuple = isinstance(colors, tuple)
+        colors = list(colors)
+        colors.append(random_name(5)) # not a color
+        random.shuffle(colors)
+        if was_tuple:
+          colors = tuple(colors)
+
+      if isinstance(colors, dict):
+        keys = list(colors.keys())
+        values = list(colors.values())
+
+        keys.append(random_name(5))
+        values.append(random_name(5)) # not a color
+
+        random.shuffle(keys)
+        random.shuffle(values)
+
+        colors = dict(zip(keys, values))
+
+      self.assertFalse(
+        GraphNodeColorizer.validate_colors(colors),
+        f'colors={colors} is NOT valid'
+      )
 
 
   def test_validate_palette_arg_invalid(self):
@@ -304,10 +378,12 @@ class TestGraphNodeColorizer(unittest.TestCase):
     todo: implement this test
     """
 
+
   def test_identity_interpretation_guess(self):
     """
     todo: implement this test
     """
+
 
   def test_spectral_interpretation_guess(self):
     """
@@ -351,6 +427,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
         'Binary interpretation specified by {} --> False'.format(comment)
       )
 
+
   def test_compute_single_group_interpretation_specified(self):
     """
     Todo: docstrig this
@@ -389,10 +466,12 @@ class TestGraphNodeColorizer(unittest.TestCase):
         'Default if not in dict'
       )
 
+
   def test_compute_single_group_interpretation_two_colors_more_values_specified(self):
     """
     todo: implement this test
     """
+
 
   def test_compute_single_spectral_interpretation_specified(self):
     """
@@ -408,15 +487,18 @@ class TestGraphNodeColorizer(unittest.TestCase):
     todo: implement this test
     """
 
+
   def test_compute_single_group_interpretation_guess(self):
     """
     todo: implement this test
     """
 
+
   def test_compute_single_identity_interpretation_guess(self):
     """
     todo: implement this test
     """
+
 
   def test_compute_single_spectral_interpretation_guess(self):
     """
@@ -432,15 +514,18 @@ class TestGraphNodeColorizer(unittest.TestCase):
     todo: implement this test
     """
 
+
   def test_compute_group_interpretation(self):
     """
     todo: implement this test
     """
 
+
   def test_compute_identity_interpretation(self):
     """
     todo: implement this test
     """
+
 
   def test_compute_spectral_interpretation(self):
     """

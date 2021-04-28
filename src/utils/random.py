@@ -88,18 +88,19 @@ def random_color_hex():
     - whitespace padding is valid
 
   The probabilities are:
-    1. 50%: use upper case instead of lower case
-    2. 50%: pad the color with random amount of whitespace
+    1. 25%: for each of the specified lengths
+    2. 50%: use upper case instead of lower case
+    3. 50%: pad the color with random amount of whitespace
 
   returns:
     - color (str): color in hex format
   """
-  color = '#' + random_name(choice([3, 4, 6, 8]))
+  color = '#' + random_name(4)[:choice([3, 4, 6, 8])] # 1.
 
-  if random() > 0.5:
+  if random() > 0.5: # 2.
     color = color.upper()
 
-  if random() > 0.5:
+  if random() > 0.5: # 3.
     color = random_whitespace_pad(color)
 
   return color
@@ -129,7 +130,7 @@ def random_color_rgba():
   use_alpha_perc = use_alpha and random() > 0.5 # 3.
 
   random_int = lambda: str(randint(0, 255))
-  random_perc = lambda: f'{random() * 100}%'
+  random_perc = lambda: f'{randint(0, 255) / 255 * 100}%'
   random_float = lambda: str(random())
 
   rgba = [random_perc() if use_perc else random_int() for _ in range(3)]

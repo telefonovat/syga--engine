@@ -226,7 +226,7 @@ class GraphNodeColorizer:
       elif Color.is_color(self._colors):
         self._binary_interpretation(self._colors)
 
-      elif isinstance(self._colors, (list, tuple)):
+      elif isinstance(self._colors, list):
         if len(self._colors) == 1:
           self._binary_interpretation(self._colors[0])
         elif len(self._colors) > 1:
@@ -326,9 +326,10 @@ class GraphNodeColorizer:
     return self._interpretation == self.SPECTRAL_INTERPRETATION
 
 
-  def _validate_colors(self):
+  @staticmethod
+  def validate_colors(colors):
     """
-    Validates the value of _colors. The validity criteria is based on the type
+    Validates the value of colors. The validity criteria is based on the type
       - None: always valid (color(s) parameter was omitted)
       - int: valid if greater than 0
       - str: valid if is color
@@ -336,41 +337,49 @@ class GraphNodeColorizer:
       - tuple: same as list
       - dict: valid if not empty and the values are colors
 
-    All other types are considered invalid
+    All other types are considered invalid.
+
+    parameters:
+      - colors (any): The color(s) argument
 
     returns:
       - validity (bool): True if valid False otherwise
     """
-    if self._colors is None:
+    if colors is None:
       return True
 
-    if isinstance(self._colors, int):
-      return self._colors > 0
+    if isinstance(colors, int):
+      return colors > 0
 
-    if isinstance(self._colors, (list, tuple)):
-      return self._colors and Color.are_colors(self._colors)
+    if isinstance(colors, (list, tuple)):
+      return colors and Color.are_colors(colors)
 
-    if isinstance(self._colors, dict):
-      return self._colors and Color.are_colors(self._colors.values())
+    if isinstance(colors, dict):
+      return colors and Color.are_colors(colors.values())
 
-    return Color.is_color(self._colors)
+    return Color.is_color(colors)
 
 
-  def _validate_palette(self):
+  @staticmethod
+  def validate_palette(palette):
     """
     Validates the value of _palette.
 
-    returns
+    parameters:
+      - palette (any): The palette argument
+
+    returns:
       - validity (bool): True if valid False otherwise
     """
-    if self._palette is None:
+    if palette is None:
       return True
 
     # todo: implement this
     return True
 
 
-  def _validate_range(self):
+  @staticmethod
+  def validate_range(ran):
     """
     Validates the value of _range. Following rules must be met:
       - type is list or tuple
@@ -378,26 +387,45 @@ class GraphNodeColorizer:
       - both items are of type int or float
       - first item is lower than the second item
 
-    If the type of _range is list, it is cast to tuple
+    If the type of _range is list, it is cast to tuple.
+
+    parameters:
+      - ran (any): The range argument
 
     returns
       - validity (bool): True if valid False otherwise
     """
-    if self._range is None:
+    if ran is None:
       return True
 
+    if not isinstance(ran, (tuple, list)) or len(ran) != 2:
+      return False
+
+    low, upp = ran
+
+    return isinstance(low, (int, float)) and isinstance(upp, (int, float)) and low < upp
+
+
+  def _prepare_colors(self):
+    """
+    Prepares the _colors property after retrieving it as an argument
+    """
+    if isinstance(self._colors, tuple):
+      self._colors = list(self._colors)
+
+
+  def _prepare_palette(self):
+    """
+    Prepares the _palette property after retrieving it as an argument
+    """
+
+
+  def _prepare_range(self):
+    """
+    Prepares the _range property after retrieving it as an argument
+    """
     if isinstance(self._range, list):
       self._range = tuple(self._range)
-
-    if not isinstance(self._range, tuple):
-      return False
-
-    if len(self._range) != 2:
-      return False
-
-    lower, upper = self._range
-
-    return isinstance(lower, (int, float)) and isinstance(upper, (int, float)) and lower < upper
 
 
   def __init__(self, transform, **kwargs):
@@ -410,9 +438,11 @@ class GraphNodeColorizer:
     if 'color' in kwargs and 'colors' in kwargs:
       raise Exception('Color and colors arguments are mutually exclusive')
 
-    self._interpretation = None
     self._transform = transform
+
     self._unique_values = set()
+    self._interpretation = None
+
     self._colors = None
     self._palette = None
     self._range = None
@@ -432,11 +462,15 @@ class GraphNodeColorizer:
     if self._palette is not None and self._colors is not None:
       raise Exception('Parameters color(s) and palette are mutually exclusive')
 
-    if not self._validate_colors():
+    if not GraphNodeColorizer.validate_colors(self._colors):
       raise Exception('Invalid value for parameter color(s): {}'.format(self._colors))
 
-    if not self._validate_palette():
+    if not GraphNodeColorizer.validate_palette(self._palette):
       raise Exception('Invalid value for parameter palette: {}'.format(self._palette))
 
-    if not self._validate_range():
+    if not GraphNodeColorizer.validate_range(self._range):
       raise Exception('Invalid value for parameter range: {}'.format(self._range))
+
+    self._prepare_colors()
+    self._prepare_palette()
+    self._prepare_range()

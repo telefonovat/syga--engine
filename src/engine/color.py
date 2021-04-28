@@ -255,6 +255,8 @@ class Color:
       return None # None is a valid color
 
     if isinstance(color, Color):
+      # This does NOT create an object clone, but tuples are immutable, so it
+      # does not really matter and saves a little bit of time
       return color.rgba
 
     if Color.is_keyword(color):
