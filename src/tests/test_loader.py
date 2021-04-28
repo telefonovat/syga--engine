@@ -62,7 +62,7 @@ class TestLoader(unittest.TestCase):
     parameters:
       - uid (str): the unique ID of the module
     """
-    return Loader(self._get_cfg(uid))
+    return Loader().set_input(self._get_cfg(uid))
 
 
   def _get_admin_loader(self, uid=None):
@@ -74,7 +74,7 @@ class TestLoader(unittest.TestCase):
     parameters:
       - uid (str): the unique ID of the module
     """
-    return Loader(self._get_admin_cfg(uid))
+    return Loader().set_input(self._get_admin_cfg(uid))
 
 
   def test_unique_id_random(self):
@@ -89,7 +89,7 @@ class TestLoader(unittest.TestCase):
       - uid can be specified but will be ignored with no admin access
     """
     for _ in range(20):
-      loader = self._get_loader(random.randint(20, 30))
+      loader = self._get_loader(random_name(random.randint(20, 30)))
 
       loader.generate_name()
 
@@ -127,7 +127,7 @@ class TestLoader(unittest.TestCase):
     for _ in range(20):
       not_json = lambda: random_name(random.randint(100, 200))
       random_json = lambda: json.dumps(random_string_dict(1, 5))
-      loader = Loader(not_json() if random.random() > 0.5 else random_json())
+      loader = Loader().set_input(not_json() if random.random() > 0.5 else random_json())
 
       with self.assertRaises(LoaderException):
         loader.parse_cfg()

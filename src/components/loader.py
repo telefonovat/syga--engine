@@ -20,6 +20,15 @@ class Loader:
     - Create the module which holds the user specified algorithm
   """
 
+  def set_input(self, raw):
+    """
+    Sets the raw user JSON config input
+    """
+    self._raw = raw
+
+    return self
+
+
   def parse_cfg(self):
     """
     Parses the input config JSON
@@ -129,14 +138,14 @@ class Loader:
     return self
 
 
-  def __init__(self, cfg):
+  def __init__(self):
     """
     Creates a new instance of Loader
 
     parameters:
      - cfg (str): the JSON config input
     """
-    self._raw = cfg
+    self._raw = None
 
     self.unique_id = None
     self.module_name = None

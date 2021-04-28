@@ -5,6 +5,7 @@ The sender component
 import json
 from engine.color import Color
 from .logger import logger
+from .runner import Runner
 
 
 class Sender:
@@ -33,7 +34,7 @@ class Sender:
     return obj
 
 
-  def _send_response(self, res:bool, frames, err):
+  def _send_response(self, res, err=None):
     """
     Sends the response to stdout
 
@@ -42,13 +43,18 @@ class Sender:
      - err (Exception): The exception thrown during preparation or execution
      - frames (list<Frame>): The list of generated frames (or an empty list)
     """
-    logger.debug('Sending {} response'.format(res))
+    frames = self._runner.make_frames()
+    elapsed = self._runner.get_elapsed_time()
 
     self._parse_colors(frames)
+
+    logger.debug('Sending {} response'.format(res))
+    logger.debug('Algorithm run in {:.6f} seconds'.format(elapsed))
 
     print(json.dumps({
       'res': res,
       'err': str(err),
+      'elapsed': elapsed,
       'frames': frames
     }))
 
@@ -60,25 +66,28 @@ class Sender:
     parameters:
       - err (Exception): The exception raised during preparation or execution
     """
-    self._send_response('error', frames=None, err=err)
+    self._send_response('error', err)
 
 
-  def send_mixed(self, frames, err):
+  def send_mixed(self, err):
     """
     Sends a mixed response
 
     parameters:
-      - frames (list<Frame>): The list of generated frames (or an empty list)
       - err (Exception): The exception raised during preparation or execution
     """
-    self._send_response('mixed', frames=frames, err=err)
+    self._send_response('mixed', err)
 
 
-  def send_success(self, frames):
+  def send_success(self):
     """
     Sends a success response
-
-    parameters:
-      - frames (list<Frame>): The list of generated frames (or an empty list)
     """
-    self._send_response('success', frames=frames, err=None)
+    self._send_response('success')
+
+
+  def __init__(self, runner:Runner):
+    """
+    Creates a new instance of Sender
+    """
+    self._runner = runner

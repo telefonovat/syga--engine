@@ -26,18 +26,23 @@ class App:
     try:
       logger.debug('{} main_loop START'.format('-' * 70))
 
-      sender = Sender()
+      # Initiate components
+      loader = Loader()
+      runner = Runner(loader)
+      sender = Sender(runner)
 
+      # Read config
       cfg = input()
       logger.debug('Input read: {} chars'.format(len(cfg)))
+      loader.set_input(cfg)
 
-      loader = Loader(cfg)
-      runner = Runner(loader)
-
+      # Prepare the module
       loader.load()
+
+      # Run the module
       runner.run()
 
-      sender.send_success(runner.make_frames())
+      sender.send_success()
 
     except EOFError as e:
       logger.debug('EOF, exiting')
@@ -45,7 +50,7 @@ class App:
 
     except AlgorithmException as e:
       logger.debug(traceback.format_exc())
-      sender.send_mixed(frames=runner.make_frames(), err=e)
+      sender.send_mixed(e)
 
     except Exception as e: # pylint: disable=broad-except
       logger.exception(traceback.format_exc())

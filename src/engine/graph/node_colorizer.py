@@ -3,6 +3,7 @@ The GraphNodeColorizer module
 """
 
 import types
+from collections.abc import Iterable
 import seaborn as sns
 from engine.color import Color
 
@@ -11,7 +12,7 @@ class GraphNodeColorizer:
   """
   GraphNodeColorizer computes the colors of the nodes in a graph. The process
   is described in the following document:
-    - todo: add link
+    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
   """
 
   BINARY_INTERPRETATION = 0
@@ -35,10 +36,13 @@ class GraphNodeColorizer:
       raise Exception('Too many positional arguments')
 
     if len(args) == 1:
-      if not isinstance(args[0], types.FunctionType):
-        # todo: validate the used of in operator
+      if isinstance(args[0], Iterable):
         return GraphNodeColorizer.build(lambda v, graph: v in args[0], **kwargs)
-      return GraphNodeColorizer(args[0], **kwargs)
+
+      if isinstance(args[0], types.FunctionType):
+        return GraphNodeColorizer(args[0], **kwargs)
+
+      raise Exception(f'Cannot use object of type {type(args[0])} as source')
 
     if 'prop' not in kwargs:
       raise Exception('Source not specified')
@@ -263,7 +267,6 @@ class GraphNodeColorizer:
     if self._interpretation == self.SPECTRAL_INTERPRETATION:
       if not isinstance(value, (int, float)):
         # Do not raise an exception here, instead the node will have no color
-        # Todo: maybe add warning
         return self.DEFAULT_FALSE_COLOR
       lower, upper = self._range
       point = min(1, max(0, (value - lower) / (upper - lower)))

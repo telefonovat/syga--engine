@@ -64,6 +64,8 @@ class Runner:
       'print': self._engine.print
     }
 
+    self._engine.stopwatch.start()
+
     try:
       exec('fun(engine, print)', {}, args) # pylint: disable=exec-used
       logger.debug('>>> success')
@@ -72,12 +74,26 @@ class Runner:
       logger.debug('>>> error')
       raise AlgorithmException(e)
 
+    finally:
+      self._engine.stopwatch.stop()
+
 
   def make_frames(self):
     """
     Engine computes the visualization frames. These frames are then returned
     """
     return self._engine.make_frames()
+
+
+  def get_elapsed_time(self):
+    """
+    Returns the amount of time elapsed during the execution of the visualized
+    algorithm in seconds.
+
+    returns:
+      time (float): elapsed time in seconds
+    """
+    return self._engine.stopwatch.elapsed
 
 
   def __init__(self, loader:Loader):
@@ -88,5 +104,5 @@ class Runner:
      - loader (Loader): the loader which already loaded the config
     """
     self._loader = loader
-    self._engine = Engine()
     self._module = None
+    self._engine = Engine()

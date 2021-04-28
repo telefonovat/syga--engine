@@ -7,6 +7,7 @@ import logging
 from utils.path import path_from_root
 from engine.graph import Graph
 from .ticker import Ticker
+from .stopwatch import Stopwatch
 from .color import Color
 
 
@@ -161,3 +162,5 @@ class Engine:
 
     self._logger = None
     self._ticker = Ticker()
+
+    self.stopwatch = Stopwatch()
