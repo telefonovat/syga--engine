@@ -21,7 +21,6 @@
 #### Iné
 
 - [x] <s>Support pre RGB farby ako string</s>
-- [ ] Vytvoriť dedikované Exceptions pre Visualizer, GraphNodeColorizer, ...
-- [ ] Implementovať timer (sledovanie času behu algoritmu)
+- [x] <s>Implementovať stopwatch (sledovanie času behu algoritmu)</s>
 - [x] <s>Implementovať možnosť špecifikovať uid behu algoritmu (musí to byť chránené heslom) Otestovať to</s>
 - [x] <s>`engine.Color` namiesto importovaného Color</s>
