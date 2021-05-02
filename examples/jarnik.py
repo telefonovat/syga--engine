@@ -26,5 +26,5 @@ while True:
 
   if len(edges) == 0:
     break
-  
+
   T.add_edge(edges[0][0], edges[0][1])

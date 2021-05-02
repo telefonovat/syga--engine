@@ -37,7 +37,7 @@ while True:
       G.nodes[w]['h'] = G.nodes[v]['h'] + G.edges[v, w]['w']
       G.nodes[w]['s'] = STATE_OPENED
       G.nodes[w]['p'] = v
-  
+
   G.nodes[v]['s'] = STATE_CLOSED
 
 print('-' * 60 + ' Results')
