@@ -2,8 +2,6 @@
 
 cd "$( dirname "$( realpath "$0" )" )/.."
 
-echo 'Examples'
-
 for example in $( find ./examples -name '*.py' ) ; do
   example=${example#.\/examples\/}
   example=${example%\.py}
