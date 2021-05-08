@@ -154,7 +154,7 @@ class Graph(networkx.Graph, Visualizer):
     super().__init__(incoming_graph_data=incoming_graph_data, **attr)
 
     self._stylizers = {
-      'node_colors': None,
+      'node_colors': GraphNodeColorizer.build(lambda v, G: None),
       'node_shapes': None,
       'node_scales': None,
       'node_labels': None,

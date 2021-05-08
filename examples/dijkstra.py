@@ -16,7 +16,7 @@ for v in G.nodes:
   G.nodes[v]['h'] = float('inf')
   G.nodes[v]['p'] = None
 
-G.color_nodes_by(prop='s', colors=['gray', 'blue', 'red'])
+G.color_nodes_by(prop='s', colors=[None, 'blue', 'red'])
 G.label_nodes_by(prop='h')
 
 v0 = 'a'
