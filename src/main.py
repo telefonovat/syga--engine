@@ -28,7 +28,7 @@ parser.add_argument('--debug',
 arguments = parser.parse_args()
 
 
-@app.route('/ping', methods=['GET'])
+@app.route('/nprg045/api/ping', methods=['GET'])
 def ping():
   """
   Todo: docstring this
@@ -38,7 +38,7 @@ def ping():
   }
 
 
-@app.route('/', methods=['POST'])
+@app.route('/nprg045/api', methods=['POST'])
 def entrypoint():
   """
   Expects a config JSON in the POST body. The config JSON consists of:
