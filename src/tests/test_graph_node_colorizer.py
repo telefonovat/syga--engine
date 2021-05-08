@@ -605,6 +605,25 @@ class TestGraphNodeColorizer(unittest.TestCase):
     """
     todo: implement this test
     """
+    G = Graph()
+    prop = random_name()
+    colorizer = GraphNodeColorizer.build(prop=prop)
+
+    for v in range(random.randint(500, 1000)):
+      if random.random() > 0.5:
+        G.add_node(v)
+        if random.random() > 0.5:
+          G.nodes[v][prop] = random.randint(-99, 99)
+          if random.random() > 0.5:
+            G.nodes[v][prop] += random.random() * 2 - 1
+
+    colorizer.transform(G)
+    colorizer.interpret()
+
+    self.assertTrue(
+      colorizer.has_identity_interpretation(),
+      'Guess spectral interpretation when values are of types int and float'
+    )
 
 
   def test_spectral_interpretation_guess_lambda(self):
