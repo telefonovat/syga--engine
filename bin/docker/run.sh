@@ -8,4 +8,4 @@ else
   port="$1"
 fi
 
-docker run -p "$port:5000" -d wiki/aruna-engine
+docker run -p "$port:5000" -d wiki/nprg045-engine
