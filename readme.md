@@ -12,11 +12,11 @@
 
 #### Testy
 
-- [ ] Unit testy pre `engine`
-- [ ] Unit testy pre `runner`
-- [ ] Unit testy pre `sender`
+- [ ] Unit testy pre `Ticker`
+- [ ] Unit testy pre `Frame`
+- [ ] Unit testy pre `Tick`
 - [x] <s>Unit testy pre `loader`</s>
-- [ ] Pozrieť sa neskôr na `test_color.py` a skontrolovať kvalitu
+- [x] <s>Pozrieť sa neskôr na `test_color.py` a skontrolovať kvalitu</s>
 
 #### Iné
 
