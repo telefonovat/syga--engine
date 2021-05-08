@@ -672,32 +672,30 @@ class TestGraphNodeColorizer(unittest.TestCase):
       - if an int=1 was specified, the default true color should be returned
     """
     props = ['color', 'colors']
-    values = [1, 'blue', ['red'], '#333', '#123456']
+    values = [self._random_colors_argument_binary() for _ in range(100)]
 
-    for prop,value in itertools.product(props, values):
+    for prop, value in itertools.product(props, values):
       colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: value })
 
       colorizer.interpret()
 
       if value == 1:
         excepted = colorizer.DEFAULT_TRUE_COLOR
-      elif isinstance(value, list):
+      elif isinstance(value, (list, tuple)):
         excepted = value[0]
       else:
         excepted = value
 
-      comment = '{}={}'.format(prop, ''' + value + ''' if isinstance(value, str) else str(value))
-
       self.assertEqual(
         colorizer.compute_single(True),
         Color(excepted),
-        'Binary interpretation specified by {} --> True'.format(comment)
+        f'Binary interpretation specified by {prop}={value} --> True'
       )
 
       self.assertEqual(
         colorizer.compute_single(False),
         colorizer.DEFAULT_FALSE_COLOR,
-        'Binary interpretation specified by {} --> False'.format(comment)
+        f'Binary interpretation specified by {prop}={value} --> False'
       )
 
 
@@ -727,15 +725,13 @@ class TestGraphNodeColorizer(unittest.TestCase):
       colorizer.transform(G)
       colorizer.interpret()
 
-      comment = '{}={}'.format(prop, ''' + value + ''' if isinstance(value, str) else str(value))
-
       for key,color in colors.items():
         index = list(colors.values()).index(color)
 
         self.assertEqual(
           colorizer.compute_single(key),
           Color(color) if value != len(colors) else Color(palette[index]),
-          'Group interpretation specified by {} --> {} = {}'.format(comment, key, color)
+          f'Group interpretation specified by {prop}={value} --> {key} = {color}'
         )
 
       self.assertEqual(
