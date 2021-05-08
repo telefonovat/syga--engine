@@ -144,6 +144,10 @@ def random_color_rgba():
 
   rgba = 'rgb{}({})'.format(choice(['a', '']), ','.join(rgba)) # 5.
 
+  if 'e-' in rgba:
+    # If a part of the color is in format 9.594183194205907e-05, try again
+    return random_color_rgba()
+
   if random() > 0.5: # 6.
     rgba = random_whitespace_pad(rgba)
 
