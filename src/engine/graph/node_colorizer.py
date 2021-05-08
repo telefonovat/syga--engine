@@ -143,7 +143,7 @@ class GraphNodeColorizer:
           # interpretation with the specified colors as true/false colors
           self._binary_interpretation(*self._colors)
         else:
-          raise GraphNodeColorizerException('Too few colors: found {} unique values'.format(len(uniq)))
+          raise GraphNodeColorizerException(f'Too few colors: found {len(uniq)} unique values')
       else:
         self._colors = dict(zip(sorted(uniq), self._colors[:len(uniq)]))
 
@@ -467,13 +467,13 @@ class GraphNodeColorizer:
       raise GraphNodeColorizerException('Parameters color(s) and palette are mutually exclusive')
 
     if not GraphNodeColorizer.validate_colors(self._colors):
-      raise GraphNodeColorizerException('Invalid value for parameter color(s): {}'.format(self._colors))
+      raise GraphNodeColorizerException(f'Invalid value for parameter color(s): {self._colors}')
 
     if not GraphNodeColorizer.validate_palette(self._palette):
-      raise GraphNodeColorizerException('Invalid value for parameter palette: {}'.format(self._palette))
+      raise GraphNodeColorizerException(f'Invalid value for parameter palette: {self._palette}')
 
     if not GraphNodeColorizer.validate_range(self._range):
-      raise GraphNodeColorizerException('Invalid value for parameter range: {}'.format(self._range))
+      raise GraphNodeColorizerException(f'Invalid value for parameter range: {self._range}')
 
     self._prepare_colors()
     self._prepare_palette()
