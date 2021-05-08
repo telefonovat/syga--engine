@@ -188,7 +188,7 @@ class GraphNodeColorizer:
     if uniq in ({True, False}, {True}, {False}, set()):
       self._binary_interpretation()
 
-    elif {type(x) for x in uniq} == {int, float}:
+    elif {type(x) for x in uniq} in ({float}, {int, float}):
       self._spectral_interpretation()
 
     elif Color.are_colors(uniq):

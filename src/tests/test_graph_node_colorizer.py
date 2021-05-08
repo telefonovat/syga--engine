@@ -603,7 +603,13 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_spectral_interpretation_guess_meta(self):
     """
-    todo: implement this test
+    Tests the conditions which should cause the graph visualizer to choose the
+    spectral interpretation automatically - no interpretation parameters used
+
+    Meta transformation is used
+
+    conditions:
+      - transformed values are of type int and float (at least one float)
     """
     G = Graph()
     prop = random_name()
@@ -621,15 +627,37 @@ class TestGraphNodeColorizer(unittest.TestCase):
     colorizer.interpret()
 
     self.assertTrue(
-      colorizer.has_identity_interpretation(),
+      colorizer.has_spectral_interpretation(),
       'Guess spectral interpretation when values are of types int and float'
     )
 
 
   def test_spectral_interpretation_guess_lambda(self):
     """
-    todo: implement this test
+    Tests the conditions which should cause the graph visualizer to choose the
+    spectral interpretation automatically - no interpretation parameters used
+
+    Lambda transformation is used
+
+    conditions:
+      - transformed values are of type int and float (at least one float)
     """
+    G = Graph()
+    scale = random.random()
+    shift = random.random() * random.randint(50, 100)
+    colorizer = GraphNodeColorizer.build(lambda v, G: v * scale + shift)
+
+    for v in range(random.randint(500, 1000)):
+      if random.random() > 0.5:
+        G.add_node(v)
+
+    colorizer.transform(G)
+    colorizer.interpret()
+
+    self.assertTrue(
+      colorizer.has_spectral_interpretation(),
+      'Guess spectral interpretation when values are of types int and float'
+    )
 
   #
   # Compute single - interpretation specified | ANCHOR
