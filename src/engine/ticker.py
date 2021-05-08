@@ -47,6 +47,7 @@ class Ticker:
 
     # Merge the frames
     merged_frames = []
+    curr = None
 
     try:
       iterator = iter(frames)

@@ -6,7 +6,8 @@ for example in $( find ./examples -name '*.py' ) ; do
   example=${example#.\/examples\/}
   example=${example%\.py}
 
-  out="$( ./bin/run-example.sh "$example" )"
+  ./bin/run-example.sh "$example"
+  out="$( cat "./out/$example.json" )"
 
   res="$( echo "$out" | jq -r .res )"
   err="$( echo "$out" | jq -r .err )"

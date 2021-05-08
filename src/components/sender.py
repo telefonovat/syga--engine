@@ -49,12 +49,12 @@ class Sender:
     logger.debug('Sending {} response'.format(res))
     logger.debug('Algorithm run in {:.6f} seconds'.format(elapsed))
 
-    print(json.dumps({
+    return json.dumps({
       'res': res,
       'err': None if err is None else str(err),
       'elapsed': elapsed,
       'frames': frames
-    }))
+    })
 
 
   def send_error(self, err):
@@ -64,7 +64,7 @@ class Sender:
     parameters:
       - err (Exception): The exception raised during preparation or execution
     """
-    self._send_response('error', err)
+    return self._send_response('error', err)
 
 
   def send_mixed(self, err):
@@ -74,14 +74,14 @@ class Sender:
     parameters:
       - err (Exception): The exception raised during preparation or execution
     """
-    self._send_response('mixed', err)
+    return self._send_response('mixed', err)
 
 
   def send_success(self):
     """
     Sends a success response
     """
-    self._send_response('success')
+    return self._send_response('success')
 
 
   def __init__(self, runner:Runner):

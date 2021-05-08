@@ -3,15 +3,12 @@ Tests for src/components/loader.py
 """
 
 import unittest
-import json
 import random
 import os
-from random_dict import random_string_dict
 from components import Loader
 from utils.path import resolve_url, path_from_root
 from utils.code import detect_indentation, get_sample_code
 from utils.random import random_name
-from exceptions import LoaderException
 
 
 class TestLoader(unittest.TestCase):
@@ -36,7 +33,7 @@ class TestLoader(unittest.TestCase):
     if uid is not None:
       cfg['uid'] = uid
 
-    return json.dumps(cfg)
+    return cfg
 
 
   def _get_admin_cfg(self, uid=None):
@@ -51,7 +48,7 @@ class TestLoader(unittest.TestCase):
     if uid is not None:
       cfg['uid'] = uid
 
-    return json.dumps(cfg)
+    return cfg
 
 
   def _get_loader(self, uid=None):
@@ -115,22 +112,6 @@ class TestLoader(unittest.TestCase):
       loader.generate_name()
 
       self.assertEqual(loader.unique_id, name, "Unique ID should equal the specified one")
-
-
-  def test_parse_cfg_invalid(self):
-    """
-    Tests whether an invalid input will raise a LoaderException
-
-    conditions:
-      - invalid input raises LoaderException
-    """
-    for _ in range(20):
-      not_json = lambda: random_name(random.randint(100, 200))
-      random_json = lambda: json.dumps(random_string_dict(1, 5))
-      loader = Loader().set_input(not_json() if random.random() > 0.5 else random_json())
-
-      with self.assertRaises(LoaderException):
-        loader.parse_cfg()
 
 
   def test_parse_cfg_valid(self):

@@ -6,3 +6,4 @@ colour
 webcolors
 seaborn
 python-dotenv
+Flask

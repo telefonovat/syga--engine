@@ -21,11 +21,11 @@ class Loader:
     - Create the module which holds the user specified algorithm
   """
 
-  def set_input(self, raw):
+  def set_input(self, cfg):
     """
     Sets the raw user JSON config input
     """
-    self._raw = raw
+    self._cfg = cfg
 
     return self
 
@@ -38,8 +38,6 @@ class Loader:
      - LoaderException: if the JSON cannot be parsed
     """
     try:
-      self._cfg = json.loads(self._raw)
-
       if 'code' not in self._cfg:
         raise LoaderException('`code` property not in cfg')
 
@@ -146,8 +144,6 @@ class Loader:
     parameters:
      - cfg (str): the JSON config input
     """
-    self._raw = None
-
     self.unique_id = None
     self.module_name = None
     self.module_path = None
