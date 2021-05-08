@@ -30,7 +30,4 @@ for example in $( find ./examples -name '*.py' ) ; do
   fi
 done
 
-echo ''
-printf "\033[1;32mALL TESTS PASSED\033[0m\n"
-
 exit 0
