@@ -289,6 +289,13 @@ class Color:
     return all(abs(x - y) <= FLOAT_ERROR for x, y in zip(self.rgba, color.rgba))
 
 
+  def __hash__(self):
+    """
+    Defines the hash function - hash the normalized rgba tuple
+    """
+    return hash(self.rgba)
+
+
   def __str__(self):
     """
     Defines conversion to string

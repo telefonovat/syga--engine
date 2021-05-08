@@ -437,7 +437,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
   def test_binary_interpretation_guess_meta(self):
     """
     Tests the conditions which should cause the graph visualizer to choose the
-    binary interpretation automatically - no interpretation parameters used
+    binary interpretation automatically - no interpretation parameters used.
 
     Meta transformation is used
 
@@ -451,7 +451,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
     for i in range(random.randrange(500, 1000)):
       G.add_node(i)
       if random.random() > 0.75:
-        G.nodes[i]['prop'] = random.random() > 0.5
+        G.nodes[i][prop] = random.random() > 0.5
 
     colorizer.transform(G)
     colorizer.interpret()
@@ -464,8 +464,27 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_binary_interpretation_guess_lambda(self):
     """
-    Todo: implement this test
+    Tests the conditions which should cause the graph visualizer to choose the
+    binary interpretation automatically - no interpretation parameters used.
+
+    Lambda transformation is used
+
+    conditions:
+      - only True and False transformed values cause binary interpretation
     """
+    G = Graph()
+    colorizer = GraphNodeColorizer.build(lambda v, G: bool(v % 2))
+
+    for i in range(random.randrange(500, 1000)):
+      G.add_node(i)
+
+    colorizer.transform(G)
+    colorizer.interpret()
+
+    self.assertTrue(
+      colorizer.has_binary_interpretation(),
+      'Guess binary interpretation when True/False values produced by lambda'
+    )
 
 
   def test_group_interpretation_guess_meta(self):
@@ -498,20 +517,88 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_group_interpreattion_guess_lambda(self):
     """
-    Todo: implement this test
+    Tests the conditions which should cause the graph visualizer to choose the
+    group interpretation automatically - no interpretation parameters used
+
+    Lambda transformation is used
+
+    conditions:
+      - transformed values are from {0, ..., 9} - this should cause group
+        interpretation to be chosen
     """
+    transform = lambda v, G: v % 10
+    G = Graph()
+    colorizer = GraphNodeColorizer.build(transform)
+    unique = set()
+
+    for v in range(random.randrange(500, 1000)):
+      if random.random() > 0.5:
+        G.add_node(v)
+        unique.add(transform(v, G))
+
+    colorizer.transform(G)
+    colorizer.interpret()
+
+    self.assertTrue(
+      colorizer.has_group_interpretation(),
+      f'Guess group interpretation when unique values are {unique}'
+    )
 
 
   def test_identity_interpretation_guess_meta(self):
     """
-    todo: implement this test
+    Tests the conditions which should cause the graph visualizer to choose the
+    identity interpretation automatically - no interpretation parameters used
+
+    Meta transformation is used
+
+    conditions:
+      - transformed values are colors
     """
+    G = Graph()
+    prop = random_name()
+    colors = [random_color() for _ in range(random.randint(5, 20))]
+    colorizer = GraphNodeColorizer.build(prop=prop)
+
+    for v in range(random.randint(500, 1000)):
+      if random.random() > 0.5:
+        G.add_node(v)
+        G.nodes[v][prop] = colors[v % len(colors)]
+
+    colorizer.transform(G)
+    colorizer.interpret()
+
+    self.assertTrue(
+      colorizer.has_identity_interpretation(),
+      f'Guess identity interpretation when unique values are {set(colors)}'
+    )
 
 
   def test_identity_interpretation_guess_lambda(self):
     """
-    todo: implement this test
+    Tests the conditions which should cause the graph visualizer to choose the
+    identity interpretation automatically - no interpretation parameters used
+
+    Lambda transformation is used
+
+    conditions:
+      - transformed values are colors
     """
+    G = Graph()
+    colors = [random_color() for _ in range(random.randint(5, 20))]
+    colorizer = GraphNodeColorizer.build(lambda v, G: colors[v % len(colors)])
+
+    for v in range(random.randint(500, 1000)):
+      if random.random() > 0.5:
+        G.add_node(v)
+
+    colorizer.transform(G)
+    colorizer.interpret()
+
+    self.assertTrue(
+      colorizer.has_identity_interpretation(),
+      f'Guess identity interpretation when unique values are {set(colors)}'
+    )
 
 
   def test_spectral_interpretation_guess_meta(self):
