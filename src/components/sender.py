@@ -51,7 +51,7 @@ class Sender:
 
     print(json.dumps({
       'res': res,
-      'err': str(err),
+      'err': None if err is None else str(err),
       'elapsed': elapsed,
       'frames': frames
     }))
