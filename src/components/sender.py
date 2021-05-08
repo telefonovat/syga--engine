@@ -17,8 +17,6 @@ class Sender:
   def _parse_colors(self, obj):
     """
     Recursively turns all instances of Color into RGB tuples
-
-    todo: consider using different library than colour
     """
     if isinstance(obj, Color):
       return obj.rgba

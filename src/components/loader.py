@@ -2,6 +2,7 @@
 Loader component
 """
 
+import os
 import json
 from utils.path import path_from_root
 from utils.code import detect_indentation, add_indentation
@@ -43,7 +44,7 @@ class Loader:
         raise LoaderException('`code` property not in cfg')
 
       if 'secret' in self._cfg:
-        if self._cfg['secret'] == 'super-secret-password': # todo: use .env
+        if self._cfg['secret'] == os.environ['SECRET_PASSWORD']:
           self._admin_access = True
         else:
           raise LoaderException('Invalid value of `secret` property')

@@ -1,8 +1,5 @@
 """
 Helper module for colors
-
-todo:
-  - consider rounding error
 """
 
 import re

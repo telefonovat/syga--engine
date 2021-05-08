@@ -105,7 +105,7 @@ class Engine:
     (component). Neighboring frames with the same style of the components
     are then merged into one. More detailed description of the merging
     algorithm can be found here:
-      - todo: add link
+      - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/engine/engine.md#zlievanie
 
     returns:
       - frames (list): the frames used for visualization

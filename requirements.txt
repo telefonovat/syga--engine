@@ -5,3 +5,4 @@ networkx
 colour
 webcolors
 seaborn
+python-dotenv

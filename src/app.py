@@ -4,6 +4,7 @@ The main class
 
 import sys
 import traceback
+from dotenv import load_dotenv
 from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
 
@@ -16,6 +17,7 @@ class App:
     """
     Initiates the app
     """
+    load_dotenv()
 
 
   def main_loop(self):

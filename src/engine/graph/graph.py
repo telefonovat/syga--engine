@@ -12,7 +12,7 @@ class Graph(networkx.Graph, Visualizer):
   Graph Visualizer is simply a wrapper for the networkx.Graph class which
   implements all visualization methods. The more precise description can be
   found in the following document:
-    - todo: add a link
+    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/graphs.md
 
   The style properties are as follows:
     - node color
@@ -26,7 +26,7 @@ class Graph(networkx.Graph, Visualizer):
 
   The stylization of every property can be specified by a designated method.
   This method simply passes all arguments to the builder of the designated
-  Stylizer (todo: maybe rename this)
+  Stylizer
   """
 
   def get_transformed_state(self):
