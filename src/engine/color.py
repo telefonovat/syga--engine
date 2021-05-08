@@ -102,6 +102,9 @@ class Color:
       if len(color) not in (3, 4):
         return False
 
+      if not all(isinstance(part, (int, float)) for part in color):
+        return False
+
       if len(color) == 4 and (color[3] < -FLOAT_ERROR or color[3] > 1 + FLOAT_ERROR):
         return False
 

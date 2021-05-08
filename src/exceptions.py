@@ -29,7 +29,15 @@ class AlgorithmException(AppException):
   provided algorithm, this exception should be raised.
   """
 
+
 class ColorException(AlgorithmException):
   """
   An exception which should be raised when there is a color problem
+  """
+
+
+class GraphNodeColorizerException(AlgorithmException):
+  """
+  An exception which should be raised when there is a problem with a graph
+  node colorizer - eg. invalid parameters, problem with interpretation ...
   """

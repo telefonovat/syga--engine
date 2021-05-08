@@ -10,6 +10,7 @@ from engine.color import Color
 from engine.graph import Graph
 from engine.graph.node_colorizer import GraphNodeColorizer
 from utils.random import random_name, random_color
+from exceptions import GraphNodeColorizerException
 
 
 class TestGraphNodeColorizer(unittest.TestCase):
@@ -29,10 +30,10 @@ class TestGraphNodeColorizer(unittest.TestCase):
     returns:
       - colors (int|str|Color|list|dict): valid argument for color kwarg
     """
-    OPT_INT = 0 # pylint: disable=invalid-name
+    OPT_INT = 0   # pylint: disable=invalid-name
     OPT_COLOR = 1 # pylint: disable=invalid-name
-    OPT_LIST = 2 # pylint: disable=invalid-name
-    OPT_DICT = 3 # pylint: disable=invalid-name
+    OPT_LIST = 2  # pylint: disable=invalid-name
+    OPT_DICT = 3  # pylint: disable=invalid-name
 
     opt = random.choice([OPT_INT, OPT_COLOR, OPT_LIST, OPT_DICT])
 
@@ -49,7 +50,60 @@ class TestGraphNodeColorizer(unittest.TestCase):
     if opt == OPT_DICT:
       return { random_name(4): random_color() for _ in range(random.randint(1, 20)) }
 
-    raise Exception('Invalid opt')
+    raise Exception('Invalid opt: {}'.format(opt))
+
+
+  def _random_colors_argument_binary(self):
+    """
+    Generates a random valid argument for the color(s) parameter. Options are
+      - int 1
+      - a single color (str or Color instance)
+      - a list of colors with just one item (str or Color instance)
+      - a tuple of colors with just one item (str or Color instance)
+
+    returns:
+      - colors (int|str|Color|list|dict): valid argument for color kwarg
+    """
+    color = self._random_colors_argument()
+
+    if isinstance(color, int):
+      return 1
+
+    if isinstance(color, (str, Color)):
+      return color
+
+    if isinstance(color, (list, tuple)):
+      return color[:1]
+
+    if isinstance(color, dict):
+      return self._random_colors_argument_binary()
+
+    raise Exception('Unknown color type: {}'.format(color))
+
+
+  def _random_colors_argument_group(self):
+    """
+    Generates a random valid argument for the color(s) parameter. Options are
+      - int greater than 1
+      - a list of colors with more than one item (str or Color instance)
+      - a tuple of colors with more than one item (str or Color instance)
+
+    returns:
+      - colors (int|str|Color|list|dict): valid argument for color kwarg
+    """
+    color = self._random_colors_argument()
+
+    if isinstance(color, int):
+      return max(2, color)
+
+    if isinstance(color, (str, Color)):
+      return self._random_colors_argument_group()
+
+    if isinstance(color, (list, tuple, dict)):
+      return self._random_colors_argument_group() if len(color) == 1 else color
+
+    raise Exception('Unknown color type: {}'.format(color))
+
 
   #
   # Validation | ANCHOR
@@ -58,6 +112,9 @@ class TestGraphNodeColorizer(unittest.TestCase):
   def test_validate_color_arg_valid(self):
     """
     Tests the validate_colors static function if the input is valid.
+
+    conditions:
+      - any valid color is invalid
     """
     for _ in range(200):
       colors = self._random_colors_argument()
@@ -68,21 +125,10 @@ class TestGraphNodeColorizer(unittest.TestCase):
       )
 
 
-  def test_validate_palette_arg_valid(self):
-    """
-    todo: implement this test
-    """
-
-
-  def test_validate_range_arg_valid(self):
-    """
-    todo: implement this test
-    """
-
-
   def test_validate_color_arg_invalid(self):
     """
-    Tests the validate_colors static function if the input is invalid.
+    Tests the validate_colors static function if the input is invalid. This is
+    done by generating a random valid color and then malforming it.
     """
     for _ in range(200):
       colors = self._random_colors_argument()
@@ -119,16 +165,45 @@ class TestGraphNodeColorizer(unittest.TestCase):
       )
 
 
+  def test_validate_palette_arg_valid(self):
+    """
+    todo: implement this test
+    """
+
+
   def test_validate_palette_arg_invalid(self):
     """
     todo: implement this test
     """
 
 
-  def test_validate_range_arg_invalid(self):
+  def test_validate_range_arg(self):
     """
-    todo: implement this test
+    Tests the validate_colors static function if the input is either valid of
+    invalid.
+
+    Conditions:
+      - the lower bound must be a smaller number that the upper bound
+      - integers and real numbers can be used - validity is unchanged
     """
+    for _ in range(200):
+      lower = random.randrange(-200, 200)
+      upper = random.randrange(-200, 200)
+
+      if random.random() > 0.5:
+        lower += random.random()
+
+      if random.random() > 0.5:
+        upper += random.random()
+
+      valid = lower < upper
+
+      self.assertEqual(
+        GraphNodeColorizer.validate_range((lower, upper)),
+        valid,
+        'Range {} is {}'.format((lower, upper), 'valid' if valid else 'invalid')
+      )
+
 
   #
   # Transformation | ANCHOR
@@ -150,7 +225,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
       if random.random() > 0.75:
         props.append((i, random.randint(1, 100)))
 
-    for key,value in props:
+    for key, value in props:
       G.add_node(key)
       G.nodes[key][prop] = value
 
@@ -177,7 +252,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
       if random.random() > 0.75:
         nodes.add(i)
 
-    transformed = {key for key,value in colorizer.transform(G).items() if value}
+    transformed = {key for key, value in colorizer.transform(G).items() if value}
 
     self.assertEqual(transformed, nodes, 'Set transformation from the specified set')
 
@@ -213,14 +288,11 @@ class TestGraphNodeColorizer(unittest.TestCase):
     Tests ways to specified usage of the binary transformation
 
     conditions:
-      - 1 is valid
-      - color name is valid
-      - color hex of length 3 and 6 is valid
-      - instance of Color is valid
-      - list with exactly one item which is a valid parameter is valid
+      - see _random_colors_argument_binary for valid binary colors - any valid
+        binary color is a valid argument
     """
     props = ['color', 'colors']
-    values = [1, 'blue', ['red'], '#333', ['#123456'], Color((0.5, 0.1, 0.2)), [Color('pink')]]
+    values = [self._random_colors_argument_binary() for _ in range(100)]
 
     for prop, value in itertools.product(props, values):
       colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: value })
@@ -243,17 +315,9 @@ class TestGraphNodeColorizer(unittest.TestCase):
       - different representations of colors can be mixed
     """
     props = ['color', 'colors']
-    values = [
-      2,
-      3,
-      4,
-      ['red', 'blue'],
-      { 'foo': 'red', 'bar': 'blue' },
-      [Color('pink'), Color('grey')],
-      { 'lorem': Color((0.1, 0.2, 0.3)), 'ipsum': 'red', 'dolor': '#123' }
-    ]
+    values = [self._random_colors_argument_group() for _ in range(100)]
 
-    for prop,value in itertools.product(props, values):
+    for prop, value in itertools.product(props, values):
       colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: value })
       colorizer.interpret()
 
@@ -265,21 +329,68 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
   def test_group_interpretation_specified_too_few_colors(self):
     """
-    todo: implement this test
+    Tests the group interpretation when there are more distinct values than
+    color specified by color(s) parameter. This can only happen if the type
+    of color(s) parameter is an int or a list or a tuple.
 
     conditions:
       - too few colors should raise exception
     """
+    props = ['color', 'colors']
+    values = [self._random_colors_argument_group() for _ in range(100)]
+
+    for prop, value in itertools.product(props, values):
+      value = list(value.values()) if isinstance(value, dict) else value
+      distinct = value if isinstance(value, int) else len(value)
+
+      if distinct == 2:
+        continue # 2 values will fall back to binary interpretation and not raise an exception
+
+      colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: value })
+      G = Graph()
+
+      # Add more unique values than colors
+      distinct += random.randrange(1, 20)
+      for v in range(distinct):
+        G.add_node(v, lorem=random_name(50))
+
+      colorizer.transform(G)
+
+      msg = f'Should raise expection with colors={value} and {distinct} distinct values'
+
+      with self.assertRaises(GraphNodeColorizerException, msg=msg):
+        colorizer.interpret()
 
 
   def test_group_interpretation_two_colors_more_values(self):
     """
-    todo: implement this test
+    Tests the fallback to binary interpretation when two colors specified and
+    more than two unique values found. This can happen only if the color(s)
+    parameter is an int, a list or a tuple.
 
     conditions:
       - binary interpretation should be used instead
       - no exception should be raised
     """
+    props = ['color', 'colors']
+    values = [self._random_colors_argument_group() for _ in range(100)]
+
+    for prop, v in itertools.product(props, values):
+      v = 2 if isinstance(v, int) else list(v.values())[:2] if isinstance(v, dict) else v[:2]
+      colorizer = GraphNodeColorizer.build(prop='lorem', **{ prop: v })
+      G = Graph()
+
+      # Add more unique values than colors
+      for w in range(random.randrange(3, 30)):
+        G.add_node(w, lorem=random_name(50))
+
+      colorizer.transform(G)
+      colorizer.interpret() # This should not raise an exception
+
+      self.assertTrue(
+        colorizer.has_binary_interpretation(),
+        f'Binary interpretation should be used when colors={v} and >2 distinct values'
+      )
 
 
   def test_spectral_interpretation_specified(self):
@@ -351,7 +462,13 @@ class TestGraphNodeColorizer(unittest.TestCase):
     )
 
 
-  def test_group_interpretation_guess(self):
+  def test_binary_interpretation_guess_lambda(self):
+    """
+    Todo: implement this test
+    """
+
+
+  def test_group_interpretation_guess_meta(self):
     """
     Tests the conditions which should cause the graph visualizer to choose the
     group interpretation automatically - no interpretation parameters used
@@ -379,19 +496,31 @@ class TestGraphNodeColorizer(unittest.TestCase):
     )
 
 
-  def test_group_interpretation_guess_random(self):
+  def test_group_interpreattion_guess_lambda(self):
+    """
+    Todo: implement this test
+    """
+
+
+  def test_identity_interpretation_guess_meta(self):
     """
     todo: implement this test
     """
 
 
-  def test_identity_interpretation_guess(self):
+  def test_identity_interpretation_guess_lambda(self):
     """
     todo: implement this test
     """
 
 
-  def test_spectral_interpretation_guess(self):
+  def test_spectral_interpretation_guess_meta(self):
+    """
+    todo: implement this test
+    """
+
+
+  def test_spectral_interpretation_guess_lambda(self):
     """
     todo: implement this test
     """

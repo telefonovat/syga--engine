@@ -6,6 +6,7 @@ import types
 from collections.abc import Iterable
 import seaborn as sns
 from engine.color import Color
+from exceptions import GraphNodeColorizerException
 
 
 class GraphNodeColorizer:
@@ -33,7 +34,7 @@ class GraphNodeColorizer:
     Creates the GraphNodeColorizer
     """
     if len(args) >= 2:
-      raise Exception('Too many positional arguments')
+      raise GraphNodeColorizerException('Too many positional arguments')
 
     if len(args) == 1:
       if isinstance(args[0], Iterable):
@@ -42,10 +43,10 @@ class GraphNodeColorizer:
       if isinstance(args[0], types.FunctionType):
         return GraphNodeColorizer(args[0], **kwargs)
 
-      raise Exception(f'Cannot use object of type {type(args[0])} as source')
+      raise GraphNodeColorizerException(f'Cannot use object of type {type(args[0])} as source')
 
     if 'prop' not in kwargs:
-      raise Exception('Source not specified')
+      raise GraphNodeColorizerException('Source not specified')
 
     prop = kwargs['prop']
     transform = lambda v, graph: None if prop not in graph.nodes[v] else graph.nodes[v][prop]
@@ -142,7 +143,7 @@ class GraphNodeColorizer:
           # interpretation with the specified colors as true/false colors
           self._binary_interpretation(*self._colors)
         else:
-          raise Exception('Too few colors: found {} unique values'.format(len(uniq)))
+          raise GraphNodeColorizerException('Too few colors: found {} unique values'.format(len(uniq)))
       else:
         self._colors = dict(zip(sorted(uniq), self._colors[:len(uniq)]))
 
@@ -242,7 +243,7 @@ class GraphNodeColorizer:
       # Unable to determine the interpretation type - if this happends, it is
       # an implementation error - the arguments MUST be validated properly
       if self._interpretation is None:
-        raise Exception('Error during the colorization process')
+        raise GraphNodeColorizerException('Error during the colorization process')
 
     # todo: consider the _palette
 
@@ -275,7 +276,7 @@ class GraphNodeColorizer:
     if self._interpretation == self.IDENTITY_INTERPRETATION:
       return value
 
-    raise Exception('Unknown interpretation type')
+    raise GraphNodeColorizerException('Unknown interpretation type')
 
 
   def compute(self, transformed_state):
@@ -439,7 +440,7 @@ class GraphNodeColorizer:
     constructore can be considered private
     """
     if 'color' in kwargs and 'colors' in kwargs:
-      raise Exception('Color and colors arguments are mutually exclusive')
+      raise GraphNodeColorizerException('Color and colors arguments are mutually exclusive')
 
     self._transform = transform
 
@@ -463,16 +464,16 @@ class GraphNodeColorizer:
       self._range = kwargs['range']
 
     if self._palette is not None and self._colors is not None:
-      raise Exception('Parameters color(s) and palette are mutually exclusive')
+      raise GraphNodeColorizerException('Parameters color(s) and palette are mutually exclusive')
 
     if not GraphNodeColorizer.validate_colors(self._colors):
-      raise Exception('Invalid value for parameter color(s): {}'.format(self._colors))
+      raise GraphNodeColorizerException('Invalid value for parameter color(s): {}'.format(self._colors))
 
     if not GraphNodeColorizer.validate_palette(self._palette):
-      raise Exception('Invalid value for parameter palette: {}'.format(self._palette))
+      raise GraphNodeColorizerException('Invalid value for parameter palette: {}'.format(self._palette))
 
     if not GraphNodeColorizer.validate_range(self._range):
-      raise Exception('Invalid value for parameter range: {}'.format(self._range))
+      raise GraphNodeColorizerException('Invalid value for parameter range: {}'.format(self._range))
 
     self._prepare_colors()
     self._prepare_palette()
