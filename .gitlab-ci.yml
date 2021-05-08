@@ -45,6 +45,7 @@ Algorithm tests:
     - apt-get -yq update
     - apt-get -yq install python3.7 python3.7-dev python3-pip
     - pip3 install -r requirements.txt
+    - ./bin/create-dotenv.sh
   script:
     - ./bin/run-tests.sh
   artifacts:
