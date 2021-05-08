@@ -36,6 +36,9 @@ class Graph(networkx.Graph, Visualizer):
       - list of edges
       - dict (element to transformed information) for every style property
 
+    If the graph is empty, None is returned. If all components in a tick are
+    None, the tick can be skipped.
+
     Every style property can also be None after transformation, if the
     stylization has not been specified by the designated method.
 
@@ -44,6 +47,9 @@ class Graph(networkx.Graph, Visualizer):
     returns:
       - transformed_information (dict): The information used for stylization
     """
+    if not self.nodes and not self.nodes:
+      return None
+
     transformed = {}
 
     for name, stylizer in self._stylizers.items():

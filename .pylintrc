@@ -254,6 +254,7 @@ function-naming-style=snake_case
 
 # Good variable names which should always be accepted, separated by a comma
 good-names=a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z,
+           v0, v1, v2, u0, u1, u2, w0, w1, w2, x0, x1, x2, y0, y1, y2, z0, z1, z2,
            G,
            ex,
            Run,
