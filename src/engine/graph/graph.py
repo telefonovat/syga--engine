@@ -56,9 +56,9 @@ class Graph(networkx.Graph, Visualizer):
       transformed[name] = None if stylizer is None else stylizer.transform(self)
 
     return {
-        'nodes': list(self.nodes),
-        'edges': list(self.edges),
-        'transformed': transformed
+      'nodes': list(self.nodes),
+      'edges': list(self.edges),
+      'transformed': transformed
     }
 
 
@@ -91,9 +91,9 @@ class Graph(networkx.Graph, Visualizer):
       style[name] = None if stylizer is None else stylizer.compute(state['transformed'][name])
 
     return {
-        'nodes': state['nodes'],
-        'edges': state['edges'],
-        'style': style
+      'nodes': state['nodes'],
+      'edges': state['edges'],
+      'style': style
     }
 
 
@@ -154,13 +154,13 @@ class Graph(networkx.Graph, Visualizer):
     super().__init__(incoming_graph_data=incoming_graph_data, **attr)
 
     self._stylizers = {
-        'node_colors': None,
-        'node_shapes': None,
-        'node_scales': None,
-        'node_labels': None,
+      'node_colors': None,
+      'node_shapes': None,
+      'node_scales': None,
+      'node_labels': None,
 
-        'edge_colors': None,
-        'edge_shapes': None,
-        'edge_scales': None,
-        'edge_labels': None
+      'edge_colors': None,
+      'edge_shapes': None,
+      'edge_scales': None,
+      'edge_labels': None
     }

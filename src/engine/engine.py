@@ -113,15 +113,7 @@ class Engine:
     for component in self._components:
       component.interpret_transformed_state()
 
-    all_ticks = self._ticker.get_ticks()
-
-    for tick in all_ticks:
-      components_style = [comp.compute_style(state) for comp, state in tick.data['components']]
-      tick.data['components'] = components_style
-
-    # todo: implement the merging algorithm
-
-    return [ tick.data for tick in all_ticks ]
+    return self._ticker.to_frames()
 
 
   def Graph(self, incoming_graph_data=None, **attr): # pylint: disable=invalid-name

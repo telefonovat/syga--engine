@@ -43,7 +43,7 @@ class Sender:
      - err (Exception): The exception thrown during preparation or execution
      - frames (list<Frame>): The list of generated frames (or an empty list)
     """
-    frames = self._runner.make_frames()
+    frames = [dict(frame) for frame in self._runner.make_frames()]
     elapsed = self._runner.get_elapsed_time()
 
     self._parse_colors(frames)

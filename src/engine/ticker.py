@@ -35,11 +35,19 @@ class Ticker:
     self.ticks.append(tick)
 
 
-  def get_ticks(self):
+  def to_frames(self):
     """
-    Returns all ticks
+    Turns the ticks into frames and returns them. The megring algorithm is
+    executed here.
+
+    returns:
+      - frames (list<Frame>): The frames
     """
-    return self.ticks
+    frames = [tick.to_frame() for tick in self.ticks]
+
+    # todo: merge
+
+    return frames
 
 
   def __init__(self):
@@ -50,11 +58,74 @@ class Ticker:
     self.ticks = []
 
 
+class Frame:
+  """
+  A frame stores all data used to draw one step of the visualized algorithm.
+  A frame is created from tick by computing the style of the components. After
+  that, neighbouring frames, which are equal, are merged into one.
+  Frame consists of:
+    - lineno: taken from the tick which became a frame
+    - console_logs: The current stdout output forwarded here, possible merged
+    - components: The style of the components - see Visualizer.compute_style
+  """
+
+  def __iter__(self):
+    """
+    Iterator function which allows to turn this object into dict using the
+    default dict() function.
+    """
+    yield ('lineno', self.lineno)
+    yield ('console_logs', self.console_logs)
+    yield ('components', self.components)
+
+
+  def __init__(self, lineno, console_logs, components):
+    """
+    Creates a new instance of Frame.
+
+    parameters:
+      - lineno (int): The current line
+      - console_logs (string): The text printed by the overloaded print method
+      - components (list): The list of component's styles. Result of the
+        compute_style method. See Tick.to_frame method.
+    """
+    self.lineno = lineno
+    self.console_logs = console_logs
+    self.components = components
+
+
 class Tick:
   """
-  The tick class is just a wrapper for a dict, which stores the tick properties
-  which implements the __eq__ method.
+  A tick is a snapshot of the current state of the visualized algorithm.
+  Tick consists of:
+    - tick id: A unique ID of the tick
+    - source: Identifies the source of the tick
+    - lineno: The number of the currently interpreted line during tick creation
+    - console_logs: The current stdout output forwarded here
+    - components: A list of tuple (component object, transformed state)
+
+  Tick defines the __eq__ method for comparing two ticks. If two neighbouring
+  ticks are equal, the latter will be ignored by the Ticker - there is no need
+  to store identical ticks in a row.
   """
+
+  def to_frame(self):
+    """
+    Turns this Tick into a Frame by computing the style of all components
+
+    returns:
+      - frame (Frame): The frame created from this Tick
+    """
+    lineno = self.lineno
+    console_logs = self.console_logs
+    components = [component.compute_style(state) for component, state in self.components]
+
+    return Frame(
+      lineno=lineno,
+      console_logs=console_logs,
+      components=components
+    )
+
 
   def __eq__(self, value):
     """
@@ -71,9 +142,9 @@ class Tick:
       return False
 
     return (
-      self.data['source'] == value.data['source'] and
-      self.data['console_logs'] == value.data['console_logs'] and
-      all([x[1] == y[1] for x, y in zip(self.data['components'], value.data['components'])])
+      self.source == value.source and
+      self.console_logs == value.console_logs and
+      all([x[1] == y[1] for x, y in zip(self.components, value.components)])
     )
 
 
@@ -88,10 +159,8 @@ class Tick:
       - console_logs (string): The text printed by the overloaded print method
       - components (list): A list of tuples (component, transformed state)
     """
-    self.data = dict(
-      tick_id=tick_id,
-      source=source,
-      lineno=lineno,
-      console_logs=console_logs,
-      components=components
-    )
+    self.tick_id = tick_id
+    self.source = source
+    self.lineno = lineno
+    self.console_logs = console_logs
+    self.components = components

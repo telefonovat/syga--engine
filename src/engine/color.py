@@ -311,6 +311,14 @@ class Color:
     return str(self)
 
 
+  def __iter__(self):
+    """
+    Defines the iterator for color - iterate the rgba parts
+    """
+    for part in self.rgba:
+      yield part
+
+
   def __init__(self, color):
     """
     Creates a new instance of Color.
