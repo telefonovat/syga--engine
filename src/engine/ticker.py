@@ -45,9 +45,26 @@ class Ticker:
     """
     frames = [tick.to_frame() for tick in self.ticks]
 
-    # todo: merge
+    # Merge the frames
+    merged_frames = []
 
-    return frames
+    try:
+      iterator = iter(frames)
+      curr = next(iterator)
+
+      while True:
+        frame = next(iterator)
+        if curr == frame:
+          curr.merge_with(frame)
+        else:
+          merged_frames.append(curr)
+          curr = frame
+
+    except StopIteration:
+      if curr is not None:
+        merged_frames.append(curr)
+
+    return merged_frames
 
 
   def __init__(self):
@@ -77,6 +94,36 @@ class Frame:
     yield ('lineno', self.lineno)
     yield ('console_logs', self.console_logs)
     yield ('components', self.components)
+
+
+  def __eq__(self, value):
+    """
+    Used to compare two frames. Frames are equal when the styles of the
+    components are equal.
+
+    Frame defines the __eq__ method to compare the neighbouring frames. If two
+    neighbouring frames are identical, they will be merged
+    """
+    if not isinstance(value, Frame):
+      return False
+
+    # todo: think more about the comparison.
+
+    return self.components == value.components
+
+
+  def merge_with(self, frame):
+    """
+    Merges this frame with the specified frame
+
+    parameters:
+      - frame (Frame): The frame to merge with
+
+    returns:
+      - self (Frame): Reference to this frame
+    """
+    self.console_logs = f'{frame.console_logs}{self.console_logs}'
+    return self
 
 
   def __init__(self, lineno, console_logs, components):
