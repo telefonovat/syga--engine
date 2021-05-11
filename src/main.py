@@ -2,7 +2,6 @@
 The entrypoint
 """
 
-
 import sys
 import traceback
 import datetime

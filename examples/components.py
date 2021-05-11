@@ -23,4 +23,6 @@ for v in G.nodes:
     while len(stack) > 0:
       v = stack.pop()
       G.nodes[v]['component'] = c
-      [stack.append(u) for u in G.adj[v] if G.nodes[u]['component'] is None]
+      for u in G.adj[v]:
+        if G.nodes[u]['component'] is None:
+          stack.append(u)
