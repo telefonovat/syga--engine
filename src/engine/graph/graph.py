@@ -53,7 +53,8 @@ class Graph(networkx.Graph, Visualizer):
     transformed = {}
 
     for name, stylizer in self._stylizers.items():
-      transformed[name] = None if stylizer is None else stylizer.transform(self)
+      if stylizer is not None:
+        transformed[name] = stylizer.transform(self)
 
     return {
       'nodes': list(self.nodes),
@@ -88,7 +89,8 @@ class Graph(networkx.Graph, Visualizer):
     style = {}
 
     for name, stylizer in self._stylizers.items():
-      style[name] = None if stylizer is None else stylizer.compute(state['transformed'][name])
+      if stylizer is not None:
+        style[name] = stylizer.compute(state['transformed'][name])
 
     return {
       'nodes': state['nodes'],
