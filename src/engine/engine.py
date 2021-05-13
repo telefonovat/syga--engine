@@ -32,6 +32,7 @@ class Engine:
   TICK_SOURCE_LINE = 0
   TICK_SOURCE_VARS = 1
   TICK_SOURCE_USER = 2
+  TICK_SOURCE_STYLIZER = 3
 
 
   Color = Color
@@ -123,7 +124,7 @@ class Engine:
     if 'visualize' not in attr:
       attr['visualize'] = True
 
-    graph = Graph(incoming_graph_data=incoming_graph_data, **attr)
+    graph = Graph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
 
     if attr['visualize']:
       self._components.append(graph)

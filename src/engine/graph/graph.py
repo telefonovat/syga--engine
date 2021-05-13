@@ -105,6 +105,9 @@ class Graph(networkx.Graph, Visualizer):
     """
     self._stylizers['node_colors'] = GraphNodeColorizer.build(*args, **kwargs)
 
+    if self._engine is not None:
+      self._engine.tick(self._engine.TICK_SOURCE_STYLIZER)
+
 
   def shape_nodes_by(self, *args, **kwargs):
     """
@@ -154,6 +157,8 @@ class Graph(networkx.Graph, Visualizer):
     engine.Graph(), which calls this constructor and forwards the arguments
     """
     super().__init__(incoming_graph_data=incoming_graph_data, **attr)
+
+    self._engine = attr['_engine'] if '_engine' in attr else None
 
     self._stylizers = {
       'node_colors': GraphNodeColorizer.build(lambda v, G: None),
