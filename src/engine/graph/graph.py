@@ -29,6 +29,15 @@ class Graph(networkx.Graph, Visualizer):
   Stylizer
   """
 
+  def _engine_tick(self):
+    """
+    If a reference to the engine is stored in this graph component, a tick is
+    created. The type of the tick is TICK_SOURCE_STYLIZER
+    """
+    if self._engine is not None:
+      self._engine.tick(self._engine.TICK_SOURCE_STYLIZER)
+
+
   def get_transformed_state(self):
     """
     Returns the transformed state of the Graph which is composed of
@@ -37,10 +46,10 @@ class Graph(networkx.Graph, Visualizer):
       - dict (element to transformed information) for every style property
 
     If the graph is empty, None is returned. If all components in a tick are
-    None, the tick can be skipped.
+    None, the tick can be skipped - it is useless.
 
-    Every style property can also be None after transformation, if the
-    stylization has not been specified by the designated method.
+    Only the properties which have stylizers specified are included in the
+    transformed dict.
 
     This method MUST be called every time a tick is being generated.
 
@@ -80,6 +89,15 @@ class Graph(networkx.Graph, Visualizer):
     `get_transformed_state`. The engine is responsible for keeping the
     transformed information and calling this method with it as the argument.
 
+    The transformed state for a property might not be present in the state
+    dict. This happends when ticks are generated BEFORE a stylizer has been
+    specified by the user. In such case the style of the property will NOT be
+    included in the style dict.
+
+    The style dict can also be empty if no stylizers were specified when
+    computing the transformed state. In such case the style dict is empty. If
+    all style dicts in a frame are empty - the frame will be ignored.
+
     parameters:
       - state (dict): The dict returned by the `get_transformed_state` method
 
@@ -89,7 +107,7 @@ class Graph(networkx.Graph, Visualizer):
     style = {}
 
     for name, stylizer in self._stylizers.items():
-      if stylizer is not None:
+      if stylizer is not None and name in state['transformed']:
         style[name] = stylizer.compute(state['transformed'][name])
 
     return {
@@ -105,8 +123,7 @@ class Graph(networkx.Graph, Visualizer):
     """
     self._stylizers['node_colors'] = GraphNodeColorizer.build(*args, **kwargs)
 
-    if self._engine is not None:
-      self._engine.tick(self._engine.TICK_SOURCE_STYLIZER)
+    self._engine_tick()
 
 
   def shape_nodes_by(self, *args, **kwargs):
@@ -161,7 +178,7 @@ class Graph(networkx.Graph, Visualizer):
     self._engine = attr['_engine'] if '_engine' in attr else None
 
     self._stylizers = {
-      'node_colors': GraphNodeColorizer.build(lambda v, G: None),
+      'node_colors': None,
       'node_shapes': None,
       'node_scales': None,
       'node_labels': None,

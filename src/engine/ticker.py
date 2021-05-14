@@ -43,7 +43,9 @@ class Ticker:
     returns:
       - frames (list<Frame>): The frames
     """
-    frames = [tick.to_frame() for tick in self.ticks]
+    # Create frames from the ticks and take only the truthy ones. See
+    # Frame.__bool__ for more information about the definition of truthyness.
+    frames = filter(None, [tick.to_frame() for tick in self.ticks])
 
     # Merge the frames
     merged_frames = []
@@ -95,6 +97,15 @@ class Frame:
     yield ('lineno', self.lineno)
     yield ('console_logs', self.console_logs)
     yield ('components', self.components)
+
+
+  def __bool__(self):
+    """
+    Defines the conversion to bool for a frame. A frame is truthy if at least
+    one component has a truthy style - this happends when the style dict has at
+    least one property specified.
+    """
+    return any(component['style'] for component in self.components) and not self.console_logs
 
 
   def __eq__(self, value):
