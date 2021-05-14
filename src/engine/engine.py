@@ -60,7 +60,10 @@ class Engine:
     parameters:
       - src (object): the source line
     """
-    self._lineno = src.lineno - 1
+    if not self._can_tick:
+      return # Skip line callback if ticks are not enabled ATM
+
+    self._lineno = src.lineno
 
     if self._logger is not None:
       self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
@@ -77,23 +80,32 @@ class Engine:
       - source (int): The source of the tick. Valid values are defined as
         constans with prefix TICK_SOURCE_
     """
+    if not self._can_tick:
+      return # Stop if ticks are not enabled ATM
+
     if not self._components:
       return # Ignore tick with no components
 
-    if source is None:
-      source = self.TICK_SOURCE_USER
+    try:
+      self._can_tick = False
 
-    console_logs = self._console_log.getvalue()
-    components = [ (comp, comp.get_transformed_state()) for comp in self._components ]
+      if source is None:
+        source = self.TICK_SOURCE_USER
 
-    self._ticker.tick(
-      source=source,
-      lineno=self._lineno,
-      console_logs=console_logs,
-      components=components
-    )
+      console_logs = self._console_log.getvalue()
+      components = [ (comp, comp.get_transformed_state()) for comp in self._components ]
 
-    self._console_log = StringIO() # Empty the contents
+      self._ticker.tick(
+        source=source,
+        lineno=self._lineno,
+        console_logs=console_logs,
+        components=components
+      )
+
+      self._console_log = StringIO() # Empty the contents
+
+    finally:
+      self._can_tick = True
 
 
   def make_frames(self):
@@ -149,6 +161,7 @@ class Engine:
     """
     Creates a new instance of Engine.
     """
+    self._can_tick = True
     self._console_log = StringIO()
     self._components = []
     self._lineno = 1
