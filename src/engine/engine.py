@@ -46,6 +46,7 @@ class Engine:
 
     The printed text is then saved as a data member of a Tick.
     """
+    self._logger.debug('{}:  --- print({}, {})'.format(self._lineno, list(args), dict(kwargs)))
     kwargs['file'] = self._console_log
     print(*args, **kwargs)
 

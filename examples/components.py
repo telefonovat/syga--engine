@@ -1,10 +1,16 @@
-import random
-
 # Components
 G = engine.Graph()
 stack = []
 
-G.add_edges_from(zip(random.choices(range(40), k=20), random.choices(range(40), k=20)))
+G.add_nodes_from(range(1, 11)) # {1, 2, ..., 10}
+G.add_edges_from([
+  # Component 1
+  (1, 2), (1, 3), (1, 4), (2, 3), (3, 4), (4, 5),
+  # Component 2
+  (6, 7),
+  # Component 3
+  (8, 9), (8, 10), (9, 10)
+])
 
 # Preparation
 for v in G.nodes:

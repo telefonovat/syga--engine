@@ -108,6 +108,9 @@ class TestColor(unittest.TestCase):
       if random() > 0.5:
         color_rgba = tuple(color_rgba)
 
+      if 'e-' in color_rgba_str:
+        continue # Skip this test if scientific notation was used
+
       self.assertTrue(Color.is_rgba(color_rgba), '{} is valid'.format(color_rgba))
       self.assertTrue(Color.is_rgba(color_rgba_str), '{} is valid'.format(color_rgba_str))
 
