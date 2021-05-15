@@ -2,7 +2,6 @@
 The sender component
 """
 
-import json
 from engine.color import Color
 from .logger import logger
 from .runner import Runner
@@ -49,12 +48,12 @@ class Sender:
     logger.debug('Sending {} response'.format(res))
     logger.debug('Algorithm run in {:.6f} seconds'.format(elapsed))
 
-    return json.dumps({
+    return {
       'res': res,
       'err': None if err is None else str(err),
       'elapsed': elapsed,
       'frames': frames
-    })
+    }
 
 
   def send_error(self, err):
