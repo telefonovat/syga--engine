@@ -65,7 +65,7 @@ class Engine:
     if not self._can_tick:
       return # Skip line callback if ticks are not enabled ATM
 
-    self._lineno = src.lineno
+    self._lineno = src.lineno - 1
 
     if os.environ['DEBUG_MODE'] == 'yes' and self._logger is not None:
       self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
