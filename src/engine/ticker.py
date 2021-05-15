@@ -137,7 +137,8 @@ class Frame:
     returns:
       - self (Frame): Reference to this frame
     """
-    self.console_logs = f'{frame.console_logs}{self.console_logs}'
+    self.lineno = frame.lineno
+    self.console_logs = f'{self.console_logs}{frame.console_logs}'
     return self
 
 
