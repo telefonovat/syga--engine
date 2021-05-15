@@ -3,6 +3,7 @@ The engine module
 """
 
 from io import StringIO
+import os
 import logging
 from utils.path import path_from_root
 from engine.graph import Graph
@@ -66,7 +67,7 @@ class Engine:
 
     self._lineno = src.lineno
 
-    if self._logger is not None:
+    if os.environ['DEBUG_MODE'] == 'yes' and self._logger is not None:
       self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
 
     self.tick(self.TICK_SOURCE_LINE)
