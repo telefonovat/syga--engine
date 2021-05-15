@@ -93,6 +93,10 @@ class Loader:
       code = self._cfg['code']
       indentation = detect_indentation(code)
 
+      # If there is no indentation (no if, for, while blocks), use 2
+      if indentation == 0:
+        indentation = 2
+
       self._code = 'def {}(engine, print):\n{}'.format(
         self.unique_id,
         add_indentation(code, indentation)
