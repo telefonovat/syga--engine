@@ -39,7 +39,13 @@ class Loader:
     """
     try:
       if 'code' not in self._cfg:
-        raise LoaderException('`code` property not in cfg')
+        raise LoaderException('Code is missing')
+
+      if not isinstance(self._cfg['code'], str):
+        raise LoaderException('Code is invalid - must be a string')
+
+      if not self._cfg['code']:
+        raise LoaderException('Code is empty')
 
       if 'secret' in self._cfg:
         if self._cfg['secret'] == os.environ['SECRET_PASSWORD']:
