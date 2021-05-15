@@ -27,17 +27,17 @@ parser.add_argument('--debug',
 arguments = parser.parse_args()
 
 
-@app.route('/nprg045/api/ping', methods=['GET'])
+@app.route('/api/ping', methods=['GET'])
 def ping():
   """
-  Todo: docstring this
+  Tests whether the REST API works
   """
   return {
     'time': datetime.datetime.now().isoformat()
   }
 
 
-@app.route('/nprg045/api', methods=['POST'])
+@app.route('/api/alg', methods=['POST'])
 def entrypoint():
   """
   Expects a config JSON in the POST body. The config JSON consists of:
@@ -50,7 +50,7 @@ def entrypoint():
   The sender prepares the response.
   """
   try:
-    logger.debug('{} main_loop START'.format('-' * 70))
+    logger.debug('{} main START'.format('-' * 70))
 
     # Initiate components
     loader = Loader()
@@ -83,7 +83,7 @@ def entrypoint():
     return sender.send_error(e)
 
   finally:
-    logger.debug('{} main_loop END\n'.format('-' * 70))
+    logger.debug('{} main END\n'.format('-' * 70))
 
 
 if __name__ == '__main__':

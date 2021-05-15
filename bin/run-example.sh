@@ -23,7 +23,7 @@ python3 src/main.py --port "$PORT" --debug > ./logs/flask.log 2>&1 &
 flask_pid="$!"
 
 for attempt in $( seq 1 "$MAX_ATTEMPTS" ) ; do
-  if [ "$( curl --silent -o /dev/null -w "%{http_code}" "http://localhost:$PORT/nprg045/api/ping" )" == '200' ] ; then
+  if [ "$( curl --silent -o /dev/null -w "%{http_code}" "http://localhost:$PORT/api/ping" )" == '200' ] ; then
     break
   else
     sleep 0.05
@@ -37,7 +37,7 @@ curl --silent \
   --header "Content-Type: application/json" \
   --request 'POST' \
   --data "$input_json" \
-  "http://localhost:$PORT/nprg045/api" > "./out/$alg.json"
+  "http://localhost:$PORT/api/alg" > "./out/$alg.json"
 
 exit_code="$?"
 
