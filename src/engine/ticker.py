@@ -105,6 +105,9 @@ class Frame:
     one component has a truthy style - this happends when the style dict has at
     least one property specified.
     """
+    if not self.components:
+      return False
+
     return any(component['style'] for component in self.components) and not self.console_logs
 
 
@@ -177,7 +180,7 @@ class Tick:
     """
     lineno = self.lineno
     console_logs = self.console_logs
-    components = [component.compute_style(state) for component, state in self.components]
+    components = list(filter(None, [comp.compute_style(state) for comp, state in self.components]))
 
     return Frame(
       lineno=lineno,

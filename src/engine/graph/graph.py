@@ -104,6 +104,9 @@ class Graph(networkx.Graph, Visualizer):
     returns:
       - style (dict): The final information used to draw the graph
     """
+    if state is None:
+      return None
+
     style = {}
 
     for name, stylizer in self._stylizers.items():
