@@ -2,8 +2,9 @@
 
 cd "$( dirname "$( realpath "$0" )" )/.."
 
-ssh phillip "\
-  cd /srv/nprg045-engine && \
+# This is just a temporary way to run the REST API
+ssh syga "\
+  cd /srv/syga-engine && \
   git pull origin master && \
   ./bin/docker/kill.sh && \
   ./bin/docker/build.sh && \
