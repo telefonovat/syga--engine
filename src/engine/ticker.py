@@ -190,6 +190,18 @@ class Tick:
     )
 
 
+  def __iter__(self):
+    """
+    Iterator function which allows to turn this object into dict using the
+    default dict() function.
+    """
+    yield ('tick_id', self.tick_id)
+    yield ('source', self.source)
+    yield ('lineno', self.lineno)
+    yield ('console_logs', self.console_logs)
+    yield ('components', [state for _, state in self.components])
+
+
   def __eq__(self, value):
     """
     Used to compare two ticks. Two ticks are considered equal if the following

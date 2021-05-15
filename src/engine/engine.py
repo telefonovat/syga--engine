@@ -3,6 +3,7 @@ The engine module
 """
 
 from io import StringIO
+import json
 import os
 import logging
 from utils.path import path_from_root
@@ -47,7 +48,6 @@ class Engine:
 
     The printed text is then saved as a data member of a Tick.
     """
-    self._logger.debug('{}:  --- print({}, {})'.format(self._lineno, list(args), dict(kwargs)))
     kwargs['file'] = self._console_log
     print(*args, **kwargs)
 
@@ -65,10 +65,11 @@ class Engine:
     if not self._can_tick:
       return # Skip line callback if ticks are not enabled ATM
 
-    self._lineno = src.lineno - 1
+    self._prev_line = self._curr_line
+    self._curr_line = src.lineno - 1
 
     if os.environ['DEBUG_MODE'] == 'yes' and self._logger is not None:
-      self._logger.debug('{}: {}'.format(self._lineno, src.fullsource.replace('\n', '')))
+      self._logger.debug('{}: {}'.format(self._prev_line, src.fullsource.replace('\n', '')))
 
     self.tick(self.TICK_SOURCE_LINE)
 
@@ -99,7 +100,7 @@ class Engine:
 
       self._ticker.tick(
         source=source,
-        lineno=self._lineno,
+        lineno=self._prev_line,
         console_logs=console_logs,
         components=components
       )
@@ -125,6 +126,10 @@ class Engine:
     returns:
       - frames (list): the frames used for visualization
     """
+    if os.environ['DEBUG_MODE'] == 'yes':
+      self._logger.debug('--------------------------- ALL TICKS')
+      self._logger.debug(json.dumps([dict(tick) for tick in self._ticker.ticks]))
+
     for component in self._components:
       component.interpret_transformed_state()
 
@@ -166,7 +171,9 @@ class Engine:
     self._can_tick = True
     self._console_log = StringIO()
     self._components = []
-    self._lineno = 1
+
+    self._curr_line = None
+    self._prev_line = None
 
     self._logger = None
     self._ticker = Ticker()
