@@ -11,4 +11,13 @@ ssh syga "\
   ./bin/pre-start.sh && \
   ./bin/docker/kill.sh && \
   ./bin/docker/build.sh && \
-  ./bin/docker/run.sh | timeout 5s xargs docker logs -f "
+  ./bin/docker/run.sh | timeout 5s xargs docker logs -f " || exit "$?"
+
+# Creanet VPS
+ssh phillip "\
+  cd /srv/nprg045-engine && \
+  git pull origin master && \
+  ./bin/pre-start.sh && \
+  ./bin/docker/kill.sh && \
+  ./bin/docker/build.sh && \
+  ./bin/docker/run.sh | timeout 5s xargs docker logs -f " || echo "$?"
