@@ -2,6 +2,7 @@
 The entrypoint
 """
 
+import os
 import sys
 import traceback
 import datetime
@@ -27,7 +28,7 @@ parser.add_argument('--debug',
 arguments = parser.parse_args()
 
 
-@app.route('/api/ping', methods=['GET'])
+@app.route('{}/ping'.format(os.environ['API_BASE']), methods=['GET'])
 def ping():
   """
   Tests whether the REST API works
@@ -37,7 +38,7 @@ def ping():
   }
 
 
-@app.route('/api/alg', methods=['POST'])
+@app.route('{}/alg'.format(os.environ['API_BASE']), methods=['POST'])
 def entrypoint():
   """
   Expects a config JSON in the POST body. The config JSON consists of:

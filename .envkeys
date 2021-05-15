@@ -1,0 +1,5 @@
+# This file contains keys which MUST be present in .env
+# This file auto generated in bin/dotenv-copy-keys.sh
+
+SECRET_PASSWORD=
+API_BASE=
