@@ -25,8 +25,8 @@ class Ticker:
       components=components
     )
 
-    if len(self.ticks) > 0 and self.ticks[-1] == tick:
-      return # Same data - skip this tick
+    if len(self.ticks) > 0 and self.ticks[-1] == tick and not bool(tick.console_logs):
+      return # Same data and no console logs - skip this tick
 
     if all(component[1] is None for component in components):
       return # All transformed states are None - this tick is useless
@@ -61,7 +61,7 @@ class Ticker:
 
       while True:
         frame = next(iterator)
-        if curr != frame:
+        if curr != frame or bool(frame.console_logs):
           merged_frames.append(frame)
         curr = frame
 
@@ -123,10 +123,7 @@ class Frame:
 
     # todo: think more about the comparison.
 
-    return (
-      self.components == value.components and
-      (self.console_logs == '' or value.console_logs == '')
-    )
+    return self.components == value.components
 
 
   def merge_with(self, frame):
@@ -222,7 +219,6 @@ class Tick:
 
     return (
       self.source == value.source and
-      self.console_logs == value.console_logs == '' and
       all([x[1] == y[1] for x, y in zip(self.components, value.components)])
     )
 
