@@ -137,8 +137,10 @@ class Frame:
     returns:
       - self (Frame): Reference to this frame
     """
-    # self.lineno = frame.lineno
-    self.console_logs = f'{self.console_logs}{frame.console_logs}'
+    if frame.console_logs:
+      self.lineno.append(frame.lineno)
+      self.console_logs = f'{self.console_logs}{frame.console_logs}'
+
     return self
 
 
@@ -147,7 +149,7 @@ class Frame:
     Creates a new instance of Frame.
 
     parameters:
-      - lineno (int): The current line
+      - lineno (list): The current lines - may be more than one if merged
       - console_logs (string): The text printed by the overloaded print method
       - components (list): The list of component's styles. Result of the
         compute_style method. See Tick.to_frame method.
@@ -179,7 +181,7 @@ class Tick:
     returns:
       - frame (Frame): The frame created from this Tick
     """
-    lineno = self.lineno
+    lineno = [self.lineno]
     console_logs = self.console_logs
     components = list(filter(None, [comp.compute_style(state) for comp, state in self.components]))
 
