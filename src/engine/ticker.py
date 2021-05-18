@@ -80,7 +80,7 @@ class Ticker:
         r_frame = merged_frames[right]
 
         if l_frame == r_frame and bool(l_frame.console_logs) and bool(r_frame.console_logs):
-          l_frame.merge_with(r_frame)
+          r_frame.merge_with(l_frame)
           merged_frames[left] = None
 
       merged_frames = list(filter(lambda frame: frame is not None, merged_frames))
@@ -157,7 +157,7 @@ class Frame:
     """
     if frame.console_logs:
       self.lineno.append(frame.lineno)
-      self.console_logs = f'{self.console_logs}{frame.console_logs}'
+      self.console_logs = f'{frame.console_logs}{self.console_logs}'
 
     return self
 
