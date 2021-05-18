@@ -12,10 +12,6 @@ for u in range(10):
 
 D = [[float('inf')] * len(G.nodes) for _ in range(len(G.nodes))]
 
-# Preparation
-for v in G.nodes:
-  G.nodes[v]['discovered'] = False
-
 # Style
 G.color_nodes_by(lambda v, G: None if D[0][v] == float('inf') else D[0][v])
 G.label_edges_by(lambda u, v, G: D[u][v])

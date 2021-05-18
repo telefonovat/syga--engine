@@ -69,7 +69,9 @@ class Engine:
     self._curr_line = src.lineno - 1
 
     if os.environ['DEBUG_MODE'] == 'yes' and self._logger is not None:
-      self._logger.debug('{}: {}'.format(self._prev_line, src.fullsource.replace('\n', '')))
+      self._logger.debug('({} -> {}): {}'.format(
+        self._prev_line, self._curr_line, src.fullsource.replace('\n', ''))
+      )
 
     self.tick(self.TICK_SOURCE_LINE)
 
@@ -97,10 +99,11 @@ class Engine:
 
       console_logs = self._console_log.getvalue()
       components = [ (comp, comp.get_transformed_state()) for comp in self._components ]
+      lineno = self._prev_line if source == self.TICK_SOURCE_LINE else self._curr_line
 
       self._ticker.tick(
         source=source,
-        lineno=self._prev_line,
+        lineno=lineno,
         console_logs=console_logs,
         components=components
       )
