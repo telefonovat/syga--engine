@@ -55,6 +55,14 @@ class Ticker:
       iterator = iter(frames)
       curr = next(iterator)
 
+      # No need to merge until the first frame
+      while not merged_frames:
+        frame = next(iterator)
+        if curr != frame:
+          merged_frames.append(curr)
+        curr = frame
+
+      # Keep merging identical frames
       while True:
         frame = next(iterator)
         if curr == frame:
