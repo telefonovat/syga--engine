@@ -156,7 +156,7 @@ class Frame:
       - self (Frame): Reference to this frame
     """
     if frame.console_logs:
-      self.lineno.append(frame.lineno)
+      self.lineno += frame.lineno
       self.console_logs = f'{frame.console_logs}{self.console_logs}'
 
     return self
