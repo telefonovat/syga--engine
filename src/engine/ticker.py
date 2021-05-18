@@ -47,11 +47,13 @@ class Ticker:
     # Frame.__bool__ for more information about the definition of truthyness.
     frames = filter(None, [tick.to_frame() for tick in self.ticks])
 
-    # return list(frames)
-
     # Merge the frames
+
+    # Phase 1 - assume the first frame is important. Use this frame for
+    # comparison. Keep iterating until a frame differs or has some console
+    # logs. When this happens, store this frame for comparison and continue
+    # the process until the end of the iterator.
     merged_frames = []
-    curr = None
 
     try:
       iterator = iter(frames)
@@ -66,7 +68,24 @@ class Ticker:
         curr = frame
 
     except StopIteration:
-      return merged_frames
+      pass # This is ok
+
+    except Exception as e:
+      raise e # Anything else is not okay
+
+    # Phase 2
+    if len(merged_frames) >= 2:
+      for left, right in zip(range(len(merged_frames) - 1), range(1, len(merged_frames))):
+        l_frame = merged_frames[left]
+        r_frame = merged_frames[right]
+
+        if l_frame == r_frame and bool(l_frame.console_logs) and bool(r_frame.console_logs):
+          l_frame.merge_with(r_frame)
+          merged_frames[left] = None
+
+      merged_frames = list(filter(lambda frame: frame is not None, merged_frames))
+
+    return merged_frames
 
 
   def __init__(self):
