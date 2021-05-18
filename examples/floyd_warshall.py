@@ -23,6 +23,10 @@ G.label_edges_by(lambda u, v, G: D[u][v])
 # Algorithm
 for u, v in G.edges:
   D[u][v] = G.edges[u, v]['d']
+  D[v][u] = G.edges[v, u]['d']
+
+print('The initial distance matrix is')
+print(D)
 
 for k in range(len(G.nodes) - 1):
   for i in range(len(G.nodes)):
