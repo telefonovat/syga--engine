@@ -108,7 +108,7 @@ class Frame:
     if not self.components:
       return False
 
-    return any(component['style'] for component in self.components) and not self.console_logs
+    return any(component['style'] for component in self.components) or bool(self.console_logs)
 
 
   def __eq__(self, value):
@@ -218,7 +218,7 @@ class Tick:
 
     return (
       self.source == value.source and
-      self.console_logs == value.console_logs and
+      self.console_logs == value.console_logs == '' and
       all([x[1] == y[1] for x, y in zip(self.components, value.components)])
     )
 

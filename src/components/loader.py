@@ -103,6 +103,8 @@ class Loader:
       if indentation == 0:
         indentation = 2
 
+      code += '\nprint("That\'s all, folks!")'
+
       self._code = 'def {}(engine, print):\n{}'.format(
         self.unique_id,
         add_indentation(code, indentation)

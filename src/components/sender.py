@@ -2,6 +2,8 @@
 The sender component
 """
 
+import traceback
+import os
 from engine.color import Color
 from .logger import logger
 from .runner import Runner
@@ -40,20 +42,35 @@ class Sender:
      - err (Exception): The exception thrown during preparation or execution
      - frames (list<Frame>): The list of generated frames (or an empty list)
     """
-    frames = [dict(frame) for frame in self._runner.make_frames()]
-    elapsed = self._runner.get_elapsed_time()
+    try:
+      ticks = None
 
-    self._parse_colors(frames)
+      if os.environ['DEBUG_MODE'] == 'yes':
+        ticks = [dict(tick) for tick in self._runner.get_ticks()]
 
-    logger.debug('Sending {} response'.format(res))
-    logger.debug('Algorithm run in {:.6f} seconds'.format(elapsed))
+      frames = [dict(frame) for frame in self._runner.make_frames()]
+      elapsed = self._runner.get_elapsed_time()
 
-    return {
-      'res': res,
-      'err': None if err is None else str(err),
-      'elapsed': elapsed,
-      'frames': frames
-    }
+      self._parse_colors(frames)
+
+      logger.debug('Sending {} response'.format(res))
+      logger.debug('Algorithm run in {:.6f} seconds'.format(elapsed))
+
+      return {
+        'res': res,
+        'err': None if err is None else str(err),
+        'elapsed': elapsed,
+        'frames': frames,
+        'ticks': ticks
+      }
+
+    except Exception: # pylint: disable=broad-except
+      logger.exception(traceback.format_exc())
+
+      return {
+        'res': 'error',
+        'err': 'Error while processing response'
+      }
 
 
   def send_error(self, err):

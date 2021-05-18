@@ -3,7 +3,6 @@ The entrypoint
 """
 
 import os
-import sys
 import traceback
 import datetime
 from argparse import ArgumentParser
@@ -70,10 +69,6 @@ def entrypoint():
     runner.run()
 
     return sender.send_success()
-
-  except EOFError as e:
-    logger.debug('EOF, exiting')
-    sys.exit(0)
 
   except AlgorithmException as e:
     logger.debug(traceback.format_exc())
