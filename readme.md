@@ -2,6 +2,10 @@
 
 ### Todo
 
+#### Bugs
+
+- [x] Miznú console logy
+
 #### Workflow & Konvencie
 
 - [x] <s>Upraviť všetky *.py súbory, aby mali 10/10 v Pylint</s>
