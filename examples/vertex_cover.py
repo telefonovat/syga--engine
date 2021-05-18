@@ -2,7 +2,7 @@ import random
 
 # Components
 G = engine.Graph()
-G.add_edges_from(zip(random.choices(range(200), k=800), random.choices(range(200), k=800)))
+G.add_edges_from(zip(random.choices(range(100), k=400), random.choices(range(100), k=400)))
 
 cover_nodes = []
 edges = list(G.edges)
