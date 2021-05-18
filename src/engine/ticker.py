@@ -25,11 +25,11 @@ class Ticker:
       components=components
     )
 
-    # if len(self.ticks) > 0 and self.ticks[-1] == tick:
-      # return # Same data - skip this tick
+    if len(self.ticks) > 0 and self.ticks[-1] == tick:
+      return # Same data - skip this tick
 
-    # if all(component[1] is None for component in components):
-      # return # All transformed states are None - this tick is useless
+    if all(component[1] is None for component in components):
+      return # All transformed states are None - this tick is useless
 
     self.next_tick_id += 1
     self.ticks.append(tick)
@@ -55,14 +55,21 @@ class Ticker:
       iterator = iter(frames)
       curr = next(iterator)
 
+      # No need to merge until the first frame
+      while not merged_frames:
+        frame = next(iterator)
+        if curr != frame:
+          merged_frames.append(curr)
+        curr = frame
+
       # Keep merging identical frames
       while True:
         frame = next(iterator)
         if curr == frame:
-          frame.merge_with(curr)
+          curr.merge_with(frame)
         else:
           merged_frames.append(curr)
-        curr = frame
+          curr = frame
 
     except StopIteration:
       if curr is not None:
@@ -140,7 +147,7 @@ class Frame:
     """
     if frame.console_logs:
       self.lineno.append(frame.lineno)
-      self.console_logs = f'{frame.console_logs}{self.console_logs}'
+      self.console_logs = f'{self.console_logs}{frame.console_logs}'
 
     return self
 
