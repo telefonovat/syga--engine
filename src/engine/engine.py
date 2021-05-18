@@ -159,6 +159,8 @@ class Engine:
     if attr['visualize']:
       self._components.append(graph)
 
+    self._ticker.ticks = [] # Reset the ticks
+
     return graph
 
 

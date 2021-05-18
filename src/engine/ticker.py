@@ -47,6 +47,8 @@ class Ticker:
     # Frame.__bool__ for more information about the definition of truthyness.
     frames = filter(None, [tick.to_frame() for tick in self.ticks])
 
+    # return list(frames)
+
     # Merge the frames
     merged_frames = []
     curr = None
@@ -55,27 +57,16 @@ class Ticker:
       iterator = iter(frames)
       curr = next(iterator)
 
-      # No need to merge until the first frame
-      while not merged_frames:
-        frame = next(iterator)
-        if curr != frame:
-          merged_frames.append(curr)
-        curr = frame
+      merged_frames.append(curr)
 
-      # Keep merging identical frames
       while True:
         frame = next(iterator)
-        if curr == frame:
-          curr.merge_with(frame)
-        else:
-          merged_frames.append(curr)
-          curr = frame
+        if curr != frame:
+          merged_frames.append(frame)
+        curr = frame
 
     except StopIteration:
-      if curr is not None:
-        merged_frames.append(curr)
-
-    return merged_frames
+      return merged_frames
 
 
   def __init__(self):
