@@ -132,7 +132,10 @@ class Frame:
 
     # todo: think more about the comparison.
 
-    return self.components == value.components and self.console_logs == value.console_logs == ''
+    return (
+      self.components == value.components and
+      (self.console_logs == '' or value.console_logs == '')
+    )
 
 
   def merge_with(self, frame):
