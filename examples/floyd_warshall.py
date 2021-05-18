@@ -26,7 +26,7 @@ for u, v in G.edges:
   D[v][u] = G.edges[v, u]['d']
 
 print('The initial distance matrix is')
-print(D)
+print('\n'.join([str(row) for row in D]))
 
 for k in range(len(G.nodes) - 1):
   for i in range(len(G.nodes)):
@@ -34,4 +34,4 @@ for k in range(len(G.nodes) - 1):
       D[i][j] = min(D[i][j], D[i][k + 1] + D[k + 1][j])
 
 print("The distance matrix is")
-print(D)
+print('\n'.join([str(row) for row in D]))
