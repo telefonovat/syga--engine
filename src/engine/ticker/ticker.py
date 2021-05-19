@@ -28,11 +28,13 @@ class Ticker:
       components=components
     )
 
-    if len(self.ticks) > 0 and self.ticks[-1] == tick and not bool(tick.console_logs):
-      return # Same data and no console logs - skip this tick
+    # Ticks with console logs are always important
+    if not tick.console_logs:
+      if len(self.ticks) > 0 and self.ticks[-1] == tick:
+        return # Same data - skip this tick
 
-    if all(component[1] is None for component in components):
-      return # All transformed states are None - this tick is useless
+      if all(component[1] is None for component in components):
+        return # All transformed states are None - this tick is useless
 
     self.next_tick_id += 1
     self.ticks.append(tick)
