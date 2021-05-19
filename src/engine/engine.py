@@ -88,9 +88,6 @@ class Engine:
     if not self._can_tick:
       return # Stop if ticks are not enabled ATM
 
-    if not self._components:
-      return # Ignore tick with no components
-
     try:
       self._can_tick = False
 
@@ -98,6 +95,10 @@ class Engine:
         source = self.TICK_SOURCE_USER
 
       console_logs = self._console_log.getvalue()
+
+      if not self._components and not bool(console_logs):
+        return # Ignore ticks with no components and no console logs
+
       components = [ (comp, comp.get_transformed_state()) for comp in self._components ]
       lineno = self._prev_line if source == self.TICK_SOURCE_LINE else self._curr_line
 
