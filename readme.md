@@ -4,7 +4,11 @@
 
 #### Bugs
 
-- [x] Miznú console logy
+- [x] <s>Miznú console logy</s>
+
+#### Nápady
+
+- [ ] Posledný frame dostane info o dĺžke behu algoritmu v milisekundách
 
 #### Workflow & Konvencie
 

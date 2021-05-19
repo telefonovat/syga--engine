@@ -4,7 +4,9 @@ The sender component
 
 import traceback
 import os
+import json
 from engine.color import Color
+from engine.stopwatch import Stopwatch
 from .logger import logger
 from .runner import Runner
 
@@ -43,26 +45,37 @@ class Sender:
      - frames (list<Frame>): The list of generated frames (or an empty list)
     """
     try:
-      ticks = None
+      stopwatch = Stopwatch().start()
 
+      # Get ticks only in debug mode
+      ticks = None
       if os.environ['DEBUG_MODE'] == 'yes':
         ticks = [dict(tick) for tick in self._runner.get_ticks()]
 
+      # Get all frames as dicts
       frames = [dict(frame) for frame in self._runner.make_frames()]
-      elapsed = self._runner.get_elapsed_time()
 
       self._parse_colors(frames)
 
-      logger.debug('Sending {} response'.format(res))
-      logger.debug('Algorithm run in {:.6f} seconds'.format(elapsed))
+      # Get elapsed times
+      alg_time = self._runner.get_elapsed_time()
+      parse_time = stopwatch.stop().elapsed
+      elapsed = alg_time + parse_time
 
-      return {
+      logger.debug('Sending {} response'.format(res))
+      logger.debug('Algorithm run in {:.6f} seconds'.format(alg_time))
+      logger.debug('Response prepared in {:.6f} seconds'.format(parse_time))
+      logger.debug('Everything took {:.6f} seconds'.format(elapsed))
+
+      return json.dumps({
         'res': res,
         'err': None if err is None else str(err),
+        'alg_time': alg_time,
+        'parse_time': parse_time,
         'elapsed': elapsed,
         'frames': frames,
         'ticks': ticks
-      }
+      })
 
     except Exception: # pylint: disable=broad-except
       logger.exception(traceback.format_exc())
