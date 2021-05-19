@@ -62,6 +62,12 @@ class Sender:
       parse_time = stopwatch.stop().elapsed
       elapsed = alg_time + parse_time
 
+      if frames:
+        frames[-1]['console_logs'] = f'\
+          Algorithm ran in {alg_time}ms\n\
+          Response ready in {parse_time}ms\n\
+          {frames[-1]["console_logs"]}'
+
       logger.debug('Sending {} response'.format(res))
       logger.debug('Algorithm run in {:.6f} seconds'.format(alg_time))
       logger.debug('Response prepared in {:.6f} seconds'.format(parse_time))
