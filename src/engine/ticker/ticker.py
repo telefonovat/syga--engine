@@ -20,6 +20,11 @@ class Ticker:
       - console_logs (string): The text printed by the overloaded print method
       - components (list): A list of tuples (component, transformed state)
     """
+    has_console_logs = bool(console_logs)
+
+    if not has_console_logs and all(component[1] is None for component in components):
+      return # All transformed states are None - this tick is useless
+
     tick = Tick(
       tick_id=self.next_tick_id,
       source=source,
@@ -28,13 +33,8 @@ class Ticker:
       components=components
     )
 
-    # Ticks with console logs are always important
-    if not tick.console_logs:
-      if len(self.ticks) > 0 and self.ticks[-1] == tick:
-        return # Same data - skip this tick
-
-      if all(component[1] is None for component in components):
-        return # All transformed states are None - this tick is useless
+    if not has_console_logs and len(self.ticks) > 0 and self.ticks[-1] == tick:
+      return # Same data - skip this tick
 
     self.next_tick_id += 1
     self.ticks.append(tick)
@@ -93,9 +93,22 @@ class Ticker:
     return merged_frames
 
 
+  def set_logger(self, logger):
+    """
+    Sets the debug logger used by the ticker. This allows ticker to make debug
+    logs when the program runs in debug mode.
+
+    parameters:
+      - logger (Logger): The logger used by the engine
+    """
+    self._logger = logger
+
+
   def __init__(self):
     """
     Creates a new instance of Ticker
     """
+    self._logger = None
+
     self.next_tick_id = 0
     self.ticks = []

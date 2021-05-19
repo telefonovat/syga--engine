@@ -163,8 +163,6 @@ class Engine:
     if attr['visualize']:
       self._components.append(graph)
 
-    self._ticker.ticks = [] # Reset the ticks
-
     return graph
 
 
@@ -179,6 +177,8 @@ class Engine:
     self._logger = logging.getLogger(uid)
     self._logger.addHandler(logging.FileHandler(path_from_root('../logs/algs/{}.log'.format(uid))))
     self._logger.setLevel(logging.DEBUG)
+
+    self._ticker.set_logger(self._logger)
 
 
   def __init__(self):

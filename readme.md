@@ -17,6 +17,7 @@
 - [x] <s>Rozlíšiť private a public properties a methods pomocou prefixu _</s>
 - [x] <s>Rozdeliť utils module</s>
 - [x] <s>Jedna medzera po class docstring-u</s>
+- [ ] Implementovať `class DebugLogger` namiesto obyčajného logger v Engine
 
 #### Testy
 

@@ -25,14 +25,29 @@ class Frame:
 
   def __bool__(self):
     """
-    Defines the conversion to bool for a frame. A frame is truthy if at least
-    one component has a truthy style - this happends when the style dict has at
-    least one property specified.
-    """
-    if not self.components:
-      return False
+    Defines the conversion to bool for a frame.
 
-    return any(component['style'] for component in self.components) or bool(self.console_logs)
+    The conditions for deciding the thruthyness of a Frame are:
+      1. if there are console logs, the frame is truthy - never remove frames
+         with console logs
+      2. if there are no components (ie. self.components is empty) and there
+         are no console logs, the frame is falsy - such frames are useless
+      3. If there are components, but no console logs, the frame is truthy only
+         if at least one of it's components has truthy style - this means that
+         component['style'] is not None and is not an empty dict
+
+      The third rule might be removed later on, because it prevents people from
+      using no style, but observing the changes in a structure of a visualizer.
+      For example changes in nodes and edges of a graph will be ignored if at
+      least one style property has not been specified for the graph.
+    """
+    if self.console_logs:
+      return True # 1.
+
+    if not self.components:
+      return False # 2.
+
+    return any(component['style'] for component in self.components) # 3.
 
 
   def __eq__(self, value):

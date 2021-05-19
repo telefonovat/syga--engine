@@ -37,4 +37,5 @@ for k in range(len(G.nodes) - 1):
     for j in range (len(G.nodes)):
       D[i][j] = min(D[i][j], D[i][k + 1] + D[k + 1][j])
 
+print('The final distance matrix is')
 print('\n'.join([' '.join([str(x).ljust(3) for x in row]) for row in D]))
