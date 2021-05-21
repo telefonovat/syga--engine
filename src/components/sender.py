@@ -2,6 +2,7 @@
 The sender component
 """
 
+import datetime
 import traceback
 import os
 import json
@@ -75,6 +76,7 @@ class Sender:
       logger.debug('Everything took {:.6f} seconds'.format(elapsed))
 
       return json.dumps({
+        'timestamp': datetime.datetime.now().isoformat(),
         'res': res,
         'err': None if err is None else str(err),
         'alg_time': alg_time,
@@ -88,6 +90,7 @@ class Sender:
       logger.exception(traceback.format_exc())
 
       return {
+        'timestamp': datetime.datetime.now().isoformat(),
         'res': 'error',
         'err': 'Error while processing response'
       }
