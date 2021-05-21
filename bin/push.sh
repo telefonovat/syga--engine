@@ -7,8 +7,8 @@ if [ "$1" = '' ] ; then
   exit 1
 fi
 
-git add .
-git commit -m "$1"
-git push origin master
+git add . || exit "$?"
+git commit -m "$1" || exit "$?"
+git push origin master || exit "$?"
 
 exit 0

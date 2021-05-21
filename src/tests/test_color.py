@@ -292,3 +292,15 @@ class TestColor(unittest.TestCase):
 
       for actual, expected in zip(Color.normalize_color(color_rgba), color_rgba):
         self.assertAlmostEqual(actual, expected, 7, color_rgba)
+
+
+  def test_to_hex(self):
+    """
+    Tests the to_hex method
+    """
+    for _ in range(500):
+      hex_color = '#{}'.format(random_name(4))
+      color = Color(hex_color)
+      conversion = color.to_hex()
+
+      self.assertEqual(hex_color, conversion, f'Original: {hex_color} != Coverted: {conversion}')

@@ -271,6 +271,19 @@ class Color:
     raise ColorException('Invalid color: {}'.format(color))
 
 
+  def to_hex(self):
+    """
+    Converts the color to long hex format.
+
+    returns:
+      - hex_color (str): the color in long hex format
+    """
+    if self.rgba is None:
+      return None # Default color will be determined by the Frontend
+
+    return '#{}'.format(''.join("%02x" % round(part * 255) for part in self.rgba))
+
+
   def __eq__(self, color):
     """
     Defines equality of two colors

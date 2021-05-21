@@ -22,7 +22,7 @@ class Sender:
     Recursively turns all instances of Color into RGB tuples
     """
     if isinstance(obj, Color):
-      return obj.rgba
+      return obj.to_hex()
 
     if isinstance(obj, list):
       for i in range(len(obj)): # pylint: disable=consider-using-enumerate
