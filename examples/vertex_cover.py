@@ -9,7 +9,7 @@ edges = list(G.edges)
 
 # Stylization
 G.color_nodes_by(cover_nodes)
-G.color_edges_by(lambda u,v: u in cover_nodes or v in cover_nodes)
+G.color_edges_by(lambda u, v, G: u in cover_nodes or v in cover_nodes)
 
 # Algorithm
 while len(edges) > 0:

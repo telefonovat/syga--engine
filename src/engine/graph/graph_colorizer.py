@@ -27,34 +27,18 @@ class GraphColorizer:
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
 
-  def get_graph_items(self, G):
-    """
-    Returns the collection of items (edges or nodes) of the specified graph
-    which should be used by the transform method
-    """
-    raise NotImplementedError()
-
-
   def transform(self, G):
     """
-    Runs the _transform method for every node in the graph, thus creating the
+    Runs the _transform method for every item in the graph, thus creating the
     transformed structure state for the specified Graph component
 
     parameters:
       - G (networkx.Graph): the graph to transform
 
     returns:
-      - transformed_state (dict): node to transformed information
+      - transformed_state (dict): item to transformed information
     """
-    res = {}
-
-    for node in self.get_graph_items(G):
-      transformed = self._transform(node, G)
-      res[node] = transformed
-      if transformed is not None:
-        self._unique_values.add(transformed)
-
-    return res
+    raise NotImplementedError()
 
 
   def _binary_interpretation(self, true=None, false=None):
@@ -469,11 +453,27 @@ class GraphNodeColorizer(GraphColorizer):
     - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
   """
 
-  def get_graph_items(self, G):
+  def transform(self, G):
     """
-    This method makes sure nodes will be iterated in the transform method.
+    Runs the _transform method for every node in the graph, thus creating the
+    transformed structure state for the specified Graph component
+
+    parameters:
+      - G (networkx.Graph): the graph to transform
+
+    returns:
+      - transformed_state (dict): item to transformed information
     """
-    return G.nodes
+    res = {}
+
+    for item in G.nodes:
+      transformed = self._transform(item, G)
+      res[item] = transformed
+
+      if transformed is not None:
+        self._unique_values.add(transformed)
+
+    return res
 
 
   @staticmethod
@@ -508,11 +508,30 @@ class GraphEdgeColorizer(GraphColorizer):
     - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
   """
 
-  def get_graph_items(self, G):
+  def transform(self, G):
     """
-    This method makes sure edges will be iterated in the transform method.
+    Runs the _transform method for every edge in the graph, thus creating the
+    transformed structure state for the specified Graph component
+
+    parameters:
+      - G (networkx.Graph): the graph to transform
+
+    returns:
+      - transformed_state (double dict): edge to transformed information
     """
-    return G.edges
+    res = {}
+
+    for u, v in G.edges:
+      if u not in res:
+        res[u] = {}
+
+      transformed = self._transform(u, v, G)
+      res[u][v] = transformed
+
+      if transformed is not None:
+        self._unique_values.add(transformed)
+
+    return res
 
 
   @staticmethod
@@ -525,7 +544,7 @@ class GraphEdgeColorizer(GraphColorizer):
 
     if len(args) == 1:
       if isinstance(args[0], Iterable):
-        return GraphEdgeColorizer.build(lambda u, v, G: v in args[0], **kwargs)
+        return GraphEdgeColorizer.build(lambda u, v, G: (u, v) in args[0], **kwargs)
 
       if isinstance(args[0], types.FunctionType):
         return GraphEdgeColorizer(args[0], **kwargs)
