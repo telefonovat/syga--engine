@@ -27,20 +27,6 @@ class GraphColorizer:
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
 
-  def transform(self, G):
-    """
-    Runs the _transform method for every item in the graph, thus creating the
-    transformed structure state for the specified Graph component
-
-    parameters:
-      - G (networkx.Graph): the graph to transform
-
-    returns:
-      - transformed_state (dict): item to transformed information
-    """
-    raise NotImplementedError()
-
-
   def _binary_interpretation(self, true=None, false=None):
     """
     States that this graph node colorizer will use binary interpretation.
@@ -162,6 +148,36 @@ class GraphColorizer:
 
     else:
       self._group_interpretation(len(self._unique_values))
+
+
+  def transform_single(self, *args):
+    """
+    Transforms a single value
+    """
+    transformed = self._transform(*args)
+
+    # Todo: use better exception
+    if isinstance(transformed, (dict, list)):
+      raise Exception(f'Invalid value for graph colorization: {transformed}')
+
+    if transformed is not None:
+      self._unique_values.add(transformed)
+
+    return transformed
+
+
+  def transform(self, G):
+    """
+    Runs the _transform method for every item in the graph, thus creating the
+    transformed structure state for the specified Graph component
+
+    parameters:
+      - G (networkx.Graph): the graph to transform
+
+    returns:
+      - transformed_state (dict): item to transformed information
+    """
+    raise NotImplementedError()
 
 
   def interpret(self):
@@ -466,12 +482,8 @@ class GraphNodeColorizer(GraphColorizer):
     """
     res = {}
 
-    for item in G.nodes:
-      transformed = self._transform(item, G)
-      res[item] = transformed
-
-      if transformed is not None:
-        self._unique_values.add(transformed)
+    for v in G.nodes:
+      res[v] = self.transform_single(v, G)
 
     return res
 
@@ -525,11 +537,7 @@ class GraphEdgeColorizer(GraphColorizer):
       if u not in res:
         res[u] = {}
 
-      transformed = self._transform(u, v, G)
-      res[u][v] = transformed
-
-      if transformed is not None:
-        self._unique_values.add(transformed)
+      res[u][v] = self.transform_single(u, v, G)
 
     return res
 
