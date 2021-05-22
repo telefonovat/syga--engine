@@ -4,7 +4,7 @@ The Graph Visualizer module
 
 import networkx
 from engine.visualizer import Visualizer
-from .node_colorizer import GraphNodeColorizer
+from .graph_colorizer import GraphNodeColorizer
 
 
 class Graph(networkx.Graph, Visualizer):

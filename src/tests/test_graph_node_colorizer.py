@@ -8,7 +8,7 @@ import random
 import seaborn as sns
 from engine.color import Color
 from engine.graph import Graph
-from engine.graph.node_colorizer import GraphNodeColorizer
+from engine.graph.graph_colorizer import GraphNodeColorizer
 from utils.random import random_name, random_color
 from exceptions import GraphNodeColorizerException
 

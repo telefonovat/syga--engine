@@ -6,12 +6,12 @@ import types
 from collections.abc import Iterable
 import seaborn as sns
 from engine.color import Color
-from exceptions import GraphNodeColorizerException
+from exceptions import GraphNodeColorizerException, GraphEdgeColorizerException
 
 
-class GraphNodeColorizer:
+class GraphColorizer:
   """
-  GraphNodeColorizer computes the colors of the nodes in a graph. The process
+  GraphNodeColorizer computes the colors of the items of a graph. The process
   is described in the following document:
     - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
   """
@@ -27,47 +27,29 @@ class GraphNodeColorizer:
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
 
-
-  @staticmethod
-  def build(*args, **kwargs):
+  def get_graph_items(self, G):
     """
-    Creates the GraphNodeColorizer
+    Returns the collection of items (edges or nodes) of the specified graph
+    which should be used by the transform method
     """
-    if len(args) >= 2:
-      raise GraphNodeColorizerException('Too many positional arguments')
-
-    if len(args) == 1:
-      if isinstance(args[0], Iterable):
-        return GraphNodeColorizer.build(lambda v, graph: v in args[0], **kwargs)
-
-      if isinstance(args[0], types.FunctionType):
-        return GraphNodeColorizer(args[0], **kwargs)
-
-      raise GraphNodeColorizerException(f'Cannot use object of type {type(args[0])} as source')
-
-    if 'prop' not in kwargs:
-      raise GraphNodeColorizerException('Source not specified')
-
-    prop = kwargs['prop']
-    transform = lambda v, graph: None if prop not in graph.nodes[v] else graph.nodes[v][prop]
-    return GraphNodeColorizer.build(transform, **kwargs)
+    raise NotImplementedError()
 
 
-  def transform(self, graph):
+  def transform(self, G):
     """
     Runs the _transform method for every node in the graph, thus creating the
     transformed structure state for the specified Graph component
 
     parameters:
-      - graph (networkx.Graph): the graph to transform
+      - G (networkx.Graph): the graph to transform
 
     returns:
       - transformed_state (dict): node to transformed information
     """
     res = {}
 
-    for node in graph.nodes:
-      transformed = self._transform(node, graph)
+    for node in self.get_graph_items(G):
+      transformed = self._transform(node, G)
       res[node] = transformed
       if transformed is not None:
         self._unique_values.add(transformed)
@@ -478,3 +460,81 @@ class GraphNodeColorizer:
     self._prepare_colors()
     self._prepare_palette()
     self._prepare_range()
+
+
+class GraphNodeColorizer(GraphColorizer):
+  """
+  GraphNodeColorizer computes the colors of the nodes of a graph. The process
+  is described in the following document:
+    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
+  """
+
+  def get_graph_items(self, G):
+    """
+    This method makes sure nodes will be iterated in the transform method.
+    """
+    return G.nodes
+
+
+  @staticmethod
+  def build(*args, **kwargs):
+    """
+    Creates a GraphNodeColorizer
+    """
+    if len(args) >= 2:
+      raise GraphNodeColorizerException('Too many positional arguments')
+
+    if len(args) == 1:
+      if isinstance(args[0], Iterable):
+        return GraphNodeColorizer.build(lambda v, g: v in args[0], **kwargs)
+
+      if isinstance(args[0], types.FunctionType):
+        return GraphNodeColorizer(args[0], **kwargs)
+
+      raise GraphNodeColorizerException(f'Cannot use object of type {type(args[0])} as source')
+
+    if 'prop' not in kwargs:
+      raise GraphNodeColorizerException('Source not specified')
+
+    prop = kwargs['prop']
+    transform = lambda v, G: None if prop not in G.nodes[v] else G.nodes[v][prop]
+    return GraphNodeColorizer.build(transform, **kwargs)
+
+
+class GraphEdgeColorizer(GraphColorizer):
+  """
+  GraphEdgeColorizer computes the colors of the edges of a graph. The process
+  is described in the following document:
+    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
+  """
+
+  def get_graph_items(self, G):
+    """
+    This method makes sure edges will be iterated in the transform method.
+    """
+    return G.edges
+
+
+  @staticmethod
+  def build(*args, **kwargs):
+    """
+    Creates a GraphEdgeColorizer
+    """
+    if len(args) >= 2:
+      raise GraphEdgeColorizerException('Too many positional arguments')
+
+    if len(args) == 1:
+      if isinstance(args[0], Iterable):
+        return GraphEdgeColorizer.build(lambda u, v, G: v in args[0], **kwargs)
+
+      if isinstance(args[0], types.FunctionType):
+        return GraphEdgeColorizer(args[0], **kwargs)
+
+      raise GraphEdgeColorizerException(f'Cannot use object of type {type(args[0])} as source')
+
+    if 'prop' not in kwargs:
+      raise GraphEdgeColorizerException('Source not specified')
+
+    prop = kwargs['prop']
+    transform = lambda u, v, G: None if prop not in G.edges[u, v] else G.edges[u, v][prop]
+    return GraphEdgeColorizer.build(transform, **kwargs)

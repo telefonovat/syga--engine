@@ -41,3 +41,10 @@ class GraphNodeColorizerException(AlgorithmException):
   An exception which should be raised when there is a problem with a graph
   node colorizer - eg. invalid parameters, problem with interpretation ...
   """
+
+
+class GraphEdgeColorizerException(AlgorithmException):
+  """
+  An exception which should be raised when there is a problem with a graph
+  edge colorizer - eg. invalid parameters, problem with interpretation ...
+  """
