@@ -7,3 +7,4 @@ webcolors
 seaborn
 python-dotenv
 Flask
+flask-cors

@@ -7,13 +7,16 @@ import traceback
 import datetime
 from argparse import ArgumentParser
 from flask import Flask, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
 
 
 load_dotenv()
+
 app = Flask(__name__)
+CORS(app)
 
 
 parser = ArgumentParser()
