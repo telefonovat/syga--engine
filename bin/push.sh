@@ -1,7 +1,9 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Main
 if [ "$1" = '' ] ; then
   echo "Missing commit message. Aborting..."
   exit 1
