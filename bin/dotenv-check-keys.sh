@@ -1,7 +1,9 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Main
 if [ ! -f '.env' ] ; then
   echo "Missing .env"
   exit 1
@@ -12,11 +14,13 @@ if [ ! -f '.envkeys' ] ; then
   exit 1
 fi
 
-for key in $( cat .envkeys | grep -Po '^.+?=$' ) ; do
-  cat .env | grep -q "^$key" || {
-    echo "Missing key $key"
-    exit 1
-  }
-done
+while read -r key ; do
+  if ! echo "$key" | grep -qPo '^#' ; then
+    grep -q "^$key" < .env || {
+      echo "Missing key $key"
+      exit 1
+    }
+  fi
+done < .envkeys
 
 exit 0
