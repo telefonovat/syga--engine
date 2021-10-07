@@ -1,9 +1,12 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Constants
 RUNS='20'
 
+# Parameters
 alg="$1"
 
 echo "$alg" | grep '/' -q && {
@@ -11,15 +14,17 @@ echo "$alg" | grep '/' -q && {
   exit 1
 }
 
+# Variables
 target="./examples/$alg.py"
 
+# Main
 if [ ! -f "$target" ] ; then
   echo "Example '$alg' does not exist"
   exit 1
 fi
 
 total='0'
-for i in $( seq 1 $RUNS ) ; do
+for _ in $( seq 1 $RUNS ) ; do
   ./bin/run-example.sh "$alg"
 
   out="$( cat "./out/$alg.json" )"
@@ -29,9 +34,9 @@ for i in $( seq 1 $RUNS ) ; do
   elapsed="$( echo "$out" | jq -r .elapsed | grep -Po '\d+\.\d{0,3}' | sed 's/\.//' | grep -Po '[1-9]\d*$' )"
 
   if [ "$res" = 'success' ] ; then
-    printf " \033[1;32m✔\033[0m $alg \033[0;90m${elapsed}ms\033[0m\n"
+    printf " \033[1;32m✔\033[0m %s \033[0;90m%sms\033[0m\n" "$alg" "$elapsed"
   else
-    printf " \033[1;31m$res\033[0m $alg \n"
+    printf " \033[1;31m%s\033[0m %s \n" "$res" "$alg"
     echo ""
     echo "$err"
 
@@ -41,4 +46,4 @@ for i in $( seq 1 $RUNS ) ; do
   total=$((total + elapsed))
 done
 
-printf "\nAverage \033[0;90m$((total / RUNS))ms\033[0m\n"
+printf "\nAverage \033[0;90m%sms\033[0m\n" "$((total / RUNS))"
