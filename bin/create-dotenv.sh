@@ -1,9 +1,13 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/../src"
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Main
 echo '
 SECRET_PASSWORD="super-secret-password"
 API_BASE="/api"
 DEBUG_MODE="yes"
-' > .env
+' > ./src/.env
+
+exit 0
