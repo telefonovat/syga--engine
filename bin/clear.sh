@@ -1,13 +1,19 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Script settings
+shopt -s nullglob
+
+# Main
 py3clean .
 
-ls ./logs/algs/ | grep -qPo '\.log$' && rm ./logs/algs/*.log
-ls ./src/__algs/ | grep -qPo '\.py$' && rm ./src/__algs/*.py
-ls ./out/ | grep -qPo '\.json$' && rm ./out/*.json
+for file in ./logs/algs/*.log ./src/__algs/*.py ./out/*.json ; do
+  rm "$file"
+done
 
-printf '' > logs/debug.log
+printf '' > ./logs/debug.log
+printf '' > ./logs/flask.log
 
 exit 0
