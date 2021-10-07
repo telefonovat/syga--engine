@@ -1,8 +1,13 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
-for example in $( find ./examples -name '*.py' ) ; do
+# Script settings
+shopt -s nullglob
+
+# Main
+for example in ./examples/*.py ; do
   example=${example#.\/examples\/}
   example=${example%\.py}
 
@@ -14,9 +19,9 @@ for example in $( find ./examples -name '*.py' ) ; do
   elapsed="$( echo "$out" | jq -r .elapsed | grep -Po '\d+\.\d{0,3}' | sed 's/\.//' | grep -Po '[1-9]\d*$' || exit "$?" )ms"
 
   if [ "$res" = 'success' ] ; then
-    printf " \033[1;32m✔\033[0m $example \033[0;90m$elapsed\033[0m\n"
+    printf " \033[1;32m✔\033[0m %s \033[0;90m%s\033[0m\n" "$example" "$elapsed"
   else
-    printf " \033[1;31m$res\033[0m $example \n"
+    printf " \033[1;31m%s\033[0m %s \n" "$res" "$example"
     echo ""
     echo "$err"
 
