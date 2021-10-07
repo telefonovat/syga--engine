@@ -2,6 +2,14 @@ stages:
   - Lint
   - Test
 
+shellcheck:
+  stage: Lint
+  image: alpine:latest
+  before_script:
+    - apk add shellcheck
+  script:
+    - find ./bin/ -name '*.sh' -exec shellcheck {} +
+
 pylint:
   stage: Lint
   image: python:3.7-slim
