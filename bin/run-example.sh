@@ -1,10 +1,13 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Constants
 MAX_ATTEMPTS='60'
 PORT='3103'
 
+# Parameters
 alg="$1"
 
 echo "$alg" | grep '/' -q && {
@@ -12,8 +15,10 @@ echo "$alg" | grep '/' -q && {
   exit 1
 }
 
+# Variables
 target="./examples/$alg.py"
 
+# Main
 if [ ! -f "$target" ] ; then
   echo "Example '$alg' does not exist"
   exit 1
@@ -22,7 +27,7 @@ fi
 python3 src/main.py --port "$PORT" --debug > ./logs/flask.log 2>&1 &
 flask_pid="$!"
 
-for attempt in $( seq 1 "$MAX_ATTEMPTS" ) ; do
+for _ in $( seq 1 "$MAX_ATTEMPTS" ) ; do
   if [ "$( curl --silent -o /dev/null -w "%{http_code}" "http://localhost:$PORT/api/ping" )" == '200' ] ; then
     break
   else
