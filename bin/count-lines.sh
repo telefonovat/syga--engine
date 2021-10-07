@@ -1,17 +1,23 @@
 #!/bin/bash
 
-cd "$( realpath "$(dirname "$0")" )/../"
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Variables
 total=0
 
+# Main
 for lang in 'py' 'sh' # specify the language suffixes
 do
-  count=$( find ./src ./examples ./bin -name "*.$lang" | xargs wc -l | tail -n 1 | grep -Po '\d+' )
-  printf "$lang\t$count lines\n"
+  lines="$( find ./src ./examples ./bin -name "*.$lang" -exec wc -l {} + )"
+  count="$( echo "$lines" | tail -n 1 | grep -Po '\d+' )"
+
+  printf "%s\t%d lines\n" "$lang" "$count"
+
   total=$((total+count))
 done
 
 printf "\n"
-printf "total\t$total lines\n"
+printf "total\t%d lines\n" "$total"
 
 exit 0
