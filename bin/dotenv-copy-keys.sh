@@ -1,18 +1,19 @@
 #!/bin/bash
 
-cd "$( dirname "$( realpath "$0" )" )/.."
+# Root directory
+cd "$( dirname "$( realpath "$0" )" )/.." || exit 1
 
+# Main
 if [ ! -f '.envkeys' ] ; then
   touch .envkeys
 fi
 
 cp .envkeys temp/.envkeys.copy
 
-echo '# This file contains keys which MUST be present in .env' > .envkeys
-echo '# This file auto generated in bin/dotenv-copy-keys.sh' >> .envkeys
-echo '' >> .envkeys
+printf '# This file contains keys which MUST be present in .env\n' > .envkeys
+printf '# This file auto generated in bin/dotenv-copy-keys.sh\n\n' >> .envkeys
 
-cat .env | grep -Po '^.+?=' >> .envkeys
+grep -Po '^.+?=' < .env >> .envkeys
 
 diff .envkeys temp/.envkeys.copy > /dev/null 2>&1
 
