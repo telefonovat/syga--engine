@@ -189,6 +189,6 @@ class TestLoader(unittest.TestCase):
         'Python file should be created'
       )
 
-      with open(loader.module_path) as f:
+      with open(loader.module_path, 'r', encoding='utf8') as f:
         code = loader._code # pylint: disable=protected-access
         self.assertEqual(f.read(), code, "File contents should be correct")

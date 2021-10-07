@@ -138,7 +138,8 @@ disable=print-statement,
         no-name-in-module,
         import-self,
         too-many-public-methods,
-        too-many-return-statements
+        too-many-return-statements,
+        consider-using-f-string
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

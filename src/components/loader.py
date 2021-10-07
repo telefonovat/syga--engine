@@ -124,7 +124,7 @@ class Loader:
      - LoaderException: if it is impossible to write to the designated file
     """
     try:
-      with open(self.module_path, 'w') as f:
+      with open(self.module_path, 'w', encoding='utf8') as f:
         f.write(self._code)
 
       logger.debug('Creating module {} -> success'.format(self.module_name))

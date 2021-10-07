@@ -266,7 +266,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
     """
     G = Graph()
     colorizer = GraphNodeColorizer.build(lambda v,G: v ** 2)
-    expected = dict()
+    expected = {}
 
     for i in range(random.randrange(500, 1000)):
       if random.random() > 0.75:
