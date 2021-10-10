@@ -95,7 +95,7 @@ class Runner:
     returns:
       - ticks (list): all ticks generated until this moment
     """
-    if DEBUG_MODE:
+    if not DEBUG_MODE:
       raise Exception('This feature is disabled in production mode')
 
     return self._engine.get_ticks()
