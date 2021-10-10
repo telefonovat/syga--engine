@@ -5,6 +5,7 @@ The runner component
 import os
 import importlib
 import hunter
+from environment import DEBUG_MODE
 from engine import Engine
 from exceptions import RunnerException, AlgorithmException
 from .logger import logger
@@ -94,7 +95,7 @@ class Runner:
     returns:
       - ticks (list): all ticks generated until this moment
     """
-    if os.environ['DEBUG_MODE'] != 'yes':
+    if DEBUG_MODE:
       raise Exception('This feature is disabled in production mode')
 
     return self._engine.get_ticks()

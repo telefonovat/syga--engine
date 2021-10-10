@@ -5,15 +5,13 @@ The entrypoint
 import os
 import traceback
 import datetime
+from environment import API_BASE, DEBUG_MODE
 from argparse import ArgumentParser
 from flask import Flask, request
 from flask_cors import CORS
-from dotenv import load_dotenv
 from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
 
-
-load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -30,7 +28,7 @@ parser.add_argument('--debug',
 arguments = parser.parse_args()
 
 
-@app.route('{}/ping'.format(os.environ['API_BASE']), methods=['GET'])
+@app.route('{}/ping'.format(API_BASE), methods=['GET'])
 def ping():
   """
   Tests whether the REST API works
@@ -40,7 +38,7 @@ def ping():
   }
 
 
-@app.route('{}/alg'.format(os.environ['API_BASE']), methods=['POST'])
+@app.route('{}/alg'.format(API_BASE), methods=['POST'])
 def entrypoint():
   """
   Expects a config JSON in the POST body. The config JSON consists of:
@@ -86,4 +84,7 @@ def entrypoint():
 
 
 if __name__ == '__main__':
+  if DEBUG_MODE:
+    print('Running in debug mode')
+
   app.run(host='0.0.0.0', debug=True, port=arguments.port)

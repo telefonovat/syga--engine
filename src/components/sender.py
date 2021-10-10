@@ -6,6 +6,7 @@ import datetime
 import traceback
 import os
 import json
+from environment import DEBUG_MODE
 from engine.color import Color
 from engine.stopwatch import Stopwatch
 from .logger import logger
@@ -50,7 +51,7 @@ class Sender:
 
       # Get ticks only in debug mode
       ticks = None
-      if os.environ['DEBUG_MODE'] == 'yes':
+      if DEBUG_MODE:
         ticks = [dict(tick) for tick in self._runner.get_ticks()]
 
       # Get all frames as dicts

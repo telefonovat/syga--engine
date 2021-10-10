@@ -4,6 +4,7 @@ Loader component
 
 import os
 import json
+from environment import SECRET_PASSWORD
 from utils.path import path_from_root
 from utils.code import detect_indentation, add_indentation
 from utils.random import random_name
@@ -48,7 +49,7 @@ class Loader:
         raise LoaderException('Code is empty')
 
       if 'secret' in self._cfg:
-        if self._cfg['secret'] == os.environ['SECRET_PASSWORD']:
+        if self._cfg['secret'] == SECRET_PASSWORD:
           self._admin_access = True
         else:
           raise LoaderException('Invalid value of `secret` property')

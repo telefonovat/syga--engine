@@ -5,6 +5,7 @@ The engine module
 from io import StringIO
 import os
 import logging
+from environment import DEBUG_MODE
 from utils.path import path_from_root
 from engine.graph import Graph
 from .ticker import Ticker
@@ -68,7 +69,7 @@ class Engine:
     self._prev_line = self._curr_line
     self._curr_line = src.lineno - 1
 
-    if os.environ['DEBUG_MODE'] == 'yes' and self._logger is not None:
+    if DEBUG_MODE and self._logger is not None:
       self._logger.debug('({} -> {}): {}'.format(
         self._prev_line, self._curr_line, src.fullsource.replace('\n', ''))
       )
@@ -145,7 +146,7 @@ class Engine:
     returns:
       - ticks (list): all ticks generated until this moment
     """
-    if os.environ['DEBUG_MODE'] != 'yes':
+    if not DEBUG_MODE:
       raise Exception('This feature is disabled in production mode')
 
     return self._ticker.ticks
