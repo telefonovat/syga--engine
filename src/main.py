@@ -22,7 +22,7 @@ CORS(app)
 parser = ArgumentParser()
 
 parser.add_argument('--port',
-  type=int, default=5000, required=False, help='The port to open')
+  type=int, default=80, required=False, help='The port to open')
 
 parser.add_argument('--debug',
   action='store_true', dest='debug', required=False, help='Run in debug mode')
