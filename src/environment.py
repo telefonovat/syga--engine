@@ -11,7 +11,7 @@ import binascii
 SECRET_PASSWORD = (
   os.environ['SECRET_PASSWORD'] if
   'SECRET_PASSWORD' in os.environ else
-  binascii.b2a_hex(os.urandom(128)).decode('utf-8').lower()
+  'super-secret-password'
 )
 
 # The prefix shared by all the endpoints
