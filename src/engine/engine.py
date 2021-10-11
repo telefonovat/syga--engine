@@ -3,7 +3,6 @@ The engine module
 """
 
 from io import StringIO
-import os
 import logging
 from environment import DEBUG_MODE
 from utils.path import path_from_root

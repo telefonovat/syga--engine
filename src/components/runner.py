@@ -2,7 +2,6 @@
 The runner component
 """
 
-import os
 import importlib
 import hunter
 from environment import DEBUG_MODE

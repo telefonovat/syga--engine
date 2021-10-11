@@ -2,7 +2,6 @@
 Loader component
 """
 
-import os
 import json
 from environment import SECRET_PASSWORD
 from utils.path import path_from_root

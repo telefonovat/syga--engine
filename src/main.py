@@ -2,13 +2,12 @@
 The entrypoint
 """
 
-import os
 import traceback
 import datetime
-from environment import API_BASE, DEBUG_MODE
 from argparse import ArgumentParser
 from flask import Flask, request
 from flask_cors import CORS
+from environment import API_BASE, DEBUG_MODE
 from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
 

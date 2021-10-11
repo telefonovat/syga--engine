@@ -4,7 +4,6 @@ The sender component
 
 import datetime
 import traceback
-import os
 import json
 from environment import DEBUG_MODE
 from engine.color import Color

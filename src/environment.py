@@ -3,7 +3,6 @@ The environment variables
 """
 
 import os
-import binascii
 
 
 # The secret password is required in order for some admin-level parameters to
