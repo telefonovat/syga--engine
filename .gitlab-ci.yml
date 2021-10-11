@@ -18,6 +18,7 @@ pylint:
     - echo undefined > public/badges/$CI_JOB_NAME.score
     - pip install pylint-gitlab
   script:
+    - pylint $(find -not -path "./examples/*" -type f -name "*.py" ! -path "**/.venv/**") || exit "$?"
     - pylint --output-format=text $(find -not -path "./examples/*" -type f -name "*.py" ! -path "**/.venv/**") | tee /tmp/pylint.txt
     - sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' /tmp/pylint.txt > public/badges/$CI_JOB_NAME.score
     - pylint --output-format=pylint_gitlab.GitlabCodeClimateReporter $(find -not -path "./examples/*" -type f -name "*.py" ! -path "**/.venv/**") > codeclimate.json
