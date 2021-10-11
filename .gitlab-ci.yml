@@ -65,13 +65,13 @@ Algorithm tests:
 
 Build Image:
   stage: Build
-  image: docker:19.03.1
+  image: docker:19.03.12
 
   variables:
     CI_IMAGE_NAME: syga/engine
 
   script:
-    # - docker info
+    - docker info
     - docker login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}"
     - docker build --pull -t "${CI_IMAGE_NAME}" .
     - docker push "${CI_IMAGE_NAME}"
