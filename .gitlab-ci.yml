@@ -65,7 +65,7 @@ Algorithm tests:
 
 Build Image:
   stage: Build
-  image: docker
+  image: docker:19.03.1
 
   variables:
     CI_IMAGE_NAME: syga/engine
