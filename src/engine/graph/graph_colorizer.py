@@ -1,19 +1,26 @@
 """
-The GraphNodeColorizer module
+The GraphColorizer module
 """
 
 import types
 from collections.abc import Iterable
 import seaborn as sns
 from engine.color import Color
-from exceptions import GraphNodeColorizerException, GraphEdgeColorizerException
+from exceptions import \
+  GraphColorizerException, \
+  GraphNodeColorizerException, \
+  GraphEdgeColorizerException
 
 
 class GraphColorizer:
   """
-  GraphNodeColorizer computes the colors of the items of a graph. The process
+  An abstract class which is the base for the following classes:
+    - GraphNodeColorizer
+    - GraphEdgeColorizer
+
+  GraphColorizer computes the colors of the items of a graph. The process
   is described in the following document:
-    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
+    - https://syga.kam.mff.cuni.cz/docs/graphs/colors/colors
   """
 
   BINARY_INTERPRETATION = 0
@@ -26,6 +33,7 @@ class GraphColorizer:
 
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
+
 
   def _binary_interpretation(self, true=None, false=None):
     """
@@ -95,7 +103,7 @@ class GraphColorizer:
           # interpretation with the specified colors as true/false colors
           self._binary_interpretation(*self._colors)
         else:
-          raise GraphNodeColorizerException(f'Too few colors: found {len(uniq)} unique values')
+          raise GraphColorizerException(f'Too few colors: found {len(uniq)} unique values')
       else:
         self._colors = dict(zip(sorted(uniq), self._colors[:len(uniq)]))
 
@@ -227,7 +235,7 @@ class GraphColorizer:
       # Unable to determine the interpretation type - if this happends, it is
       # an implementation error - the arguments MUST be validated properly
       if self._interpretation is None:
-        raise GraphNodeColorizerException('Error during the colorization process')
+        raise GraphColorizerException('Error during the colorization process')
 
     # todo: consider the _palette
 
@@ -260,7 +268,7 @@ class GraphColorizer:
     if self._interpretation == self.IDENTITY_INTERPRETATION:
       return value
 
-    raise GraphNodeColorizerException('Unknown interpretation type')
+    raise GraphColorizerException('Unknown interpretation type')
 
 
   def compute(self, transformed_state):
@@ -318,12 +326,12 @@ class GraphColorizer:
   def validate_colors(colors):
     """
     Validates the value of colors. The validity criteria is based on the type
-      - None: always valid (color(s) parameter was omitted)
-      - int: valid if greater than 0
-      - str: valid if is color
-      - list: valid if not empty and consists only of colors
+      - None:  always valid (color(s) parameter was omitted)
+      - int:   valid if greater than 0
+      - str:   valid if is color
+      - list:  valid if not empty and consists only of colors
       - tuple: same as list
-      - dict: valid if not empty and the values are colors
+      - dict:  valid if not empty and the values are colors
 
     All other types are considered invalid.
 
@@ -418,13 +426,14 @@ class GraphColorizer:
 
   def __init__(self, transform, **kwargs):
     """
-    Creates a new instance of GraphNodeColorizer
+    Creates a new instance of GraphColorizer.
 
-    GraphNodeColorizer.build MUST be used instead of this constructor. This
-    constructore can be considered private
+    One of the following two methods must be used instead of the constructor:
+      - GraphNodeColorizer.build
+      - GraphEdgeColorizer.build
     """
     if 'color' in kwargs and 'colors' in kwargs:
-      raise GraphNodeColorizerException('Color and colors arguments are mutually exclusive')
+      raise GraphColorizerException('Color and colors arguments are mutually exclusive')
 
     self._transform = transform
 
@@ -448,16 +457,16 @@ class GraphColorizer:
       self._range = kwargs['range']
 
     if self._palette is not None and self._colors is not None:
-      raise GraphNodeColorizerException('Parameters color(s) and palette are mutually exclusive')
+      raise GraphColorizerException('Parameters color(s) and palette are mutually exclusive')
 
-    if not GraphNodeColorizer.validate_colors(self._colors):
-      raise GraphNodeColorizerException(f'Invalid value for parameter color(s): {self._colors}')
+    if not GraphColorizer.validate_colors(self._colors):
+      raise GraphColorizerException(f'Invalid value for parameter color(s): {self._colors}')
 
-    if not GraphNodeColorizer.validate_palette(self._palette):
-      raise GraphNodeColorizerException(f'Invalid value for parameter palette: {self._palette}')
+    if not GraphColorizer.validate_palette(self._palette):
+      raise GraphColorizerException(f'Invalid value for parameter palette: {self._palette}')
 
-    if not GraphNodeColorizer.validate_range(self._range):
-      raise GraphNodeColorizerException(f'Invalid value for parameter range: {self._range}')
+    if not GraphColorizer.validate_range(self._range):
+      raise GraphColorizerException(f'Invalid value for parameter range: {self._range}')
 
     self._prepare_colors()
     self._prepare_palette()
@@ -468,7 +477,7 @@ class GraphNodeColorizer(GraphColorizer):
   """
   GraphNodeColorizer computes the colors of the nodes of a graph. The process
   is described in the following document:
-    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
+    - https://syga.kam.mff.cuni.cz/docs/graphs/colors/colors
   """
 
   def transform(self, G):
@@ -519,7 +528,7 @@ class GraphEdgeColorizer(GraphColorizer):
   """
   GraphEdgeColorizer computes the colors of the edges of a graph. The process
   is described in the following document:
-    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/colors/colors.md
+    - https://syga.kam.mff.cuni.cz/docs/graphs/colors/colors
   """
 
   def transform(self, G):
