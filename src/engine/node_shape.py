@@ -6,9 +6,26 @@ from exceptions import NodeShapeException
 
 
 NODE_SHAPES = {
-  'circle': 'circle',
-  'square': 'square',
   'hidden': 'hidden',
+
+  'circ': 'circle',
+  'circle': 'circle',
+  'ball': 'circle',
+  'dot': 'circle',
+
+  'triangle': 'triangle',
+
+  'square': 'square',
+  'rect': 'square',
+  'rectangle': 'square',
+
+  'diamond': 'diamond',
+
+  'hexagon': 'hexagon',
+
+  'octagon': 'octagon',
+
+  'star': 'star',
 }
 
 
