@@ -10,6 +10,7 @@ from engine.graph import Graph
 from .ticker import Ticker
 from .stopwatch import Stopwatch
 from .color import Color
+from .node_shape import NodeShape
 
 
 class Engine:
@@ -38,6 +39,7 @@ class Engine:
 
 
   Color = Color
+  NodeShape = NodeShape
 
 
   def print(self, *args, **kwargs):
@@ -126,7 +128,7 @@ class Engine:
     (component). Neighboring frames with the same style of the components
     are then merged into one. More detailed description of the merging
     algorithm can be found here:
-      - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/engine/engine.md#zlievanie
+      - https://syga.kam.mff.cuni.cz/docs/engine/engine#zlievanie
 
     returns:
       - frames (list): the frames used for visualization
