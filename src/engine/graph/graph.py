@@ -12,7 +12,7 @@ class Graph(networkx.Graph, Visualizer):
   Graph Visualizer is simply a wrapper for the networkx.Graph class which
   implements all visualization methods. The more precise description can be
   found in the following document:
-    - https://gitlab.mff.cuni.cz/wikarskm/mw-nprg045-docs/-/blob/master/graphs/graphs.md
+    - https://syga.kam.mff.cuni.cz/docs/graphs/graphs
 
   The style properties are as follows:
     - node color
