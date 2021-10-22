@@ -10,7 +10,7 @@ from engine.color import Color
 from engine.graph import Graph
 from engine.graph.graph_colorizer import GraphNodeColorizer
 from utils.random import random_name, random_color
-from exceptions import GraphNodeColorizerException
+from exceptions import GraphColorizerException
 
 
 class TestGraphNodeColorizer(unittest.TestCase):
@@ -358,7 +358,7 @@ class TestGraphNodeColorizer(unittest.TestCase):
 
       msg = f'Should raise expection with colors={value} and {distinct} distinct values'
 
-      with self.assertRaises(GraphNodeColorizerException, msg=msg):
+      with self.assertRaises(GraphColorizerException, msg=msg):
         colorizer.interpret()
 
 
