@@ -5,7 +5,7 @@ The GraphShaper module
 import types
 from collections.abc import Iterable
 from engine.node_shape import NodeShape
-from exceptions import GraphShaperException, GraphEdgeShaperException, GraphNodeShaperException
+from exceptions import GraphShaperException, GraphNodeShaperException
 
 
 class GraphShaper:
@@ -26,7 +26,7 @@ class GraphShaper:
   DEFAULT_FALSE_SHAPE = None
   DEFAULT_TRUE_SHAPE = None
 
-  Shape : NodeShape = None
+  Shape = None
 
 
   def _binary_interpretation(self, true=None, false=None):
@@ -45,8 +45,8 @@ class GraphShaper:
       - true (shape): the shape of true values (must be a valid argument of self.Shape)
       - false (shape): the shape of false values (must be a valid argument of self.Shape)
     """
-    true_shape = self.Shape(true) if true is not None else self.DEFAULT_TRUE_SHAPE
-    false_shape = self.Shape(false) if false is not None else self.DEFAULT_FALSE_SHAPE
+    true_shape = self.Shape.create(true) if true is not None else self.DEFAULT_TRUE_SHAPE
+    false_shape = self.Shape.create(false) if false is not None else self.DEFAULT_FALSE_SHAPE
 
     self._shapes = (false_shape, true_shape)
     self._interpretation = self.BINARY_INTERPRETATION
@@ -80,11 +80,11 @@ class GraphShaper:
       # palette = sns.shape_palette(self.DEFAULT_DISCRETE_PALETTE, shapes)
       # self._shapes = [Color(shape) for shape in palette]
 
-    elif isinstance(shapes, list):
-      self._shapes = [self.Shape(shape) for shape in shapes]
+    if isinstance(shapes, list): # todo: turn this into elif
+      self._shapes = [self.Shape.create(shape) for shape in shapes]
 
     elif isinstance(shapes, dict):
-      self._shapes = {key: self.Shape(shape) for key, shape in shapes.items()}
+      self._shapes = {key: self.Shape.create(shape) for key, shape in shapes.items()}
 
     # If _shapes is a list, it will be turned into a dict if possible. It may
     # not be possible if there are more unique items than the number of shapes
@@ -341,6 +341,7 @@ class GraphNodeShaper(GraphShaper):
   is described in the following document:
     - https://syga.kam.mff.cuni.cz/docs/graphs/shapes/shapes
   """
+
   Shape = NodeShape
 
   DEFAULT_FALSE_SHAPE = None

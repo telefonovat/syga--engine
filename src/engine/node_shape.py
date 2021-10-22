@@ -108,11 +108,22 @@ class NodeShape:
     raise NodeShapeException('Invalid shape: {}'.format(shape))
 
 
+  @staticmethod
+  def create(shape):
+    """
+    Creates a new instance of NodeShape and returns it.
+
+    parameters:
+      - shape (any): shape in any known format, will be normalized
+    """
+    return NodeShape(shape)
+
+
   def __init__(self, shape):
     """
     Creates a new instance of NodeShape.
 
     parameters:
-      - shape (any): shape in any known format, will be normalized to rgba
+      - shape (any): shape in any known format, will be normalized
     """
     self.shape = NodeShape.normalize_shape(shape)
