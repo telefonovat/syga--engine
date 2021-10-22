@@ -7,6 +7,7 @@ import traceback
 import json
 from environment import DEBUG_MODE
 from engine.color import Color
+from engine.node_shape import NodeShape
 from engine.stopwatch import Stopwatch
 from .logger import logger
 from .runner import Runner
@@ -18,20 +19,23 @@ class Sender:
   parsed before to make sure they can be JSON encoded
   """
 
-  def _parse_colors(self, obj):
+  def _parse_custom_types(self, obj):
     """
     Recursively turns all instances of Color into RGB tuples
     """
+    if isinstance(obj, NodeShape):
+      return obj.shape
+
     if isinstance(obj, Color):
       return obj.to_hex()
 
     if isinstance(obj, list):
       for i in range(len(obj)): # pylint: disable=consider-using-enumerate
-        obj[i] = self._parse_colors(obj[i])
+        obj[i] = self._parse_custom_types(obj[i])
 
     elif isinstance(obj, dict):
       for key, value in obj.items():
-        obj[key] = self._parse_colors(value)
+        obj[key] = self._parse_custom_types(value)
 
     return obj
 
@@ -56,7 +60,7 @@ class Sender:
       # Get all frames as dicts
       frames = [dict(frame) for frame in self._runner.make_frames()]
 
-      self._parse_colors(frames)
+      self._parse_custom_types(frames)
 
       # Get elapsed times
       alg_time = self._runner.get_elapsed_time()

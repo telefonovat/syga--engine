@@ -141,6 +141,7 @@ class GraphColorizer:
     were specified. The contents of _unique_values are used. The options are:
       - a subset of {True, False} (inc. an empty set) --> BINARY_INTERPRETATION
       - a set of colors --> IDENTITY_INTERPRETATION
+      - only number and at least one float --> SPECTRAL_INTERPRETATION
       - everything else --> GROUP_INTERPRETATION
     """
     uniq = self._unique_values

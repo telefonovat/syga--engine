@@ -21,13 +21,14 @@ G.add_edges_from([
 for v in G.nodes:
   G.nodes[v]['layer'] = -1
 
-# Stylization
-G.color_nodes_by(lambda v, G: (G.nodes[v]['layer'] + 1) or None)
-
-# Algorithm
 v0 = 1
 queue = deque()
 
+# Stylization
+G.color_nodes_by(lambda v, G: (G.nodes[v]['layer'] + 1) or None)
+G.shape_nodes_by(queue)
+
+# Algorithm
 queue.append(v0)
 G.nodes[v0]['layer'] = 0
 

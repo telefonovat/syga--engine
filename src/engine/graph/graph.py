@@ -5,6 +5,7 @@ The Graph Visualizer module
 import networkx
 from engine.visualizer import Visualizer
 from .graph_colorizer import GraphNodeColorizer
+from .graph_shaper import GraphNodeShaper
 
 
 class Graph(networkx.Graph, Visualizer):
@@ -131,8 +132,11 @@ class Graph(networkx.Graph, Visualizer):
 
   def shape_nodes_by(self, *args, **kwargs):
     """
-    todo: implement this
+    Creates an instance of GraphNodeShaper used by this graph
     """
+    self._stylizers['node_shapes'] = GraphNodeShaper.build(*args, **kwargs)
+
+    self._engine_tick()
 
 
   def scale_nodes_by(self, *args, **kwargs):
