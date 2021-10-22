@@ -113,7 +113,7 @@ class GraphColorizer:
     The upper and lower boundaries of the unique values will be computed. If
     there are no unique values -inf and +inf is used.
 
-    After this method runs the value of _range will a tuple of two items:
+    After this method runs the value of _range will be a tuple of two items:
       - The first item is the lower bound of the range
       - The second item is the upper bound of the range
     """
@@ -169,7 +169,9 @@ class GraphColorizer:
   def transform(self, G):
     """
     Runs the _transform method for every item in the graph, thus creating the
-    transformed structure state for the specified Graph component
+    transformed structure state for the specified Graph component.
+
+    This method MUST be overridden.
 
     parameters:
       - G (networkx.Graph): the graph to transform
