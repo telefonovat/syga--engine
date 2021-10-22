@@ -36,15 +36,51 @@ class ColorException(AlgorithmException):
   """
 
 
-class GraphNodeColorizerException(AlgorithmException):
+class NodeShapeException(AlgorithmException):
+  """
+  An exception which should be raised when there is a node shape problem
+  """
+
+
+class GraphColorizerException(AlgorithmException):
+  """
+  The base for the following exceptions:
+    - GraphNodeColorizerException
+    - GraphEdgeColorizerException
+  """
+
+
+class GraphNodeColorizerException(GraphColorizerException):
   """
   An exception which should be raised when there is a problem with a graph
   node colorizer - eg. invalid parameters, problem with interpretation ...
   """
 
 
-class GraphEdgeColorizerException(AlgorithmException):
+class GraphEdgeColorizerException(GraphColorizerException):
   """
   An exception which should be raised when there is a problem with a graph
   edge colorizer - eg. invalid parameters, problem with interpretation ...
+  """
+
+
+class GraphShaperException(AlgorithmException):
+  """
+  The base for the following exceptions:
+    - GraphNodeShaperException
+    - GraphEdgeShaperException
+  """
+
+
+class GraphNodeShaperException(GraphShaperException):
+  """
+  An exception which should be raised when there is a problem with a graph
+  node shaper - eg. invalid parameters, problem with interpretation ...
+  """
+
+
+class GraphEdgeShaperException(GraphShaperException):
+  """
+  An exception which should be raised when there is a problem with a graph
+  edge shaper - eg. invalid parameters, problem with interpretation ...
   """
