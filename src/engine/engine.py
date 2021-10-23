@@ -164,7 +164,7 @@ class Engine:
     if not DEBUG_MODE:
       raise Exception('This feature is disabled in production mode')
 
-    with open(self._log_path, 'r') as f:
+    with open(self._log_path, 'r', encoding='utf8') as f:
       return f.read()
 
 
