@@ -6,8 +6,6 @@ from exceptions import NodeShapeException
 
 
 NODE_SHAPES = {
-  'hidden': 'hidden',
-
   'circ': 'circle',
   'circle': 'circle',
   'ball': 'circle',
@@ -26,7 +24,20 @@ NODE_SHAPES = {
   'octagon': 'octagon',
 
   'star': 'star',
+
+  'hidden': 'hidden',
 }
+
+# The node shapes available when picking at random
+AVAILABLE_NODE_SHAPES = [
+  'circle',
+  'triangle',
+  'square',
+  'diamond',
+  'hexagon',
+  'octagon',
+  'start'
+]
 
 
 class NodeShape:
