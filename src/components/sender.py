@@ -60,6 +60,11 @@ class Sender:
       # Get all frames as dicts
       frames = [dict(frame) for frame in self._runner.make_frames()]
 
+      # Get engine logs only in debug mode
+      engine_logs = None
+      if DEBUG_MODE:
+        engine_logs = self._runner.get_logs()
+
       self._parse_custom_types(frames)
 
       # Get elapsed times
@@ -87,7 +92,8 @@ class Sender:
         'parse_time': parse_time,
         'elapsed': elapsed,
         'frames': frames,
-        'ticks': ticks
+        'ticks': ticks,
+        'engine_logs': engine_logs
       })
 
     except Exception: # pylint: disable=broad-except

@@ -153,9 +153,24 @@ class Engine:
     return self._ticker.ticks
 
 
+  def get_logs(self):
+    """
+    Returns the logs produced by the engine. This method CANNOT be run unless
+    the debug mode is on.
+
+    returns:
+      - logs (str): all logs produced by the engine so far
+    """
+    if not DEBUG_MODE:
+      raise Exception('This feature is disabled in production mode')
+
+    with open(self._log_path, 'r') as f:
+      return f.read()
+
+
   def Graph(self, incoming_graph_data=None, **attr): # pylint: disable=invalid-name
     """
-    Creates a new instance of Graph visualizer
+    Creates a new instance of Graph visualizer.
     """
     if 'visualize' not in attr:
       attr['visualize'] = True
@@ -168,25 +183,35 @@ class Engine:
     return graph
 
 
-  def init_logger(self, uid):
+  def init_logger(self):
     """
     Initiates the engine's logger. A unique ID must be provided. This ID
     will be used to create a unique log file for debugging purposes
-
-    parameters:
-      - uid (str): The unique ID of this engine
     """
-    self._logger = logging.getLogger(uid)
-    self._logger.addHandler(logging.FileHandler(path_from_root('../logs/algs/{}.log'.format(uid))))
+    self._logger = logging.getLogger(self._uid)
+    self._logger.addHandler(logging.FileHandler(self._log_path))
     self._logger.setLevel(logging.DEBUG)
 
     self._ticker.set_logger(self._logger)
 
 
-  def __init__(self):
+  @property
+  def _log_path(self):
+    """
+    The path of the log file.
+    """
+    return path_from_root('../logs/algs/{}.log'.format(self._uid))
+
+
+  def __init__(self, uid):
     """
     Creates a new instance of Engine.
+
+    parameters:
+      - uid (str): The unique ID of the module
     """
+    self._uid = uid
+
     self._can_tick = True
     self._console_log = StringIO()
     self._components = []

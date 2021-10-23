@@ -46,7 +46,7 @@ class Runner:
       - RunnerException: if an error occurres while importing the module
       - AlgorithmException: if an error is raised while running the algorithm
     """
-    self._engine.init_logger(self._loader.unique_id)
+    self._engine.init_logger()
 
     module_name = self._loader.module_name
     fun_name = self._loader.unique_id
@@ -100,6 +100,20 @@ class Runner:
     return self._engine.get_ticks()
 
 
+  def get_logs(self):
+    """
+    Returns the logs produced by the engine. This method CANNOT be run unless
+    the debug mode is on.
+
+    returns:
+      - logs (str): all logs produced by the engine so far
+    """
+    if not DEBUG_MODE:
+      raise Exception('This feature is disabled in production mode')
+
+    return self._engine.get_logs()
+
+
   def get_elapsed_time(self):
     """
     Returns the amount of time elapsed during the execution of the visualized
@@ -120,4 +134,4 @@ class Runner:
     """
     self._loader = loader
     self._module = None
-    self._engine = Engine()
+    self._engine = Engine(self._loader.unique_id)
