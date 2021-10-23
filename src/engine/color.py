@@ -64,7 +64,7 @@ class Color:
     returns:
       - is_keyword (bool)
     """
-    return isinstance(color, str) and color in COLOR_NAME_TO_RGBA
+    return isinstance(color, str) and color.lower() in COLOR_NAME_TO_RGBA
 
 
   @staticmethod
@@ -163,7 +163,7 @@ class Color:
     returns:
       - rgba (tuple): normalized rgba tuple (r, g, b, a)
     """
-    return COLOR_NAME_TO_RGBA[color]
+    return COLOR_NAME_TO_RGBA[color.lower()]
 
 
   @staticmethod
@@ -341,10 +341,10 @@ class Color:
 
 for _key, _rgb in COLOR_NAME_TO_RGB.items():
   _r, _g, _b = _rgb
-  COLOR_NAME_TO_RGBA[_key] = (_r / 255, _g / 255, _b / 255, 1)
+  COLOR_NAME_TO_RGBA[_key.lower()] = (_r / 255, _g / 255, _b / 255, 1)
 
 for _key, _hex in CSS3_NAMES_TO_HEX.items():
   if _key not in COLOR_NAME_TO_RGBA:
-    COLOR_NAME_TO_RGBA[_key] = Color.normalize_hex(_hex)
+    COLOR_NAME_TO_RGBA[_key.lower()] = Color.normalize_hex(_hex)
 
 COLOR_NAMES = list(COLOR_NAME_TO_RGBA.keys())

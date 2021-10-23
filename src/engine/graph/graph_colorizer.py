@@ -29,7 +29,7 @@ class GraphColorizer:
   SPECTRAL_INTERPRETATION = 3
 
   DEFAULT_FALSE_COLOR = None
-  DEFAULT_TRUE_COLOR = Color('blue')
+  DEFAULT_TRUE_COLOR = 'DeepSkyBlue'
 
   DEFAULT_DISCRETE_PALETTE = 'hls' # sns.color_palette("hls", 8)
   DEFAULT_CONTINUOUS_PALETTE = 'Spectral' # sns.color_palette("Spectral", as_cmap=True)
@@ -274,18 +274,17 @@ class GraphColorizer:
 
   def compute(self, transformed_state):
     """
-    Computes the styles for every node in the transformed_style dict
+    Computes the styles for every item in the transformed_style dict
+
+    This method MUST be overridden
 
     parameters:
-      - transformed_state (dict): node to transformed value (by transform())
+      - transformed_state: item to transformed value (by transform())
 
     returns:
-      - style (dict): node to its style
+      - style: item to its style
     """
-    if transformed_state is None:
-      return None
-
-    return {key: self.compute_single(value) for key, value in transformed_state.items()}
+    raise NotImplementedError()
 
 
   def has_interpretation(self):
@@ -500,6 +499,22 @@ class GraphNodeColorizer(GraphColorizer):
     return res
 
 
+  def compute(self, transformed_state):
+    """
+    Computes the styles for every node in the transformed_style dict
+
+    parameters:
+      - transformed_state (dict): node to transformed value (by transform())
+
+    returns:
+      - style (dict): node to its style
+    """
+    if transformed_state is None:
+      return None
+
+    return {key: self.compute_single(value) for key, value in transformed_state.items()}
+
+
   @staticmethod
   def build(*args, **kwargs):
     """
@@ -550,6 +565,31 @@ class GraphEdgeColorizer(GraphColorizer):
         res[u] = {}
 
       res[u][v] = self.transform_single(u, v, G)
+
+    return res
+
+
+  def compute(self, transformed_state):
+    """
+    Computes the styles for every edge in the transformed_style dict
+
+    parameters:
+      - transformed_state (double dict): edge to transformed value (by transform())
+
+    returns:
+      - style (double dict): edge to its style
+    """
+    if transformed_state is None:
+      return None
+
+    res = {}
+
+    for u in transformed_state.keys():
+      if u not in res:
+        res[u] = {}
+
+      for v in transformed_state[u].keys():
+        res[u][v] = self.compute_single(transformed_state[u][v])
 
     return res
 
