@@ -22,7 +22,11 @@ for v in G.nodes:
 
 # Style
 G.color_nodes_by(lambda v, G: G.nodes[v]['state'] == STATE_OPENED)
-# G.color_edges_by(queue)
+G.color_edges_by(lambda u, v, G:
+  (G.nodes[v]['state'] == STATE_OPENED and G.nodes[v]['pred'] == u) or
+  (G.nodes[u]['state'] == STATE_OPENED and G.nodes[u]['pred'] == v)
+)
+G.shape_nodes_by(lambda v, G: G.nodes[v]['state'] == STATE_CLOSED)
 
 # Algorithm
 def dfs_step(u):
