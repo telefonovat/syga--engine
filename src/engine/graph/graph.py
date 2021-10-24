@@ -188,12 +188,12 @@ class Graph(networkx.Graph, Visualizer):
     self._engine = attr['_engine'] if '_engine' in attr else None
 
     self._stylizers = {
-      'node_colors': None,
-      'node_shapes': None,
+      'node_colors': GraphNodeColorizer.build(lambda u, G: None),
+      'node_shapes': GraphNodeShaper.build(lambda u, G: None),
       'node_scales': None,
       'node_labels': None,
 
-      'edge_colors': None,
+      'edge_colors': GraphEdgeColorizer.build(lambda u, v, G: None),
       'edge_shapes': None,
       'edge_scales': None,
       'edge_labels': None
