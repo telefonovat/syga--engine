@@ -95,6 +95,8 @@ Build Image:
 
   variables:
     CI_IMAGE_NAME: syga/engine
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
 
   before_script:
     - docker info
