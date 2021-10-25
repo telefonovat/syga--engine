@@ -88,7 +88,7 @@ Algorithm tests:
 
 Build Image:
   stage: Build
-  image: docker:19.03.12
+  image: docker:19.03.12-dind
 
   only:
     - master
