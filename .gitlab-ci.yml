@@ -9,7 +9,7 @@ stages:
 
 shellcheck:
   stage: Lint
-  image: alpine:latest
+  image: alpine:stable
 
   before_script:
     - apk add shellcheck
@@ -59,7 +59,6 @@ Unit tests:
   script:
     - python3 src/test.py
 
-# todo: make this faster
 Algorithm tests:
   stage: Test
   image: python:3.8-slim
@@ -67,14 +66,6 @@ Algorithm tests:
   before_script:
     - apt-get update -y
     - apt install -y curl jq
-    # - apt install jq
-    # - apt-get -yq update
-    # - apt-get -yq install curl jq software-properties-common
-    # - add-apt-repository -y ppa:deadsnakes/ppa
-    # - apt-get -yq update
-    # - add-apt-repository universe
-    # - apt-get -yq update
-    # - apt-get -yq install python3.8 python3.8-dev python3-pip
     - pip3 install -r requirements.txt
 
   script:
