@@ -65,6 +65,7 @@ Algorithm tests:
   image: python:3.8-slim
 
   before_script:
+    - apt-get update -y
     - apt install -y curl jq
     # - apt install jq
     # - apt-get -yq update
