@@ -59,6 +59,7 @@ Unit tests:
   script:
     - python3 src/test.py
 
+# todo: make this faster
 Algorithm tests:
   stage: Test
   image: ubuntu:latest
@@ -88,15 +89,17 @@ Algorithm tests:
 
 Build Image:
   stage: Build
-  image: docker:19.03.12-dind
+  image: docker:19.03.12
+
+  services:
+    - docker:19.03.12-dind
 
   only:
     - master
 
   variables:
     CI_IMAGE_NAME: syga/engine
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: tcp://localhost:2375/
 
   before_script:
     - docker info
