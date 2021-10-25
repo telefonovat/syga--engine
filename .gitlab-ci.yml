@@ -91,15 +91,11 @@ Build Image:
   stage: Build
   image: docker:19.03.12
 
-  services:
-    - docker:18.09.7-dind
-
   only:
     - master
 
   variables:
     CI_IMAGE_NAME: syga/engine
-    DOCKER_HOST: tcp://localhost:2375/
 
   before_script:
     - docker info
