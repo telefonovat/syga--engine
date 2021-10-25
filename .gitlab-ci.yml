@@ -9,7 +9,7 @@ stages:
 
 shellcheck:
   stage: Lint
-  image: alpine:stable
+  image: alpine:3.14
 
   before_script:
     - apk add shellcheck
