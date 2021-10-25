@@ -92,7 +92,7 @@ Build Image:
   image: docker:19.03.12
 
   services:
-    - docker:19.03.12-dind
+    - docker:18.09.7-dind
 
   only:
     - master
