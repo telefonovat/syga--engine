@@ -8,6 +8,7 @@ import json
 from environment import DEBUG_MODE
 from engine.color import Color
 from engine.node_shape import NodeShape
+from engine.edge_shape import EdgeShape
 from engine.stopwatch import Stopwatch
 from .logger import logger
 from .runner import Runner
@@ -24,6 +25,9 @@ class Sender:
     Recursively turns all instances of Color into RGB tuples
     """
     if isinstance(obj, NodeShape):
+      return obj.shape
+
+    if isinstance(obj, EdgeShape):
       return obj.shape
 
     if isinstance(obj, Color):

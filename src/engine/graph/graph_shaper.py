@@ -484,7 +484,7 @@ class GraphEdgeShaper(GraphShaper):
 
     if len(args) == 1:
       if isinstance(args[0], Iterable):
-        return GraphEdgeShaper.build(lambda v, g: v in args[0], **kwargs)
+        return GraphEdgeShaper.build(lambda u, v, G: (u, v) in args[0], **kwargs)
 
       if isinstance(args[0], types.FunctionType):
         return GraphEdgeShaper(args[0], **kwargs)
@@ -495,5 +495,5 @@ class GraphEdgeShaper(GraphShaper):
       raise GraphEdgeShaperException('Source not specified')
 
     prop = kwargs['prop']
-    transform = lambda v, G: None if prop not in G.nodes[v] else G.nodes[v][prop]
+    transform = lambda u, v, G: None if prop not in G.edges[u, v] else G.edges[u, v][prop]
     return GraphEdgeShaper.build(transform, **kwargs)

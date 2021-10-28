@@ -164,7 +164,7 @@ class Graph(networkx.Graph, Visualizer):
     """
     Creates an instance of GraphEdgeShaper used by this graph
     """
-    self._stylizers['edge_colors'] = GraphEdgeShaper.build(*args, **kwargs)
+    self._stylizers['edge_shapes'] = GraphEdgeShaper.build(*args, **kwargs)
 
     self._engine_tick()
 
