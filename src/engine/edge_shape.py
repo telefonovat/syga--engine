@@ -2,47 +2,37 @@
 Helper module for shapes.
 """
 
-from exceptions import NodeShapeException
+from exceptions import EdgeShapeException
 
 
-NODE_SHAPES = {
-  'circ': 'circle',
-  'circle': 'circle',
-  'ball': 'circle',
-  'dot': 'circle',
+EDGE_SHAPES = {
+  'solid': 'solid',
 
-  'triangle': 'triangle',
+  'dash': 'dashed',
+  'dashed': 'dashed',
 
-  'square': 'square',
-  'rect': 'square',
-  'rectangle': 'square',
+  'dot': 'dotted',
+  'dotted': 'dotted',
 
-  'diamond': 'diamond',
+  'comb': 'combined',
+  'combined': 'combined',
 
-  'hexagon': 'hexagon',
-
-  'octagon': 'octagon',
-
-  'star': 'star',
-
-  'hidden': 'hidden',
+  'no': 'hidden',
+  'hidden': 'hidden'
 }
 
-# The node shapes available when picking at random
-AVAILABLE_NODE_SHAPES = [
-  'circle',
-  'triangle',
-  'square',
-  'diamond',
-  'hexagon',
-  'octagon',
-  'start'
+# The edge shapes available when picking at random
+AVAILABLE_EDGE_SHAPES = [
+  'solid',
+  'dashed',
+  'dotted',
+  'combined',
 ]
 
 
-class NodeShape:
+class EdgeShape:
   """
-  Used to represent the shape of a node.
+  Used to represent the shape of a edge.
   """
 
   @staticmethod
@@ -56,7 +46,7 @@ class NodeShape:
     returns:
       - is_keyword (bool)
     """
-    return isinstance(shape, str) and shape in NODE_SHAPES
+    return isinstance(shape, str) and shape in EDGE_SHAPES
 
 
   @staticmethod
@@ -72,10 +62,10 @@ class NodeShape:
       - is_shape (bool)
     """
     return (
-      isinstance(shape, NodeShape) or
+      isinstance(shape, EdgeShape) or
       shape is None or
       shape == 'default' or
-      NodeShape.is_keyword(shape)
+      EdgeShape.is_keyword(shape)
     )
 
 
@@ -90,7 +80,7 @@ class NodeShape:
     returns:
       - are_shapes (bool)
     """
-    return all(NodeShape.is_shape(shape) for shape in iterable)
+    return all(EdgeShape.is_shape(shape) for shape in iterable)
 
 
   @staticmethod
@@ -104,17 +94,17 @@ class NodeShape:
     returns:
       - shape_slug (str): normalized shape slug
     """
-    return NODE_SHAPES[shape]
+    return EDGE_SHAPES[shape]
 
 
   @staticmethod
   def normalize_shape(shape):
     """
     Normalizes the specified shape in any format. If the format cannot be
-    determined or is not implemented a NodeShapeException is raised
+    determined or is not implemented a EdgeShapeException is raised
 
     raises:
-      - NodeShapeException when no format matched
+      - EdgeShapeException when no format matched
 
     paramaters:
       - shape (any): shape in any recognized format
@@ -125,33 +115,33 @@ class NodeShape:
     if shape is None or shape == 'default':
       return None # None is a valid shape
 
-    if isinstance(shape, NodeShape):
+    if isinstance(shape, EdgeShape):
       # This does NOT create an object clone, but tuples are immutable, so it
       # does not really matter and saves a little bit of time
       return shape.shape
 
-    if NodeShape.is_keyword(shape):
-      return NodeShape.from_keyword(shape)
+    if EdgeShape.is_keyword(shape):
+      return EdgeShape.from_keyword(shape)
 
-    raise NodeShapeException('Invalid node shape: {}'.format(shape))
+    raise EdgeShapeException('Invalid edge shape: {}'.format(shape))
 
 
   @staticmethod
   def create(shape):
     """
-    Creates a new instance of NodeShape and returns it.
+    Creates a new instance of EdgeShape and returns it.
 
     parameters:
       - shape (any): shape in any known format, will be normalized
     """
-    return NodeShape(shape)
+    return EdgeShape(shape)
 
 
   def __init__(self, shape):
     """
-    Creates a new instance of NodeShape.
+    Creates a new instance of EdgeShape.
 
     parameters:
       - shape (any): shape in any known format, will be normalized
     """
-    self.shape = NodeShape.normalize_shape(shape)
+    self.shape = EdgeShape.normalize_shape(shape)
