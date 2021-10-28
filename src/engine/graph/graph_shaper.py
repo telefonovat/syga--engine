@@ -27,6 +27,7 @@ class GraphShaper:
   DEFAULT_TRUE_SHAPE = None
 
   Shape = None
+  available_shapes = None
 
 
   def _binary_interpretation(self, true=None, false=None):
@@ -76,13 +77,13 @@ class GraphShaper:
     self._interpretation = self.GROUP_INTERPRETATION
 
     if isinstance(shapes, int):
-      max_shapes = len(AVAILABLE_NODE_SHAPES) - 1
+      max_shapes = len(self.available_shapes) - 1
 
       if shapes > max_shapes:
         raise GraphShaperException(f'Too many groups: {shapes}. There are only {max_shapes} shapes')
 
       # Consider edges
-      self._shapes = [self.Shape.create(shape) for shape in AVAILABLE_NODE_SHAPES[:shapes]]
+      self._shapes = [self.Shape.create(shape) for shape in self.available_shapes[:shapes]]
 
     if isinstance(shapes, list): # todo: turn this into elif
       self._shapes = [self.Shape.create(shape) for shape in shapes]
@@ -346,6 +347,7 @@ class GraphNodeShaper(GraphShaper):
   """
 
   Shape = NodeShape
+  available_shapes = AVAILABLE_NODE_SHAPES
 
   DEFAULT_FALSE_SHAPE = None
   DEFAULT_TRUE_SHAPE = NodeShape('square')
