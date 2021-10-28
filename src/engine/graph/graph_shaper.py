@@ -231,18 +231,17 @@ class GraphShaper:
 
   def compute(self, transformed_state):
     """
-    Computes the styles for every node in the transformed_style dict
+    Computes the styles for every item in the transformed_style dict.
+
+    This method MUST be overridden
 
     parameters:
-      - transformed_state (dict): node to transformed value (by transform())
+      - transformed_state (dict): item to transformed value (by transform())
 
     returns:
-      - style (dict): node to its style
+      - style (dict): item to its style
     """
-    if transformed_state is None:
-      return None
-
-    return {key: self.compute_single(value) for key, value in transformed_state.items()}
+    raise NotImplementedError()
 
 
   def has_interpretation(self):
@@ -312,9 +311,9 @@ class GraphShaper:
 
   def __init__(self, transform, **kwargs):
     """
-    Creates a new instance of GraphNodeShaper
+    Creates a new instance of GraphShaper
 
-    GraphNodeShaper.build MUST be used instead of this constructor. This
+    GraphShaper.build MUST be used instead of this constructor. This
     constructore can be considered private.
     """
     if 'shape' in kwargs and 'shapes' in kwargs:
@@ -334,7 +333,7 @@ class GraphShaper:
       self._shapes = kwargs['shapes']
 
     if not self._validate_shapes(self._shapes):
-      raise GraphNodeShaperException(f'Invalid value for parameter shape(s): {self._shapes}')
+      raise GraphShaperException(f'Invalid value for parameter shape(s): {self._shapes}')
 
     self._prepare_shapes()
 
@@ -368,6 +367,22 @@ class GraphNodeShaper(GraphShaper):
       res[v] = self.transform_single(v, G)
 
     return res
+
+
+  def compute(self, transformed_state):
+    """
+    Computes the styles for every node in the transformed_style dict
+
+    parameters:
+      - transformed_state (dict): node to transformed value (by transform())
+
+    returns:
+      - style (dict): node to its style
+    """
+    if transformed_state is None:
+      return None
+
+    return {key: self.compute_single(value) for key, value in transformed_state.items()}
 
 
   @staticmethod
