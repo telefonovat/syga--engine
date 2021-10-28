@@ -5,7 +5,7 @@ The Graph Visualizer module
 import networkx
 from engine.visualizer import Visualizer
 from .graph_colorizer import GraphNodeColorizer, GraphEdgeColorizer
-from .graph_shaper import GraphNodeShaper
+from .graph_shaper import GraphNodeShaper, GraphEdgeShaper
 
 
 class Graph(networkx.Graph, Visualizer):
@@ -153,7 +153,7 @@ class Graph(networkx.Graph, Visualizer):
 
   def color_edges_by(self, *args, **kwargs):
     """
-    todo: implement this
+    Creates an instance of GraphEdgeColorizer used by this graph
     """
     self._stylizers['edge_colors'] = GraphEdgeColorizer.build(*args, **kwargs)
 
@@ -162,8 +162,11 @@ class Graph(networkx.Graph, Visualizer):
 
   def shape_edges_by(self, *args, **kwargs):
     """
-    todo: implement this
+    Creates an instance of GraphEdgeShaper used by this graph
     """
+    self._stylizers['edge_colors'] = GraphEdgeShaper.build(*args, **kwargs)
+
+    self._engine_tick()
 
 
   def scale_edges_by(self, *args, **kwargs):
@@ -194,7 +197,7 @@ class Graph(networkx.Graph, Visualizer):
       'node_labels': None,
 
       'edge_colors': GraphEdgeColorizer.build(lambda u, v, G: None),
-      'edge_shapes': None,
+      'edge_shapes': GraphEdgeShaper.build(lambda u, v, G: None),
       'edge_scales': None,
       'edge_labels': None
     }
