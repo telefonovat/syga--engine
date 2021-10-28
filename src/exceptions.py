@@ -42,6 +42,12 @@ class NodeShapeException(AlgorithmException):
   """
 
 
+class EdgeShapeException(AlgorithmException):
+  """
+  An exception which should be raised when there is an edge shape problem
+  """
+
+
 class GraphColorizerException(AlgorithmException):
   """
   The base for the following exceptions:

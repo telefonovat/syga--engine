@@ -5,7 +5,8 @@ The GraphShaper module
 import types
 from collections.abc import Iterable
 from engine.node_shape import NodeShape, AVAILABLE_NODE_SHAPES
-from exceptions import GraphShaperException, GraphNodeShaperException
+from engine.edge_shape import EdgeShape, AVAILABLE_EDGE_SHAPES
+from exceptions import GraphShaperException, GraphNodeShaperException, GraphEdgeShaperException
 
 
 class GraphShaper:
@@ -341,7 +342,7 @@ class GraphShaper:
 
 class GraphNodeShaper(GraphShaper):
   """
-  GraphNodeShaper computes the shapes of the items of a graph. The process
+  GraphNodeShaper computes the shapes of the nodes of a graph. The process
   is described in the following document:
     - https://syga.kam.mff.cuni.cz/docs/graphs/shapes/shapes
   """
@@ -410,3 +411,89 @@ class GraphNodeShaper(GraphShaper):
     prop = kwargs['prop']
     transform = lambda v, G: None if prop not in G.nodes[v] else G.nodes[v][prop]
     return GraphNodeShaper.build(transform, **kwargs)
+
+
+class GraphEdgeShaper(GraphShaper):
+  """
+  GraphEdgeShaper computes the shapes of the edges of a graph. The process
+  is described in the following document:
+    - https://syga.kam.mff.cuni.cz/docs/graphs/shapes/shapes
+  """
+
+  Shape = EdgeShape
+  available_shapes = AVAILABLE_EDGE_SHAPES
+
+  DEFAULT_FALSE_SHAPE = None
+  DEFAULT_TRUE_SHAPE = EdgeShape('dashed')
+
+
+  def transform(self, G):
+    """
+    Runs the _transform method for every node in the graph, thus creating the
+    transformed structure state for the specified Graph component
+
+    parameters:
+      - G (networkx.Graph): the graph to transform
+
+    returns:
+      - transformed_state (double dict): edge to transformed information
+    """
+    res = {}
+
+    for u, v in G.edges:
+      if u not in res:
+        res[u] = {}
+
+      res[u][v] = self.transform_single(u, v, G)
+
+    return res
+
+
+  def compute(self, transformed_state):
+    """
+    Computes the styles for every node in the transformed_style dict
+
+    parameters:
+      - transformed_state (double dict): node to transformed value (by transform())
+
+    returns:
+      - style (double dict): edge to its style
+    """
+    if transformed_state is None:
+      return None
+
+    res = {}
+
+    for u in transformed_state.keys():
+      if u not in res:
+        res[u] = {}
+
+      for v in transformed_state[u].keys():
+        res[u][v] = self.compute_single(transformed_state[u][v])
+
+    return res
+
+
+  @staticmethod
+  def build(*args, **kwargs):
+    """
+    Creates a GraphEdgeShaper
+    """
+    if len(args) >= 2:
+      raise GraphEdgeShaperException('Too many positional arguments')
+
+    if len(args) == 1:
+      if isinstance(args[0], Iterable):
+        return GraphEdgeShaper.build(lambda v, g: v in args[0], **kwargs)
+
+      if isinstance(args[0], types.FunctionType):
+        return GraphEdgeShaper(args[0], **kwargs)
+
+      raise GraphEdgeShaperException(f'Cannot use object of type {type(args[0])} as source')
+
+    if 'prop' not in kwargs:
+      raise GraphEdgeShaperException('Source not specified')
+
+    prop = kwargs['prop']
+    transform = lambda v, G: None if prop not in G.nodes[v] else G.nodes[v][prop]
+    return GraphEdgeShaper.build(transform, **kwargs)
