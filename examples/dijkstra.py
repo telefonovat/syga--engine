@@ -18,6 +18,7 @@ for v in G.nodes:
 
 G.color_nodes_by(prop='s', colors=[None, 'blue', 'red'])
 G.label_nodes_by(prop='h')
+G.label_edges_by(prop='w')
 
 v0 = 'a'
 G.nodes[v0]['s'] = STATE_OPENED
