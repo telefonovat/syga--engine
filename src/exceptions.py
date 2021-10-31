@@ -90,3 +90,25 @@ class GraphEdgeShaperException(GraphShaperException):
   An exception which should be raised when there is a problem with a graph
   edge shaper - eg. invalid parameters, problem with interpretation ...
   """
+
+
+class GraphLabelerException(AlgorithmException):
+  """
+  The base for the following exceptions:
+    - GraphNodeLabelerException
+    - GraphEdgeLabelerException
+  """
+
+
+class GraphNodeLabelerException(GraphLabelerException):
+  """
+  An exception which should be raised when there is a problem with a graph
+  node labeler - eg. invalid parameters, problem with interpretation ...
+  """
+
+
+class GraphEdgeLabelerException(GraphLabelerException):
+  """
+  An exception which should be raised when there is a problem with a graph
+  edge labeler - eg. invalid parameters, problem with interpretation ...
+  """
