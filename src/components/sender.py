@@ -100,13 +100,13 @@ class Sender:
         'engine_logs': None # temporarily disabled
       })
 
-    except Exception: # pylint: disable=broad-except
+    except Exception as sender_exception: # pylint: disable=broad-except
       logger.exception(traceback.format_exc())
 
       return {
         'timestamp': datetime.datetime.now().isoformat(),
         'res': 'error',
-        'err': 'Error while processing response'
+        'err': str(sender_exception)
       }
 
 
