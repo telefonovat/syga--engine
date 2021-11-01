@@ -604,7 +604,8 @@ class GraphEdgeColorizer(GraphColorizer):
 
     if len(args) == 1:
       if isinstance(args[0], Iterable):
-        return GraphEdgeColorizer.build(lambda u, v, G: (u, v) in args[0], **kwargs)
+        transform = lambda u, v, G: (u, v) in args[0] or (v, u) in args[0]
+        return GraphEdgeColorizer.build(transform, **kwargs)
 
       if isinstance(args[0], types.FunctionType):
         return GraphEdgeColorizer(args[0], **kwargs)
