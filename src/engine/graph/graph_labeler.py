@@ -206,7 +206,7 @@ class GraphEdgeLabeler(GraphLabeler):
     if props is None:
       raise GraphEdgeLabelerException('Source not specified')
 
-    props = [prop for prop in props] if isinstance(props, Iterable) else [props]
+    props = list(props) if isinstance(props, Iterable) else [props]
 
     transform = lambda u, v, G: \
       ('' if prop not in G.edges[u, v] else G.edges[u, v][prop] for prop in props)

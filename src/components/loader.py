@@ -6,7 +6,7 @@ import json
 from environment import SECRET_PASSWORD
 from utils.path import path_from_root
 from utils.code import detect_indentation, add_indentation
-from utils.random import random_name
+from utils.random_utils import random_name
 from exceptions import LoaderException
 from .logger import logger
 

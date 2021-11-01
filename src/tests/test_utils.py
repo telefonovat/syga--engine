@@ -5,9 +5,9 @@ Tests for src/utils/utils.py
 import unittest
 import random
 import os
+from utils.random_utils import random_name
 from utils.path import path_from_root, resolve_url
 from utils.code import detect_indentation, add_indentation, get_sample_code
-from utils.random import random_name
 
 
 class TestUtils(unittest.TestCase):
