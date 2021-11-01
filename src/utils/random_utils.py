@@ -5,7 +5,7 @@ Utility functions dealing with randomness
 import binascii
 import os
 import itertools
-from random import random, randint, choice
+from random import randint
 
 
 def random_name(n_bytes=16):

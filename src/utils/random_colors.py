@@ -2,9 +2,9 @@
 Utility function for generating random colors
 """
 
-from engine.color import Color, COLOR_NAMES
 from random import choice, random, randint
 from utils.random_utils import random_name, random_whitespace_pad
+from engine.color import Color, COLOR_NAMES
 
 
 def random_color_name():
