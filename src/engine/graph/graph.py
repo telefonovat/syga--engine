@@ -6,7 +6,7 @@ import networkx
 from engine.visualizer import Visualizer
 from .graph_colorizer import GraphNodeColorizer, GraphEdgeColorizer
 from .graph_shaper import GraphNodeShaper, GraphEdgeShaper
-from .graph_labeler import GraphEdgeLabeler
+from .graph_labeler import GraphEdgeLabeler, GraphNodeLabeler
 
 
 class Graph(networkx.Graph, Visualizer):
@@ -148,8 +148,11 @@ class Graph(networkx.Graph, Visualizer):
 
   def label_nodes_by(self, *args, **kwargs):
     """
-    todo: implement this
+    Creates an instance of GraphNodeLabeler used by this graph
     """
+    self._stylizers['node_labels'] = GraphNodeLabeler.build(*args, **kwargs)
+
+    self._engine_tick()
 
 
   def color_edges_by(self, *args, **kwargs):
@@ -198,7 +201,7 @@ class Graph(networkx.Graph, Visualizer):
       'node_colors': GraphNodeColorizer.build(lambda u, G: None),
       'node_shapes': GraphNodeShaper.build(lambda u, G: None),
       'node_scales': None,
-      'node_labels': None,
+      'node_labels': GraphNodeLabeler.build(lambda u, G: None),
 
       'edge_colors': GraphEdgeColorizer.build(lambda u, v, G: None),
       'edge_shapes': GraphEdgeShaper.build(lambda u, v, G: None),

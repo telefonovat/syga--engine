@@ -4,7 +4,7 @@ The GraphLabeler module
 
 import types
 from collections.abc import Iterable
-from exceptions import GraphLabelerException, GraphEdgeLabelerException
+from exceptions import GraphLabelerException, GraphEdgeLabelerException, GraphNodeLabelerException
 from components.logger import logger # pylint: disable=unused-import
 
 
@@ -126,6 +126,80 @@ class GraphLabeler:
     # todo: implement
     # if not GraphLabeler.validate_separator(self._separator):
     #   raise GraphLabelerException(f'Invalid value for parameter separator: {self._separator}')
+
+
+class GraphNodeLabeler(GraphLabeler):
+  """
+  GraphNodeLabeler computes the labels of the nodes of a graph. The process
+  is described in the following document:
+    - https://syga.kam.mff.cuni.cz/docs/graphs/labels/labels
+
+  todo: implement filters
+  """
+
+  def transform(self, G):
+    """
+    Runs the _transform method for every node in the graph, thus creating the
+    transformed structure state for the specified Graph component
+
+    parameters:
+      - G (networkx.Graph): the graph to transform
+
+    returns:
+      - transformed_state (dict): node to transformed information
+    """
+    res = {}
+
+    for v in G.nodes:
+      res[v] = self.transform_single(v, G)
+
+    return res
+
+
+  def compute(self, transformed_state):
+    """
+    Computes the styles for every node in the transformed_style dict
+
+    parameters:
+      - transformed_state (dict): node to transformed value (by transform())
+
+    returns:
+      - style (dict): node to its style
+    """
+    if transformed_state is None:
+      return None
+
+    return {key: self.compute_single(value) for key, value in transformed_state.items()}
+
+
+  @staticmethod
+  def build(*args, **kwargs):
+    """
+    Creates a GraphNodeLabeler
+    """
+    if len(args) >= 2:
+      raise GraphNodeLabelerException('Too many positional arguments')
+
+    if len(args) == 1:
+      if isinstance(args[0], types.FunctionType):
+        return GraphNodeLabeler(args[0], **kwargs)
+
+      raise GraphNodeLabelerException(f'Cannot use object of type {type(args[0])} as source')
+
+    if 'prop' in kwargs and 'props' in kwargs:
+      raise GraphLabelerException('Prop and props arguments are mutually exclusive')
+
+    props = dict.get(kwargs, 'prop', None) or dict.get(kwargs, 'props', None)
+
+    if props is None:
+      raise GraphNodeLabelerException('Source not specified')
+
+    props = list(props) if isinstance(props, Iterable) else [props]
+
+    transform = lambda v, G: \
+      ('' if prop not in G.nodes[v] else G.nodes[v][prop] for prop in props)
+
+    return GraphNodeLabeler.build(transform, **kwargs)
 
 
 class GraphEdgeLabeler(GraphLabeler):
