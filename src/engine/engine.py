@@ -183,12 +183,17 @@ class Engine:
     return graph
 
 
-  def init_logger(self):
+  def init_logger(self, module_uid):
     """
     Initiates the engine's logger. A unique ID must be provided. This ID
     will be used to create a unique log file for debugging purposes
+
+    parameters:
+      - module_uid (str): The unique ID of the module
     """
-    self._logger = logging.getLogger(self._uid)
+    self._module_uid = module_uid
+
+    self._logger = logging.getLogger(self._module_uid)
     self._logger.addHandler(logging.FileHandler(self._log_path))
     self._logger.setLevel(logging.DEBUG)
 
@@ -200,17 +205,14 @@ class Engine:
     """
     The path of the log file.
     """
-    return path_from_root('../logs/algs/{}.log'.format(self._uid))
+    return path_from_root('../logs/algs/{}.log'.format(self._module_uid))
 
 
-  def __init__(self, uid):
+  def __init__(self):
     """
     Creates a new instance of Engine.
-
-    parameters:
-      - uid (str): The unique ID of the module
     """
-    self._uid = uid
+    self._module_uid = None
 
     self._can_tick = True
     self._console_log = StringIO()
