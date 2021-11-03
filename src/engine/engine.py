@@ -64,16 +64,19 @@ class Engine:
     parameters:
       - src (object): the source line
     """
+    if DEBUG_MODE and self._logger is not None:
+      self._logger.debug('[{}] ({} -> {}): {}'.format(
+        '✔' if self._can_tick else ' ',
+        self._prev_line,
+        self._curr_line,
+        src.fullsource.replace('\n', '')
+      ))
+
     if not self._can_tick:
       return # Skip line callback if ticks are not enabled ATM
 
     self._prev_line = self._curr_line
     self._curr_line = src.lineno - 1
-
-    if DEBUG_MODE and self._logger is not None:
-      self._logger.debug('({} -> {}): {}'.format(
-        self._prev_line, self._curr_line, src.fullsource.replace('\n', ''))
-      )
 
     self.tick(self.TICK_SOURCE_LINE)
 
