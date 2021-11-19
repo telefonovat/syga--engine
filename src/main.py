@@ -3,42 +3,14 @@ The entrypoint
 """
 
 import traceback
-import datetime
-from argparse import ArgumentParser
-from flask import Flask, request
-from flask_cors import CORS
-from environment import API_BASE, DEBUG_MODE
-from components import Loader, Runner, Sender, logger
+import sys
+import json
+from environment import DEBUG_MODE
+from components import Loader, Runner, Sender
 from exceptions import AlgorithmException
 
 
-app = Flask(__name__)
-CORS(app)
-
-
-parser = ArgumentParser()
-
-parser.add_argument('--port',
-  type=int, default=80, required=False, help='The port to open')
-
-parser.add_argument('--debug',
-  action='store_true', dest='debug', required=False, help='Run in debug mode')
-
-arguments = parser.parse_args()
-
-
-@app.route('{}/ping'.format(API_BASE), methods=['GET'])
-def ping():
-  """
-  Tests whether the REST API works
-  """
-  return {
-    'time': datetime.datetime.now().isoformat()
-  }
-
-
-@app.route('{}/alg'.format(API_BASE), methods=['POST'])
-def entrypoint():
+def main():
   """
   Expects a config JSON in the POST body. The config JSON consists of:
     - code: the algorithm
@@ -49,8 +21,11 @@ def entrypoint():
   The runner creates an engine and runs the algorithm.
   The sender prepares the response.
   """
+  if DEBUG_MODE:
+    print('Running in debug mode', file=sys.stderr)
+
   try:
-    logger.debug('{} main START'.format('-' * 70))
+    print('{} main START'.format('-' * 70), file=sys.stderr)
 
     # Initiate components
     loader = Loader()
@@ -58,9 +33,7 @@ def entrypoint():
     sender = Sender(runner)
 
     # Read config
-    cfg = request.get_json(silent=True) or ''
-    logger.debug('Input received: {}'.format(cfg))
-    loader.set_input(cfg)
+    loader.set_input(json.load(sys.stdin))
 
     # Prepare the module
     loader.load()
@@ -68,22 +41,19 @@ def entrypoint():
     # Run the module
     runner.run()
 
-    return sender.send_success()
+    print(sender.send_success())
 
   except AlgorithmException as e:
-    logger.debug(traceback.format_exc())
-    return sender.send_mixed(e)
+    print(traceback.format_exc(), file=sys.stderr)
+    print(sender.send_mixed(e))
 
   except Exception as e: # pylint: disable=broad-except
-    logger.exception(traceback.format_exc())
-    return sender.send_error(e)
+    print(traceback.format_exc(), file=sys.stderr)
+    print(sender.send_error(e))
 
   finally:
-    logger.debug('{} main END\n'.format('-' * 70))
+    print('{} main END\n'.format('-' * 70), file=sys.stderr)
 
 
 if __name__ == '__main__':
-  if DEBUG_MODE:
-    print('Running in debug mode')
-
-  app.run(host='0.0.0.0', debug=True, port=arguments.port)
+  main()
