@@ -61,7 +61,7 @@ class Loader:
       logger.error('Parsing cfg: error')
       raise error
 
-    except json.JSONDecodeError as error:
+    except json.JSONDecodeError:
       logger.error('Parsing cfg: error')
       raise LoaderException('Error parsing cfg')
 
@@ -131,7 +131,7 @@ class Loader:
 
       return self
 
-    except OSError as e:
+    except OSError:
       logger.error('Creating module: error', { 'module': self.module_name })
       raise LoaderException()
 
