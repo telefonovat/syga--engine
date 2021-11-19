@@ -76,10 +76,10 @@ class Sender:
       parse_time = stopwatch.stop().elapsed
       elapsed = alg_time + parse_time
 
-      logger.debug('Sending {} response'.format(res))
-      logger.debug('Algorithm run in {:.6f} seconds'.format(alg_time))
-      logger.debug('Response prepared in {:.6f} seconds'.format(parse_time))
-      logger.debug('Everything took {:.6f} seconds'.format(elapsed))
+      logger.info('Sending {} response'.format(res), { 'res': res })
+      logger.info('Algorithm run in {:.6f} seconds'.format(alg_time), { 'time': alg_time })
+      logger.info('Response prepared in {:.6f} seconds'.format(parse_time), { 'time': parse_time })
+      logger.info('Everything took {:.6f} seconds'.format(elapsed), { 'time': elapsed })
 
       return json.dumps({
         'timestamp': datetime.datetime.now().isoformat(),
@@ -94,7 +94,7 @@ class Sender:
       })
 
     except Exception as sender_exception: # pylint: disable=broad-except
-      logger.exception(traceback.format_exc())
+      logger.error('Error in sender', { 'error': traceback.format_exc() })
 
       return {
         'timestamp': datetime.datetime.now().isoformat(),

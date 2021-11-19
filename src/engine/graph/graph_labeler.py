@@ -5,7 +5,6 @@ The GraphLabeler module
 import types
 from collections.abc import Iterable
 from exceptions import GraphLabelerException, GraphEdgeLabelerException, GraphNodeLabelerException
-from components.logger import logger # pylint: disable=unused-import
 
 
 class GraphLabeler:

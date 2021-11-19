@@ -53,16 +53,16 @@ class Loader:
         else:
           raise LoaderException('Invalid value of `secret` property')
 
-      logger.debug('Parsing cfg -> success')
+      logger.info('Parsing cfg: success')
 
       return self
 
-    except LoaderException as e:
-      logger.debug('Parsing cfg -> error')
-      raise e
+    except LoaderException as error:
+      logger.error('Parsing cfg: error')
+      raise error
 
-    except json.JSONDecodeError:
-      logger.debug('Parsing cfg -> error')
+    except json.JSONDecodeError as error:
+      logger.error('Parsing cfg: error')
       raise LoaderException('Error parsing cfg')
 
 
@@ -127,12 +127,12 @@ class Loader:
       with open(self.module_path, 'w', encoding='utf8') as f:
         f.write(self._code)
 
-      logger.debug('Creating module {} -> success'.format(self.module_name))
+      logger.info('Creating module: success', { 'module': self.module_name })
 
       return self
 
-    except OSError:
-      logger.debug('Creating module {} -> error'.format(self.module_name))
+    except OSError as e:
+      logger.error('Creating module: error', { 'module': self.module_name })
       raise LoaderException()
 
 

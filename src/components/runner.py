@@ -30,10 +30,10 @@ class Runner:
 
     try:
       self._module = importlib.import_module(module_name)
-      logger.debug('Importing module {} -> success'.format(module_name))
+      logger.debug('Importing module: success', { 'module': module_name })
 
     except Exception as e:
-      logger.debug('Importing module {} -> error'.format(module_name))
+      logger.debug('Importing module: error', { 'module': module_name })
       raise RunnerException(e)
 
 
@@ -46,8 +46,6 @@ class Runner:
       - RunnerException: if an error occurres while importing the module
       - AlgorithmException: if an error is raised while running the algorithm
     """
-    self._engine.init_logger(self._loader.unique_id)
-
     module_name = self._loader.module_name
     fun_name = self._loader.unique_id
 
@@ -57,7 +55,7 @@ class Runner:
 
     fun = getattr(self._module, fun_name)
 
-    logger.debug('Running {} <<<'.format(module_name))
+    logger.debug('Running <<<', { 'module': module_name })
 
     args = {
       'fun': fun,

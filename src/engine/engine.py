@@ -3,7 +3,7 @@ The engine module
 """
 
 from io import StringIO
-import logging
+from components.logger import logger
 from environment import DEBUG_MODE
 from utils.path import path_from_root
 from engine.graph import Graph
@@ -64,13 +64,24 @@ class Engine:
     parameters:
       - src (object): the source line
     """
-    if DEBUG_MODE and self._logger is not None:
-      self._logger.debug('[{}] ({} -> {}): {}'.format(
+    if DEBUG_MODE is not None:
+      line = src.fullsource.replace('\n', '')
+
+      msg = '[{}] ({} -> {}): {}'.format(
         '✔' if self._can_tick else ' ',
         self._prev_line,
         self._curr_line,
-        src.fullsource.replace('\n', '')
-      ))
+        line
+      )
+
+      meta = {
+        'canTick': self._can_tick,
+        'prevLine': self._prev_line,
+        'currLine': self._curr_line,
+        'line': line
+      }
+
+      logger.debug(msg, meta)
 
     if not self._can_tick:
       return # Skip line callback if ticks are not enabled ATM
@@ -186,23 +197,6 @@ class Engine:
     return graph
 
 
-  def init_logger(self, module_uid):
-    """
-    Initiates the engine's logger. A unique ID must be provided. This ID
-    will be used to create a unique log file for debugging purposes
-
-    parameters:
-      - module_uid (str): The unique ID of the module
-    """
-    self._module_uid = module_uid
-
-    self._logger = logging.getLogger(self._module_uid)
-    self._logger.addHandler(logging.FileHandler(self._log_path))
-    self._logger.setLevel(logging.DEBUG)
-
-    self._ticker.set_logger(self._logger)
-
-
   @property
   def _log_path(self):
     """
@@ -224,7 +218,6 @@ class Engine:
     self._curr_line = None
     self._prev_line = None
 
-    self._logger = None
     self._ticker = Ticker()
 
     self.stopwatch = Stopwatch()

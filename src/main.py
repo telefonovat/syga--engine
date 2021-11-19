@@ -6,7 +6,7 @@ import traceback
 import sys
 import json
 from environment import DEBUG_MODE
-from components import Loader, Runner, Sender
+from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
 
 
@@ -22,10 +22,10 @@ def main():
   The sender prepares the response.
   """
   if DEBUG_MODE:
-    print('Running in debug mode', file=sys.stderr)
+    logger.info('Running in debug mode')
 
   try:
-    print('{} main START'.format('-' * 70), file=sys.stderr)
+    logger.info('start')
 
     # Initiate components
     loader = Loader()
@@ -41,18 +41,16 @@ def main():
     # Run the module
     runner.run()
 
+    logger.info('result: OK')
     print(sender.send_success())
 
   except AlgorithmException as e:
-    print(traceback.format_exc(), file=sys.stderr)
+    logger.error('result: AlgorithmException', { 'exception': traceback.format_exc() })
     print(sender.send_mixed(e))
 
   except Exception as e: # pylint: disable=broad-except
-    print(traceback.format_exc(), file=sys.stderr)
+    logger.error('result: Exception', { 'exception': traceback.format_exc() })
     print(sender.send_error(e))
-
-  finally:
-    print('{} main END\n'.format('-' * 70), file=sys.stderr)
 
 
 if __name__ == '__main__':
