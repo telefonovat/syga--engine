@@ -10,8 +10,8 @@ echo " > ./bin/clear.sh"
 echo " > ./bin/lint.sh"
 ./bin/lint.sh || exit "$?"
 
-echo " > ./bin/clear.sh && python3 src/test.py"
-./bin/clear.sh && python3 src/test.py || exit "$?"
+echo " > ./bin/clear.sh && python3 src/test.py 2> ./logs/test.log"
+./bin/clear.sh && python3 src/test.py 2> ./logs/test.log || exit "$?"
 
 echo " > ./bin/clear.sh && ./bin/run-tests.sh"
 ./bin/clear.sh && ./bin/run-tests.sh || exit "$?"
