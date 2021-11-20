@@ -64,7 +64,7 @@ class Engine:
     parameters:
       - src (object): the source line
     """
-    if DEBUG_MODE is not None:
+    if DEBUG_MODE:
       line = src.fullsource.replace('\n', '')
 
       msg = '[{}] ({} -> {}): {}'.format(
