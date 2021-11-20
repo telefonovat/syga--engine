@@ -5,5 +5,4 @@ networkx
 colour
 webcolors
 seaborn
-Flask
-flask-cors
+requests
