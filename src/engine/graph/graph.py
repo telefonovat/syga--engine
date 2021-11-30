@@ -116,6 +116,7 @@ class Graph(networkx.Graph, Visualizer):
         style[name] = stylizer.compute(state['transformed'][name])
 
     return {
+      'type': 'Graph',
       'nodes': state['nodes'],
       'edges': state['edges'],
       'style': style
