@@ -6,7 +6,8 @@ from io import StringIO
 from components.logger import logger
 from environment import DEBUG_MODE
 from utils.path import path_from_root
-from engine.graph import Graph
+from .graph.graph import Graph
+from .graph.di_graph import DiGraph
 from .ticker import Ticker
 from .stopwatch import Stopwatch
 from .color import Color
@@ -190,6 +191,21 @@ class Engine:
       attr['visualize'] = True
 
     graph = Graph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
+
+    if attr['visualize']:
+      self._components.append(graph)
+
+    return graph
+
+
+  def DiGraph(self, incoming_graph_data=None, **attr): # pylint: disable=invalid-name
+    """
+    Creates a new instance of DiGraph visualizer.
+    """
+    if 'visualize' not in attr:
+      attr['visualize'] = True
+
+    graph = DiGraph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
 
     if attr['visualize']:
       self._components.append(graph)
