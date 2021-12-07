@@ -96,11 +96,11 @@ class Sender:
     except Exception as sender_exception: # pylint: disable=broad-except
       logger.error('Error in sender', { 'error': traceback.format_exc() })
 
-      return {
+      return json.dumps({
         'timestamp': datetime.datetime.now().isoformat(),
         'res': 'error',
         'err': str(sender_exception)
-      }
+      })
 
 
   def send_error(self, err):
