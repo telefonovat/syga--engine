@@ -3,6 +3,6 @@ hunter
 watchpoints
 networkx
 colour
-webcolors
+webcolors==1.5
 seaborn
 requests
