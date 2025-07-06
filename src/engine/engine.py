@@ -15,225 +15,215 @@ from .node_shape import NodeShape
 
 
 class Engine:
-  """
-  Engine is the main component which is responsible for
-    - Initiation of visualizers
-    - Tick sampling
-    - Computation of frames
-
-  A new instance of engine is created every time an algorithm is visualized.
-
-  Engine defines a factory method for every visualizer which instantiates the
-  visualizer and stores a reference to it in a property. The transformed state
-  of every visualizer is then generated and saved for every tick.
-
-  The transformed state of every visualizer is then passed as an argument for
-  style computation method of the visualizer. After the style is computed,
-  ticks can be merged into frames
-  """
-
-  TICK_SOURCE_LINE = 0
-  TICK_SOURCE_VARS = 1
-  TICK_SOURCE_USER = 2
-  TICK_SOURCE_STYLIZER = 3
-  TICK_SOURCE_ALG_END = 4
-
-
-  Color = Color
-  NodeShape = NodeShape
-
-
-  def print(self, *args, **kwargs):
     """
-    Overloaded print method which is passed as an argument to the wrapper
-    function of the visualized algorithm. Instead of printing to stdout,
-    the printed contents are saved to a property of type StringIO.
+    Engine is the main component which is responsible for
+      - Initiation of visualizers
+      - Tick sampling
+      - Computation of frames
 
-    The printed text is then saved as a data member of a Tick.
+    A new instance of engine is created every time an algorithm is visualized.
+
+    Engine defines a factory method for every visualizer which instantiates the
+    visualizer and stores a reference to it in a property. The transformed state
+    of every visualizer is then generated and saved for every tick.
+
+    The transformed state of every visualizer is then passed as an argument for
+    style computation method of the visualizer. After the style is computed,
+    ticks can be merged into frames
     """
-    kwargs['file'] = self._console_log
-    print(*args, **kwargs)
 
+    TICK_SOURCE_LINE = 0
+    TICK_SOURCE_VARS = 1
+    TICK_SOURCE_USER = 2
+    TICK_SOURCE_STYLIZER = 3
+    TICK_SOURCE_ALG_END = 4
 
-  def line_callback(self, src):
-    """
-    This method is called for every 'line' event of the Hunter library. The
-    initiation of code tracking is a responsibility of the runner component.
+    Color = Color
+    NodeShape = NodeShape
 
-    Engine will save the number of the current line and call the tick method
+    def print(self, *args, **kwargs):
+        """
+        Overloaded print method which is passed as an argument to the wrapper
+        function of the visualized algorithm. Instead of printing to stdout,
+        the printed contents are saved to a property of type StringIO.
 
-    parameters:
-      - src (object): the source line
-    """
-    if DEBUG_MODE:
-      line = src.fullsource.replace('\n', '')
+        The printed text is then saved as a data member of a Tick.
+        """
+        kwargs["file"] = self._console_log
+        print(*args, **kwargs)
 
-      msg = '[{}] ({} -> {}): {}'.format(
-        '✔' if self._can_tick else ' ',
-        self._prev_line,
-        self._curr_line,
-        line
-      )
+    def line_callback(self, src):
+        """
+        This method is called for every 'line' event of the Hunter library. The
+        initiation of code tracking is a responsibility of the runner component.
 
-      meta = {
-        'canTick': self._can_tick,
-        'prevLine': self._prev_line,
-        'currLine': self._curr_line,
-        'line': line
-      }
+        Engine will save the number of the current line and call the tick method
 
-      logger.debug(msg, meta)
+        parameters:
+          - src (object): the source line
+        """
+        if DEBUG_MODE:
+            line = src.fullsource.replace("\n", "")
 
-    if not self._can_tick:
-      return # Skip line callback if ticks are not enabled ATM
+            msg = "[{}] ({} -> {}): {}".format(
+                "✔" if self._can_tick else " ", self._prev_line, self._curr_line, line
+            )
 
-    self._prev_line = self._curr_line
-    self._curr_line = src.lineno - 1
+            meta = {
+                "canTick": self._can_tick,
+                "prevLine": self._prev_line,
+                "currLine": self._curr_line,
+                "line": line,
+            }
 
-    self.tick(self.TICK_SOURCE_LINE)
+            logger.debug(msg, meta)
 
+        if not self._can_tick:
+            return  # Skip line callback if ticks are not enabled ATM
 
-  def tick(self, source=None):
-    """
-    The tick method computes the transformed state for every visualizer
-    (component), creates a new tick and saves it using the Ticker
+        self._prev_line = self._curr_line
+        self._curr_line = src.lineno - 1
 
-    parameters:
-      - source (int): The source of the tick. Valid values are defined as
-        constans with prefix TICK_SOURCE_
-    """
-    if not self._can_tick:
-      return # Stop if ticks are not enabled ATM
+        self.tick(self.TICK_SOURCE_LINE)
 
-    try:
-      self._can_tick = False
+    def tick(self, source=None):
+        """
+        The tick method computes the transformed state for every visualizer
+        (component), creates a new tick and saves it using the Ticker
 
-      if source is None:
-        source = self.TICK_SOURCE_USER
+        parameters:
+          - source (int): The source of the tick. Valid values are defined as
+            constans with prefix TICK_SOURCE_
+        """
+        if not self._can_tick:
+            return  # Stop if ticks are not enabled ATM
 
-      console_logs = self._console_log.getvalue()
+        try:
+            self._can_tick = False
 
-      if not self._components and not bool(console_logs):
-        return # Ignore ticks with no components and no console logs
+            if source is None:
+                source = self.TICK_SOURCE_USER
 
-      components = [ (comp, comp.get_transformed_state()) for comp in self._components ]
-      lineno = self._prev_line if source == self.TICK_SOURCE_LINE else self._curr_line
+            console_logs = self._console_log.getvalue()
 
-      self._ticker.tick(
-        source=source,
-        lineno=lineno,
-        console_logs=console_logs,
-        components=components
-      )
+            if not self._components and not bool(console_logs):
+                return  # Ignore ticks with no components and no console logs
 
-      if console_logs: # Empty the contents if some logs were made
+            components = [
+                (comp, comp.get_transformed_state()) for comp in self._components
+            ]
+            lineno = (
+                self._prev_line if source == self.TICK_SOURCE_LINE else self._curr_line
+            )
+
+            self._ticker.tick(
+                source=source,
+                lineno=lineno,
+                console_logs=console_logs,
+                components=components,
+            )
+
+            if console_logs:  # Empty the contents if some logs were made
+                self._console_log = StringIO()
+
+        finally:
+            self._can_tick = True
+
+    def make_frames(self):
+        """
+        This method is called by the runner component after execution of the
+        visualized algorithm has ended. The first step in making frames is the
+        interpretation of all visualizers (component).
+
+        After that, style is computed for every frame and for every visualizer
+        (component). Neighboring frames with the same style of the components
+        are then merged into one. More detailed description of the merging
+        algorithm can be found here:
+          - https://syga.kam.mff.cuni.cz/docs/engine/engine#zlievanie
+
+        returns:
+          - frames (list): the frames used for visualization
+        """
+        for component in self._components:
+            component.interpret_transformed_state()
+
+        return self._ticker.to_frames()
+
+    def get_ticks(self):
+        """
+        Returns all ticks generated by the ticker until this moment. This method
+        CANNOT be run unless the debug mode is on.
+
+        returns:
+          - ticks (list): all ticks generated until this moment
+        """
+        if not DEBUG_MODE:
+            raise Exception("This feature is disabled in production mode")
+
+        return self._ticker.ticks
+
+    def get_logs(self):
+        """
+        Returns the logs produced by the engine. This method CANNOT be run unless
+        the debug mode is on.
+
+        returns:
+          - logs (str): all logs produced by the engine so far
+        """
+        if not DEBUG_MODE:
+            raise Exception("This feature is disabled in production mode")
+
+        with open(self._log_path, "r", encoding="utf8") as f:
+            return f.read()
+
+    def Graph(self, incoming_graph_data=None, **attr):  # pylint: disable=invalid-name
+        """
+        Creates a new instance of Graph visualizer.
+        """
+        if "visualize" not in attr:
+            attr["visualize"] = True
+
+        graph = Graph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
+
+        if attr["visualize"]:
+            self._components.append(graph)
+
+        return graph
+
+    def DiGraph(self, incoming_graph_data=None, **attr):  # pylint: disable=invalid-name
+        """
+        Creates a new instance of DiGraph visualizer.
+        """
+        if "visualize" not in attr:
+            attr["visualize"] = True
+
+        graph = DiGraph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
+
+        if attr["visualize"]:
+            self._components.append(graph)
+
+        return graph
+
+    @property
+    def _log_path(self):
+        """
+        The path of the log file.
+        """
+        return path_from_root("../logs/algs/{}.log".format(self._module_uid))
+
+    def __init__(self):
+        """
+        Creates a new instance of Engine.
+        """
+        self._module_uid = None
+
+        self._can_tick = True
         self._console_log = StringIO()
+        self._components = []
 
-    finally:
-      self._can_tick = True
+        self._curr_line = None
+        self._prev_line = None
 
+        self._ticker = Ticker()
 
-  def make_frames(self):
-    """
-    This method is called by the runner component after execution of the
-    visualized algorithm has ended. The first step in making frames is the
-    interpretation of all visualizers (component).
-
-    After that, style is computed for every frame and for every visualizer
-    (component). Neighboring frames with the same style of the components
-    are then merged into one. More detailed description of the merging
-    algorithm can be found here:
-      - https://syga.kam.mff.cuni.cz/docs/engine/engine#zlievanie
-
-    returns:
-      - frames (list): the frames used for visualization
-    """
-    for component in self._components:
-      component.interpret_transformed_state()
-
-    return self._ticker.to_frames()
-
-
-  def get_ticks(self):
-    """
-    Returns all ticks generated by the ticker until this moment. This method
-    CANNOT be run unless the debug mode is on.
-
-    returns:
-      - ticks (list): all ticks generated until this moment
-    """
-    if not DEBUG_MODE:
-      raise Exception('This feature is disabled in production mode')
-
-    return self._ticker.ticks
-
-
-  def get_logs(self):
-    """
-    Returns the logs produced by the engine. This method CANNOT be run unless
-    the debug mode is on.
-
-    returns:
-      - logs (str): all logs produced by the engine so far
-    """
-    if not DEBUG_MODE:
-      raise Exception('This feature is disabled in production mode')
-
-    with open(self._log_path, 'r', encoding='utf8') as f:
-      return f.read()
-
-
-  def Graph(self, incoming_graph_data=None, **attr): # pylint: disable=invalid-name
-    """
-    Creates a new instance of Graph visualizer.
-    """
-    if 'visualize' not in attr:
-      attr['visualize'] = True
-
-    graph = Graph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
-
-    if attr['visualize']:
-      self._components.append(graph)
-
-    return graph
-
-
-  def DiGraph(self, incoming_graph_data=None, **attr): # pylint: disable=invalid-name
-    """
-    Creates a new instance of DiGraph visualizer.
-    """
-    if 'visualize' not in attr:
-      attr['visualize'] = True
-
-    graph = DiGraph(incoming_graph_data=incoming_graph_data, _engine=self, **attr)
-
-    if attr['visualize']:
-      self._components.append(graph)
-
-    return graph
-
-
-  @property
-  def _log_path(self):
-    """
-    The path of the log file.
-    """
-    return path_from_root('../logs/algs/{}.log'.format(self._module_uid))
-
-
-  def __init__(self):
-    """
-    Creates a new instance of Engine.
-    """
-    self._module_uid = None
-
-    self._can_tick = True
-    self._console_log = StringIO()
-    self._components = []
-
-    self._curr_line = None
-    self._prev_line = None
-
-    self._ticker = Ticker()
-
-    self.stopwatch = Stopwatch()
+        self.stopwatch = Stopwatch()
