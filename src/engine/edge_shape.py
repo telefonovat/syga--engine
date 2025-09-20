@@ -2,7 +2,7 @@
 Helper module for shapes.
 """
 
-from exceptions import EdgeShapeException
+from src.exceptions import EdgeShapeException
 
 
 EDGE_SHAPES = {

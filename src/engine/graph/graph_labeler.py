@@ -4,7 +4,7 @@ The GraphLabeler module
 
 import types
 from collections.abc import Iterable
-from exceptions import (
+from src.exceptions import (
     GraphLabelerException,
     GraphEdgeLabelerException,
     GraphNodeLabelerException,

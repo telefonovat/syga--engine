@@ -5,9 +5,9 @@ The entrypoint
 import traceback
 import sys
 import json
-from environment import DEBUG_MODE
-from components import Loader, Runner, Sender, logger
-from exceptions import AlgorithmException
+from src.environment import DEBUG_MODE
+from src.components import Loader, Runner, Sender, logger
+from src.exceptions import AlgorithmException
 
 
 def main():

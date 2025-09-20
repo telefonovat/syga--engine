@@ -2,7 +2,7 @@
 Helper module for shapes.
 """
 
-from exceptions import NodeShapeException
+from src.exceptions import NodeShapeException
 
 
 NODE_SHAPES = {

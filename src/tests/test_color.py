@@ -4,8 +4,8 @@ Tests for src/engine/color.py
 
 import unittest
 from random import random, randrange, randint, choice, shuffle
-from engine.color import Color, COLOR_NAMES
-from utils.random_utils import random_name, random_chunk, random_whitespace_pad
+from src.engine.color import Color, COLOR_NAMES
+from src.utils.random_utils import random_name, random_chunk, random_whitespace_pad
 
 
 class TestColor(unittest.TestCase):

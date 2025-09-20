@@ -3,11 +3,11 @@ Loader component
 """
 
 import json
-from environment import SECRET_PASSWORD
-from utils.path import path_from_root
-from utils.code import detect_indentation, add_indentation
-from utils.random_utils import random_name
-from exceptions import LoaderException
+from src.environment import SECRET_PASSWORD
+from src.utils.path import path_from_root
+from src.utils.code import detect_indentation, add_indentation
+from src.utils.random_utils import random_name
+from src.exceptions import LoaderException
 from .logger import logger
 
 

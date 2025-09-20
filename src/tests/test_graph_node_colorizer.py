@@ -6,12 +6,12 @@ import unittest
 import itertools
 import random
 import seaborn as sns
-from engine.color import Color
-from engine.graph import Graph
-from engine.graph.graph_colorizer import GraphNodeColorizer
-from utils.random_utils import random_name
-from utils.random_colors import random_color
-from exceptions import GraphColorizerException
+from src.engine.color import Color
+from src.engine.graph import Graph
+from src.engine.graph.graph_colorizer import GraphNodeColorizer
+from src.utils.random_utils import random_name
+from src.utils.random_colors import random_color
+from src.exceptions import GraphColorizerException
 
 
 class TestGraphNodeColorizer(unittest.TestCase):

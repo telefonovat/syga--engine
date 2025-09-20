@@ -5,7 +5,7 @@ Helper module for colors
 import re
 from colour import COLOR_NAME_TO_RGB
 from webcolors import CSS3_NAMES_TO_HEX
-from exceptions import ColorException
+from src.exceptions import ColorException
 
 
 # Normalized rgba format is tuple of floats - float error must be considered

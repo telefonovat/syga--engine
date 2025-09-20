@@ -5,10 +5,10 @@ Tests for src/components/loader.py
 import unittest
 import random
 import os
-from components import Loader
-from utils.path import resolve_url, path_from_root
-from utils.code import detect_indentation, get_sample_code
-from utils.random_utils import random_name
+from src.components import Loader
+from src.utils.path import resolve_url, path_from_root
+from src.utils.code import detect_indentation, get_sample_code
+from src.utils.random_utils import random_name
 
 
 class TestLoader(unittest.TestCase):

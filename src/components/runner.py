@@ -4,9 +4,9 @@ The runner component
 
 import importlib
 import hunter
-from environment import DEBUG_MODE
-from engine.engine import Engine
-from exceptions import RunnerException, AlgorithmException
+from src.environment import DEBUG_MODE
+from src.engine import Engine
+from src.exceptions import RunnerException, AlgorithmException
 from .logger import logger
 from .loader import Loader
 
@@ -29,7 +29,8 @@ class Runner:
         module_name = self._loader.module_name
 
         try:
-            self._module = importlib.import_module(module_name)
+            #TODO: Temporary fix. Hardcoding top-level module is very brittle
+            self._module = importlib.import_module(f'src.{ module_name }')
             logger.debug("Importing module: success", {"module": module_name})
 
         except Exception as e:
