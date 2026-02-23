@@ -50,24 +50,29 @@ class Runner:
 
         self.import_module()
 
-        hunter.trace(module=module_name, kind="line", action=self._engine.line_callback)
+        q1 = hunter.Q(
+            module=module_name, kind="line", action=self._engine.line_callback
+        )
+        # In case of infinitely running code.
+        # The number has no science behind it. Just picked a number that seemed reasonable
+        q2 = hunter.Q(calls_gt=5000, action=hunter.Stop)
+        hunter.trace(q1 | q2)
 
         fun = getattr(self._module, fun_name)
 
         logger.debug("Running <<<", {"module": module_name})
 
-        args = {"fun": fun, "engine": self._engine, "print": self._engine.print}
-
         self._engine.stopwatch.start()
 
         try:
-            exec("fun(engine, print)", {}, args)  # pylint: disable=exec-used
+            fun(self._engine, self._engine.print)
             logger.debug(">>> success")
 
+        except RecursionError:
+            raise Exception("Your code raised a recursion error. Please check it.")
         except Exception as e:
             logger.debug(">>> error")
             raise AlgorithmException(e)
-
         finally:
             self._engine.stopwatch.stop()
 

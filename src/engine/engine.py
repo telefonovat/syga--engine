@@ -3,6 +3,8 @@ The engine module
 """
 
 from io import StringIO
+
+import hunter
 from components.logger import logger
 from environment import DEBUG_MODE
 from utils.path import path_from_root
@@ -78,13 +80,16 @@ class Engine:
 
             logger.debug(msg, meta)
 
-        if not self._can_tick:
-            return  # Skip line callback if ticks are not enabled ATM
+        try:
+            if not self._can_tick:
+                return  # Skip line callback if ticks are not enabled ATM
 
-        self._prev_line = self._curr_line
-        self._curr_line = src.lineno - 1
+            self._prev_line = self._curr_line
+            self._curr_line = src.lineno - 1
 
-        self.tick(self.TICK_SOURCE_LINE)
+            self.tick(self.TICK_SOURCE_LINE)
+        except RecursionError:
+            hunter.stop()
 
     def tick(self, source=None):
         """
