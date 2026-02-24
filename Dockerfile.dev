@@ -11,4 +11,6 @@ COPY . .
 
 RUN ./bin/clear.sh
 
+RUN apt-get update && apt-get install -y tini
+ENTRYPOINT ["tini", "--"]
 CMD ["python3", "src/main.py"]
