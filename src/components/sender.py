@@ -112,13 +112,20 @@ class Sender:
                 }
             )
 
-    def send_error(self, err):
+    def send_error(self, err: Exception):
         """
         Sends an error response
 
         parameters:
           - err (Exception): The exception raised during preparation or execution
         """
+        return json.dumps(
+            {
+                "timestamp": datetime.datetime.now().isoformat(),
+                "res": "error",
+                "err": str(err),
+            }
+        )
         return self._send_response("error", err)
 
     def send_mixed(self, err):
@@ -136,7 +143,7 @@ class Sender:
         """
         return self._send_response("success")
 
-    def __init__(self, runner: Runner):
+    def __init__(self, runner: Runner | None):
         """
         Creates a new instance of Sender
         """

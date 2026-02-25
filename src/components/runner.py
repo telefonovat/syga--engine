@@ -118,7 +118,7 @@ class Runner:
         """
         return self._engine.stopwatch.elapsed
 
-    def __init__(self, loader: Loader):
+    def __init__(self, loader: Loader | None):
         """
         Creates a new instance of Runner
 
