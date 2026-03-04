@@ -5,6 +5,7 @@ import traceback
 from environment import DEBUG_MODE
 from components import Loader, Runner, Sender, logger
 from exceptions import AlgorithmException
+from utils import format_code
 
 app = Flask(__name__)
 
@@ -87,6 +88,18 @@ def run_algorithm():
     except Exception as e:  # pylint: disable=broad-except
         logger.error("result: Exception", {"exception": traceback.format_exc()})
         return sender.send_error(e)
+
+
+@app.route("/v1/format", methods=["POST"])
+def format():
+    data = request.get_json()
+    code: str = data.get("code", "")
+
+    try:
+        formatted = format_code(code)
+        return jsonify({"formatted_code": formatted})
+    except Exception as e:
+        return jsonify({"error": str(e), "formatted_code": code}), 400
 
 
 if __name__ == "__main__":
