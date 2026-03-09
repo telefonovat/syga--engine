@@ -33,7 +33,7 @@ def resolve_url(url):
     return urlunsplit(parts)
 
 
-def path_from_root(*args):
+def path_from_root(*args: str | os.PathLike[str]) -> str:
     """
     Returns the path from root the root directory
 

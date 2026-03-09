@@ -2,13 +2,21 @@
 Loader component
 """
 
+from collections.abc import Mapping
+from dataclasses import dataclass
 import json
+from typing import Any
 from src.environment import SECRET_PASSWORD
 from src.utils import path_from_root
 from src.utils import detect_indentation, add_indentation
 from src.utils import random_name
 from src.exceptions import LoaderException
 from .logger import logger
+
+
+@dataclass
+class LoaderConfig:
+    code: str
 
 
 class Loader:
@@ -21,15 +29,21 @@ class Loader:
       - Create the module which holds the user specified algorithm
     """
 
-    def set_input(self, cfg):
-        """
-        Sets the raw user JSON config input
-        """
-        self._cfg = cfg
+    def _validate_cfg(self, raw_config: Mapping[str, object]) -> LoaderConfig:
+        try:
+            if "code" not in raw_config:
+                raise LoaderException("Code is missing")
+            if not isinstance(raw_config["code"], str):
+                raise LoaderException("Code is invalid - must be a string")
+            if not raw_config["code"]:
+                raise LoaderException("Code is empty")
+            config = LoaderConfig(code=raw_config["code"])
+            return config
+        except Exception as e:
+            logger.error("Config validation failed")
+            raise e
 
-        return self
-
-    def parse_cfg(self):
+    def _parse_cfg(self, raw_config: Mapping[str, object]) -> LoaderConfig:
         """
         Parses the input config JSON
 
@@ -37,24 +51,10 @@ class Loader:
          - LoaderException: if the JSON cannot be parsed
         """
         try:
-            if "code" not in self._cfg:
-                raise LoaderException("Code is missing")
-
-            if not isinstance(self._cfg["code"], str):
-                raise LoaderException("Code is invalid - must be a string")
-
-            if not self._cfg["code"]:
-                raise LoaderException("Code is empty")
-
-            if "secret" in self._cfg:
-                if self._cfg["secret"] == SECRET_PASSWORD:
-                    self._admin_access = True
-                else:
-                    raise LoaderException("Invalid value of `secret` property")
-
+            config = self._validate_cfg(raw_config)
             logger.info("Parsing cfg: success")
 
-            return self
+            return config
 
         except LoaderException as error:
             logger.error("Parsing cfg: error")
@@ -71,10 +71,10 @@ class Loader:
         Otherwise a random 32 bytes [0-9a-f] will be generated and prefixed with
         an underscore (_) and used as the unique name.
         """
-        if self._admin_access and "uid" in self._cfg:
-            self.unique_id = self._cfg["uid"]
-        else:
-            self.unique_id = "_{}".format(random_name())
+        # if self._admin_access and "uid" in self._cfg:
+        #     self.unique_id = self._cfg["uid"]
+        # else:
+        self.unique_id = "_{}".format(random_name())
 
         self.module_name = "src.{}.{}".format("__algs", self.unique_id)
         self.module_path = "{}.py".format(path_from_root("__algs", self.unique_id))
@@ -93,7 +93,7 @@ class Loader:
          - LoaderException: if the indentation of the code is inconsistent
         """
         try:
-            code = self._cfg["code"]
+            code = self._cfg.code
             indentation = detect_indentation(code)
 
             # If there is no indentation (no if, for, while blocks), use 2
@@ -130,12 +130,12 @@ class Loader:
             logger.error("Creating module: error", {"module": self.module_name})
             raise LoaderException()
 
-    def load(self):
+    def load(self, raw_config: Mapping[str, Any]):
         """
         Prepares the module which can be run by the runner component from the user
         provided JSON config
         """
-        self.parse_cfg()
+        self._cfg = self._parse_cfg(raw_config)
         self.generate_name()
         self.prepare_code()
         self.create_module()

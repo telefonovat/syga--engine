@@ -3,7 +3,7 @@ Utils for code analysis and transformation
 """
 
 
-def detect_indentation(code):
+def detect_indentation(code: str) -> int:
     """
     A trivial function for detecting indentation of the specified code.
 
@@ -33,7 +33,7 @@ def detect_indentation(code):
     return min_indentation
 
 
-def add_indentation(code, indentation):
+def add_indentation(code: str, indentation: int) -> str:
     """
     Adds the specified amount of indentation to the beginning of each line.
     The indentation MUST be done using space (not tabulator). It is not the

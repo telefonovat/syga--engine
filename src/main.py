@@ -1,4 +1,6 @@
+from collections.abc import Mapping
 import resource
+from typing import Any
 from flask import Flask, request, jsonify
 from multiprocess import Process, Manager
 import traceback
@@ -17,18 +19,16 @@ MAX_MEMORY_MB = 1024
 MAX_EXECUTION_TIME_SECOND = 4
 
 
-def algorithm_worker(namespace, config):
+def algorithm_worker(namespace, config: Mapping[str, Any]):
     resource.setrlimit(
         resource.RLIMIT_AS, (MAX_MEMORY_MB * 1024 * 1024, MAX_MEMORY_MB * 1024 * 1024)
     )
-    loader = Loader()
-    runner = Runner(loader)
 
+    namespace.runner = None
     try:
-        loader.set_input(config)
-
         # Prepare the module
-        loader.load()
+        loader = Loader().load(config)
+        runner = Runner(loader)
 
         # Run the module
         runner.run()
