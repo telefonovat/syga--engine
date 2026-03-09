@@ -11,7 +11,8 @@ from src.utils import format_code
 
 app = Flask(__name__)
 
-# Limits
+# Constants
+API_VERSION = "/v1"
 MAX_MEMORY_MB = 1024
 MAX_EXECUTION_TIME_SECOND = 4
 
@@ -37,7 +38,7 @@ def algorithm_worker(namespace, config):
         namespace.exception = e
 
 
-@app.route("/v1/run", methods=["POST"])
+@app.route(f"{API_VERSION}/run", methods=["POST"])
 def run_algorithm():
     if DEBUG_MODE:
         logger.info("Running in debug mode")
@@ -92,7 +93,7 @@ def run_algorithm():
         return sender.send_error(e)
 
 
-@app.route("/v1/format", methods=["POST"])
+@app.route(f"{API_VERSION}/format", methods=["POST"])
 def format():
     data = request.get_json()
     code: str = data.get("code", "")
