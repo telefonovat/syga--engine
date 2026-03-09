@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from multiprocess import Process, Manager
 import traceback
 
-from src.environment import DEBUG_MODE
+from src.environment import DEBUG_MODE, ENGINE_PORT
 from src.components import Loader, Runner, Sender, logger
 from src.exceptions import AlgorithmException
 from src.utils import format_code
@@ -106,4 +106,4 @@ def format():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=ENGINE_PORT)

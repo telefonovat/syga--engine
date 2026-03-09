@@ -19,4 +19,6 @@ API_BASE = os.environ["API_BASE"] if "API_BASE" in os.environ else "/api"
 # Whether to run in debug mode
 DEBUG_MODE = "DEBUG_MODE" in os.environ and os.environ["DEBUG_MODE"] == "yes"
 
+ENGINE_PORT = int(os.environ["ENGINE_PORT"]) if "ENGINE_PORT" in os.environ else 5000
+
 # todo: do this better
