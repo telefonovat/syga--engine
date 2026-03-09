@@ -21,7 +21,9 @@ class Logger:
     LEVEL_VERBOSE: Level = "verbose"
     LEVEL_SILLY: Level = "silly"
 
-    def log(self, level: Level, msg: str, meta=None):
+    MetaType: TypeAlias = object | None
+
+    def log(self, level: Level, msg: str, meta: MetaType = None):
         """
         Logs the specified message.
         """
@@ -35,37 +37,37 @@ class Logger:
 
         print(json.dumps(obj), file=sys.stderr)
 
-    def error(self, msg: str, meta=None):
+    def error(self, msg: str, meta: MetaType = None):
         """
         Logs an error message.
         """
         self.log(self.LEVEL_ERROR, msg, meta)
 
-    def warning(self, msg: str, meta=None):
+    def warning(self, msg: str, meta: MetaType = None):
         """
         Logs a warning message.
         """
         self.log(self.LEVEL_WARNING, msg, meta)
 
-    def info(self, msg, meta=None):
+    def info(self, msg: str, meta: MetaType = None):
         """
         Logs an info message.
         """
         self.log(self.LEVEL_INFO, msg, meta)
 
-    def debug(self, msg: str, meta=None):
+    def debug(self, msg: str, meta: MetaType = None):
         """
         Logs a debug message.
         """
         self.log(self.LEVEL_DEBUG, msg, meta)
 
-    def verbose(self, msg: str, meta=None):
+    def verbose(self, msg: str, meta: MetaType = None):
         """
         Logs a verbose message.
         """
         self.log(self.LEVEL_VERBOSE, msg, meta)
 
-    def silly(self, msg: str, meta=None):
+    def silly(self, msg: str, meta: MetaType = None):
         """
         Logs a silly message.
         """
@@ -75,7 +77,7 @@ class Logger:
         """
         Creates a new instance of Logger.
         """
-        self.namespace = namespace
+        self.namespace: str = namespace
 
 
 logger = Logger("main")
