@@ -2,7 +2,7 @@
 The BaseGraph Visualizer module
 """
 
-from engine.visualizer import Visualizer
+from src.engine.visualizer import Visualizer
 from .graph_colorizer import GraphNodeColorizer, GraphEdgeColorizer
 from .graph_shaper import GraphNodeShaper, GraphEdgeShaper
 from .graph_labeler import GraphEdgeLabeler, GraphNodeLabeler

@@ -20,4 +20,4 @@ RUN ./bin/clear.sh && rm -rf ./bin
 RUN apt-get update && apt-get install -y tini
 ENTRYPOINT ["tini", "--"]
 
-CMD ["python3", "src/main.py"]
+CMD ["python3","-m", "src.main"]

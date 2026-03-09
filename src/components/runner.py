@@ -4,9 +4,9 @@ The runner component
 
 import importlib
 import hunter
-from environment import DEBUG_MODE
-from engine.engine import Engine
-from exceptions import RunnerException, AlgorithmException
+from src.environment import DEBUG_MODE
+from src.engine.engine import Engine
+from src.exceptions import RunnerException, AlgorithmException
 from .logger import logger
 from .loader import Loader
 

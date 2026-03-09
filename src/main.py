@@ -2,10 +2,12 @@ import resource
 from flask import Flask, request, jsonify
 from multiprocess import Process, Manager
 import traceback
-from environment import DEBUG_MODE
-from components import Loader, Runner, Sender, logger
-from exceptions import AlgorithmException
-from utils import format_code
+
+from src.environment import DEBUG_MODE
+from src.components import Loader, Runner, Sender, logger
+from src.exceptions import AlgorithmException
+from src.utils import format_code
+
 
 app = Flask(__name__)
 

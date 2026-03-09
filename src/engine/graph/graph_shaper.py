@@ -4,9 +4,9 @@ The GraphShaper module
 
 import types
 from collections.abc import Iterable
-from engine.node_shape import NodeShape, AVAILABLE_NODE_SHAPES
-from engine.edge_shape import EdgeShape, AVAILABLE_EDGE_SHAPES
-from exceptions import (
+from src.engine.node_shape import NodeShape, AVAILABLE_NODE_SHAPES
+from src.engine.edge_shape import EdgeShape, AVAILABLE_EDGE_SHAPES
+from src.exceptions import (
     GraphShaperException,
     GraphNodeShaperException,
     GraphEdgeShaperException,

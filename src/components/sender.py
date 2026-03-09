@@ -5,11 +5,11 @@ The sender component
 import datetime
 import traceback
 import json
-from environment import DEBUG_MODE
-from engine.color import Color
-from engine.node_shape import NodeShape
-from engine.edge_shape import EdgeShape
-from engine.stopwatch import Stopwatch
+from src.environment import DEBUG_MODE
+from src.engine.color import Color
+from src.engine.node_shape import NodeShape
+from src.engine.edge_shape import EdgeShape
+from src.engine.stopwatch import Stopwatch
 from .logger import logger
 from .runner import Runner
 

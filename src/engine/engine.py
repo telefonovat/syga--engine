@@ -5,9 +5,9 @@ The engine module
 from io import StringIO
 
 import hunter
-from components.logger import logger
-from environment import DEBUG_MODE
-from utils.path import path_from_root
+from src.components.logger import logger
+from src.environment import DEBUG_MODE
+from src.utils import path_from_root
 from .graph.graph import Graph
 from .graph.di_graph import DiGraph
 from .ticker import Ticker

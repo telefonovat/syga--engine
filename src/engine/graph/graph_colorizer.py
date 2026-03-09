@@ -5,8 +5,8 @@ The GraphColorizer module
 import types
 from collections.abc import Iterable
 import seaborn as sns
-from engine.color import Color
-from exceptions import (
+from src.engine.color import Color
+from src.exceptions import (
     GraphColorizerException,
     GraphNodeColorizerException,
     GraphEdgeColorizerException,

@@ -3,11 +3,11 @@ Loader component
 """
 
 import json
-from environment import SECRET_PASSWORD
-from utils.path import path_from_root
-from utils.code import detect_indentation, add_indentation
-from utils.random_utils import random_name
-from exceptions import LoaderException
+from src.environment import SECRET_PASSWORD
+from src.utils import path_from_root
+from src.utils import detect_indentation, add_indentation
+from src.utils import random_name
+from src.exceptions import LoaderException
 from .logger import logger
 
 
@@ -76,7 +76,7 @@ class Loader:
         else:
             self.unique_id = "_{}".format(random_name())
 
-        self.module_name = "{}.{}".format("__algs", self.unique_id)
+        self.module_name = "src.{}.{}".format("__algs", self.unique_id)
         self.module_path = "{}.py".format(path_from_root("__algs", self.unique_id))
 
         return self
