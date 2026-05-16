@@ -54,6 +54,17 @@ class Engine:
         kwargs["file"] = self._console_log
         print(*args, **kwargs)
 
+    def pause(self):
+        """
+        Turn on visualization. This has 2 usecases
+        1. Turn off visualization until the end of the code
+        2. Turn it back on and the visualization of the code inbetween will be merged into a single frame
+        """
+        self.paused = True
+
+    def resume(self):
+        self.paused = False
+
     def line_callback(self, src):
         """
         This method is called for every 'line' event of the Hunter library. The
@@ -83,6 +94,10 @@ class Engine:
         try:
             if not self._can_tick:
                 return  # Skip line callback if ticks are not enabled ATM
+
+            # If engine.toggle was called
+            if self.paused:
+                return
 
             self._prev_line = self._curr_line
             self._curr_line = src.lineno - 1
@@ -231,4 +246,5 @@ class Engine:
 
         self._ticker = Ticker()
 
+        self.paused: bool = False
         self.stopwatch = Stopwatch()
